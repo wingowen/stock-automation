@@ -1,0 +1,77 @@
+name: StockExpert 每日看板
+
+on:
+  schedule:
+    # 北京时间 16:30 ≈ UTC 08:30（收盘后）。周一~周五。
+    - cron: "35 8 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      trade_date:
+        description: "指定交易日 YYYY-MM-DD（可选，默认最近交易日）"
+        required: false
+
+permissions:
+  contents: write   # 提交生成的看板数据
+  pages: write      # 部署 GitHub Pages
+  id-token: write
+
+concurrency:
+  group: stock-brief
+  cancel-in-progress: false
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r stockexpert-daily-brief/requirements.txt
+
+      - name: Generate brief
+        env:
+          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
+          AGNES_BASE_URL: ${{ secrets.AGNES_BASE_URL }}
+          AGNES_MODEL: ${{ secrets.AGNES_MODEL }}
+          BRIEF_ROOT: ${{ github.workspace }}/stockexpert-daily-brief
+        run: |
+          if [ -n "${{ github.event.inputs.trade_date }}" ]; then
+            python stockexpert-daily-brief/web_brief.py --trade-date "${{ github.event.inputs.trade_date }}"
+          else
+            python stockexpert-daily-brief/web_brief.py
+          fi
+
+      - name: Commit data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stockexpert-daily-brief/dashboard/data stockexpert-daily-brief/dashboard/manifest.json
+          if git diff --cached --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "chore: 每日看板 $(date +%F)"
+            git push
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: stockexpert-daily-brief/dashboard
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StockExpert 每日看板</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel2: #1e222b; --border: #2a2f3a;
+    --text: #e6e8ec; --muted: #8b93a3; --accent: #4f8cff;
+    --green: #2ecc71; --red: #e74c3c; --yellow: #f1c40f; --gray: #7f8c9a;
+    --launch: #3498db; --trend: #2ecc71; --climax: #e67e22; --fade: #95a5a6;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px; }
+  header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex;
+    align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  header h1 { font-size: 17px; margin: 0; }
+  .sub { color: var(--muted); font-size: 12px; }
+  .layout { display: flex; height: calc(100vh - 60px); }
+  .sidebar { width: 220px; border-right: 1px solid var(--border); overflow-y: auto; padding: 10px 0; }
+  .sidebar .day { padding: 9px 16px; cursor: pointer; border-left: 3px solid transparent; }
+  .sidebar .day:hover { background: var(--panel2); }
+  .sidebar .day.active { background: var(--panel2); border-left-color: var(--accent); }
+  .sidebar .day .d1 { font-weight: 600; }
+  .sidebar .day .d2 { color: var(--muted); font-size: 11px; }
+  .main { flex: 1; overflow-y: auto; padding: 20px 26px; }
+  .empty { color: var(--muted); margin-top: 40px; text-align: center; }
+  .demo { background: #b45309; color: #fff; font-size: 10px; padding: 1px 6px;
+    border-radius: 6px; vertical-align: middle; margin-left: 4px; font-weight: 600; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; margin-bottom: 16px; }
+  .regime { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .regime .big { font-size: 22px; font-weight: 700; }
+  .idx { display: inline-block; margin-right: 18px; }
+  .idx .n { color: var(--muted); font-size: 12px; }
+  .up { color: var(--green); } .down { color: var(--red); }
+  .themes { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .theme { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .theme h3 { margin: 0 0 6px; font-size: 15px; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px;
+    font-weight: 600; color: #0f1115; }
+  .b-launch { background: var(--launch); } .b-trend { background: var(--trend); }
+  .b-climax { background: var(--climax); } .b-fade { background: var(--fade); }
+  .str { font-size: 11px; color: var(--muted); margin: 6px 0; }
+  .reason { font-size: 12px; color: #c2c8d4; line-height: 1.5; background: var(--panel2);
+    padding: 8px 10px; border-radius: 6px; margin-top: 6px; white-space: pre-wrap; }
+  table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  th { color: var(--muted); font-weight: 600; }
+  .tag { padding: 1px 7px; border-radius: 5px; font-size: 11px; }
+  .t-good { background: rgba(46,204,113,.18); color: var(--green); }
+  .t-ok { background: rgba(79,140,255,.18); color: var(--accent); }
+  .t-high { background: rgba(241,196,15,.18); color: var(--yellow); }
+  .t-avoid { background: rgba(231,76,60,.18); color: var(--red); }
+  .s-intact { color: var(--green); } .s-broken { color: var(--red); } .s-watch { color: var(--yellow); }
+  .src { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  h2.sec { font-size: 15px; margin: 22px 0 10px; border-left: 3px solid var(--accent); padding-left: 10px; }
+  .quality { font-size: 12px; color: var(--muted); }
+  .quality li { margin: 2px 0; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>StockExpert 每日看板</h1>
+    <div class="sub">轻量模式 · 大盘强度 → 题材阶段 → 中军位置 · 点击左侧日期查看当天快照</div>
+  </div>
+  <div class="sub" id="genAt"></div>
+</header>
+<div class="layout">
+  <div class="sidebar" id="sidebar"></div>
+  <div class="main" id="main">
+    <div class="empty">加载中…</div>
+  </div>
+</div>
+
+<script>
+const STAGE_LABEL = { launching: "启动", trending: "趋势中", climax: "高潮", fading: "退潮" };
+const STAGE_CLASS = { launching: "b-launch", trending: "b-trend", climax: "b-climax", fading: "b-fade" };
+const STR_LABEL = { strong: "强", neutral: "中", weak: "弱" };
+const POS_LABEL = { good: "好位置", ok: "可", high: "偏高谨慎", avoid: "排除" };
+const POS_CLASS = { good: "t-good", ok: "t-ok", high: "t-high", avoid: "t-avoid" };
+const TREND_LABEL = { intact: "趋势完整", broken: "破位", watch: "观察" };
+
+function pct(v) {
+  if (v === null || v === undefined) return "—";
+  const cls = v >= 0 ? "up" : "down";
+  return `<span class="${cls}">${v >= 0 ? "+" : ""}${v}%</span>`;
+}
+function el(html) { const d = document.createElement("div"); d.innerHTML = html; return d.firstChild; }
+
+async function loadAll() {
+  // GitHub Pages 静态环境：直接用同目录 manifest.json（由部署脚本生成）
+  let manifest;
+  try {
+    const r = await fetch("manifest.json", { cache: "no-store" });
+    if (!r.ok) throw new Error("no manifest");
+    manifest = await r.json();
+  } catch (e) {
+    document.getElementById("main").innerHTML =
+      '<div class="empty">未找到 manifest.json。<br>请先运行 web_brief.py 生成看板数据后再部署。</div>';
+    return;
+  }
+  const days = manifest.days || [];
+  if (!days.length) {
+    document.getElementById("main").innerHTML = '<div class="empty">暂无看板数据。</div>';
+    return;
+  }
+  const sb = document.getElementById("sidebar");
+  sb.innerHTML = "";
+  days.forEach((d, i) => {
+    const demoTag = d.is_demo ? ' <span class="demo">示例</span>' : "";
+    const node = el(`<div class="day" data-i="${i}">
+      <div class="d1">${d.trade_date}${demoTag}</div>
+      <div class="d2">${d.regime || ""} · ${d.theme_count || 0} 题材</div></div>`);
+    node.onclick = () => select(days, i);
+    sb.appendChild(node);
+  });
+  select(days, 0);
+}
+
+function select(days, i) {
+  document.querySelectorAll(".sidebar .day").forEach((n, j) => n.classList.toggle("active", j === i));
+  render(days[i]);
+}
+
+async function render(day) {
+  const main = document.getElementById("main");
+  let data;
+  try {
+    const r = await fetch(day.path, { cache: "no-store" });
+    data = await r.json();
+  } catch (e) {
+    main.innerHTML = '<div class="empty">读取 ' + day.path + ' 失败</div>';
+    return;
+  }
+  const m = data.market_regime || {};
+  document.getElementById("genAt").textContent = "生成于 " + (data.generated_at || "—");
+  if (data.is_demo) {
+    document.getElementById("genAt").innerHTML += ' <span class="demo">示例数据 · 非真实研判</span>';
+  }
+  let html = "";
+
+  html += '<div class="card"><div class="regime">';
+  html += `<div><div class="sub">大盘强度</div><div class="big">${STR_LABEL[m.strength] || m.strength || "—"}</div></div>`;
+  (m.indices || []).forEach(ix => {
+    html += `<div class="idx"><div class="n">${ix.name || ix.code}</div><div>${ix.price ?? "—"} ${pct(ix.change_pct)}</div></div>`;
+  });
+  html += "</div>";
+  if (m.breadth_up != null) html += `<div class="str">涨跌家数 ${m.breadth_up} : ${m.breadth_down}</div>`;
+  if (m.strength_reasoning) html += `<div class="reason">${m.strength_reasoning}</div>`;
+  html += "</div>";
+
+  html += '<h2 class="sec">题材阶段（' + (data.themes || []).length + '）</h2><div class="themes">';
+  (data.themes || []).forEach(t => {
+    html += `<div class="theme">
+      <h3>${t.name || t.id}</h3>
+      <span class="badge ${STAGE_CLASS[t.stage] || "b-fade"}">${STAGE_LABEL[t.stage] || t.stage}</span>
+      <span class="str">强度：${t.strength || "—"}</span>
+      <div class="str">方法论：${(t.methods || []).join(", ") || "—"}</div>
+      ${t.stage_reasoning ? `<div class="reason">${t.stage_reasoning}</div>` : ""}
+      ${t.catalyst ? `<div class="src">催化：${t.catalyst}</div>` : ""}
+      <div class="src">来源：${t.source || "—"}</div>
+    </div>`;
+  });
+  html += "</div>";
+
+  html += '<h2 class="sec">中军候选（' + (data.midcaps || []).length + '）</h2>';
+  html += '<table><thead><tr><th>代码</th><th>名称</th><th>题材</th><th>现价</th><th>涨跌</th>'
+    + '<th>位置</th><th>趋势</th><th>观察区间</th><th>推理</th></tr></thead><tbody>';
+  (data.midcaps || []).forEach(c => {
+    const z = c.suggested_zone || {};
+    html += `<tr>
+      <td>${c.code}</td><td>${c.name}</td><td>${c.theme_id || ""}</td>
+      <td>${c.price ?? "—"}</td><td>${pct(c.change_pct)}</td>
+      <td><span class="tag ${POS_CLASS[c.position_eval] || ""}">${POS_LABEL[c.position_eval] || c.position_eval || "—"}</span></td>
+      <td class="s-${c.trend_status}">${TREND_LABEL[c.trend_status] || c.trend_status || "—"}</td>
+      <td>${z.low ?? "—"} ~ ${z.high ?? "—"}</td>
+      <td>${c.position_reasoning || ""}</td>
+    </tr>`;
+  });
+  html += "</tbody></table>";
+
+  const dq = data.data_quality || {};
+  html += '<h2 class="sec">数据来源与质量</h2><div class="card"><div class="quality">';
+  html += "<div>整体：" + (dq.overall || "—") + "</div>";
+  if ((data.data_sources || []).length) {
+    html += "<ul>" + data.data_sources.map(s => `<li>${s.type}: ${s.url || s.command || ""} @ ${s.fetched_at || ""}</li>`).join("") + "</ul>";
+  }
+  if ((dq.missing || []).length) html += "<div>缺失：" + dq.missing.join("；") + "</div>";
+  html += "</div></div>";
+
+  main.innerHTML = html;
+}
+
+loadAll();
+</script>
+</body>
+</html>

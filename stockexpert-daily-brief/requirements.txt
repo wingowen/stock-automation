@@ -1,0 +1,2 @@
+# 仅用标准库完成 HTTP/JSON，无需第三方依赖。
+# 保留此文件以便 github actions 安装（pip 对空依赖也无妨）。
