@@ -1,58 +1,35 @@
 {
   "schema_version": "1.0",
   "trade_date": "2026-07-16",
-  "generated_at": "2026-07-16T20:35:37.821266+08:00",
+  "generated_at": "2026-07-16T20:47:02.707177+08:00",
   "is_demo": false,
   "market_regime": {
     "strength": "neutral",
     "strength_source": "ai-synthesis",
-    "strength_reasoning": "用户提供的资料明确提示指数接口返回空且未获取，缺乏上证指数、创业板指等核心宽基的点位与涨跌幅数据。由于无法通过量能变化、均线排列或指数相对位置判断大盘强弱，暂按中性处理。右侧交易需等待指数数据补全后再行确认方向。",
-    "indices": [
-      {
-        "name": "上证指数",
-        "code": null,
-        "price": null,
-        "change_pct": null,
-        "source": "web:用户提供的收评",
-        "fetched_at": "2026-07-16"
-      },
-      {
-        "name": "深证成指",
-        "code": null,
-        "price": null,
-        "change_pct": null,
-        "source": "web:用户提供的收评",
-        "fetched_at": "2026-07-16"
-      },
-      {
-        "name": "创业板指",
-        "code": null,
-        "price": null,
-        "change_pct": null,
-        "source": "web:用户提供的收评",
-        "fetched_at": "2026-07-16"
-      }
-    ],
+    "strength_reasoning": "模型调用失败，数据不可用，未生成研判。",
+    "indices": [],
     "breadth_up": null,
     "breadth_down": null,
-    "breadth_reasoning": "资料标注行业板块解析失败且未获取，未提供全市场上涨/下跌家数、炸板率及连板高度数据。缺乏市场广度指标导致无法量化赚钱效应分布，故暂不评估情绪周期位置。"
+    "breadth_reasoning": "未获取"
   },
   "themes": [],
   "midcaps": [],
   "data_sources": [
     {
       "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-16T20:46:45.681934+08:00"
+    },
+    {
+      "type": "web",
       "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
-      "fetched_at": "2026-07-16T20:35:02.637385+08:00"
+      "fetched_at": "2026-07-16T20:46:45.681934+08:00"
     }
   ],
   "data_quality": {
-    "overall": "partial",
+    "overall": "unavailable",
     "missing": [
-      "指数点位与涨跌幅",
-      "涨跌家数/市场广度",
-      "行业板块与题材催化详情",
-      "个股容量票数据"
+      "Agnes 模型调用失败，全天数据不可用"
     ]
   },
   "methods_used": [
