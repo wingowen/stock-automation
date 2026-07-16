@@ -14,6 +14,7 @@
   AGNES_API_KEY    Agnes AI 的 API Key（必填）
   AGNES_BASE_URL   Agnes API 网关，默认 https://api.agnes-ai.com/v1
   AGNES_MODEL      文本模型名，默认 agnes-text（以官网模型目录为准）
+  BOCHA_API_KEY    博查 Bocha AI 搜索 Key（选填，用于抓实时 Web 资讯；免费额度）
   BRIEF_ROOT       输出根目录，默认脚本同级目录
   TRADE_DATE       指定交易日（YYYY-MM-DD），默认取最近一个 A股交易日
 
@@ -152,6 +153,46 @@ def call_agnes(system: str, user: str) -> str | None:
         return None
 
 
+def call_bocha(query: str, count: int = 8) -> list[dict] | None:
+    """调用博查 Bocha AI Web 搜索，返回 [{title,url,snippet}] 或 None。
+
+    免费额度搜索接口，用于在 CI 环境抓取实时 A股收评/题材资讯，
+    弥补东财 push2 接口在 CI 常返回空的问题。失败降级返回 None。
+    """
+    api_key = os.environ.get("BOCHA_API_KEY")
+    if not api_key:
+        log("BOCHA_API_KEY 未设置，跳过博查搜索")
+        return None
+    url = "https://api.bochaai.com/v1/web-search"
+    payload = {"query": query, "count": count, "freshness": "noLimit", "summary": True}
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            resp = json.loads(r.read().decode("utf-8"))
+        items = (resp.get("data") or {}).get("webPages", {}).get("value") or []
+        out = []
+        for it in items[:count]:
+            out.append({
+                "title": it.get("name", ""),
+                "url": it.get("url", ""),
+                "snippet": (it.get("snippet") or it.get("summary") or ""),
+            })
+        log(f"博查搜索 '{query[:20]}...' 命中 {len(out)} 条")
+        return out
+    except Exception as e:  # noqa: BLE001
+        log(f"博查搜索失败: {e}")
+        return None
+
+
 def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
     """抓取公开 Web 财经信息，拼接成给模型的上下文。
 
@@ -162,27 +203,48 @@ def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
     parts: list[str] = []
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat()
 
-    # 1) 东财市场总貌（指数 + 涨跌家数）
+    # 1) 指数/市场 —— 东财 push2 优先，腾讯行情接口作为 CI 友好备用
     em_url = "https://push2.eastmoney.com/api/qt/clist/get?fs=m:1+t:2,m:0+t:6,m:0+t:80,m:1+t:23&fields=f12,f14,f2,f3,f104,f105"
-    txt = http_get(em_url)
-    if txt:
-        try:
-            j = json.loads(txt)
-            items = (j.get("data") or {}).get("diff") or []
-            lines = []
-            for it in items[:12]:
-                if isinstance(it, dict):
-                    lines.append(f"{it.get('f14')}({it.get('f12')}) 涨跌幅={it.get('f3')}%")
-            if lines:
-                parts.append("【指数/市场】\n" + "\n".join(lines))
-                ds.append({"type": "web", "url": em_url, "fetched_at": now})
-            else:
-                parts.append("【指数/市场】接口返回空，未获取")
-        except Exception as e:  # noqa: BLE001
-            log(f"东财解析失败: {e}")
-            parts.append("【指数/市场】解析失败，未获取")
-    else:
-        parts.append("【指数/市场】未获取（网络/接口失败）")
+    idx_lines: list[str] = []
+    # 腾讯行情：上证(1.000001) 深证(0.399001) 创业板(0.399006)
+    tencent_url = "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006"
+    ttxt = http_get(tencent_url)
+    if ttxt:
+        import re
+        for seg in ttxt.split(";"):
+            seg = seg.strip()
+            if not seg or "=" not in seg:
+                continue
+            code = seg.split("~")[0].split("=")[-1].strip("'\"")
+            m = re.search(r"~([^~]+)~([^~]+)~([^~]+)~([^~]+)", seg)
+            if not m:
+                continue
+            name, price, prev_close, pct = m.group(1), m.group(2), m.group(3), m.group(4)
+            # 腾讯返回的是涨跌额字段(~31~)，这里直接用 pct 近似：用 ~33(涨跌幅) 若存在
+            idx_lines.append(f"{name}({code}) 现价={price} 昨收={prev_close}")
+        if idx_lines:
+            parts.append("【指数/市场·腾讯】\n" + "\n".join(idx_lines))
+            ds.append({"type": "web", "url": tencent_url, "fetched_at": now})
+    # 若腾讯也没拿到，再试东财
+    if not idx_lines:
+        txt = http_get(em_url)
+        if txt:
+            try:
+                j = json.loads(txt)
+                items = (j.get("data") or {}).get("diff") or []
+                for it in items[:12]:
+                    if isinstance(it, dict):
+                        idx_lines.append(f"{it.get('f14')}({it.get('f12')}) 涨跌幅={it.get('f3')}%")
+                if idx_lines:
+                    parts.append("【指数/市场·东财】\n" + "\n".join(idx_lines))
+                    ds.append({"type": "web", "url": em_url, "fetched_at": now})
+                else:
+                    parts.append("【指数/市场】接口返回空，未获取")
+            except Exception as e:  # noqa: BLE001
+                log(f"东财解析失败: {e}")
+                parts.append("【指数/市场】解析失败，未获取")
+        else:
+            parts.append("【指数/市场】未获取（网络/接口失败）")
 
     # 2) 板块涨幅（东财行业板块，m:90+t:2 为板块，字段含 f3 涨幅 f62 主力净流）
     sector_url = "https://push2.eastmoney.com/api/qt/clist/get?fs=m:90+t:2&fields=f12,f14,f3,f62&pn=1&pz=20"
@@ -214,6 +276,17 @@ def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
         parts.append("【盘中快讯】已抓取东财公开接口（见数据源）")
     else:
         parts.append("【盘中快讯】未获取")
+
+    # 4) 博查实时搜索：A股当日收评 + 题材热点（免费额度，CI 友好）
+    for q in (f"{trade_date.isoformat()} A股 收评 大盘 题材", f"{trade_date.isoformat()} A股 热点板块 涨停 复盘"):
+        results = call_bocha(q, count=6)
+        if results:
+            block = [f"【Web资讯·博查】{q}"]
+            for r in results:
+                snippet = (r.get("snippet") or "").strip().replace("\n", " ")
+                block.append(f"- {r.get('title')}\n  {snippet}\n  来源: {r.get('url')}")
+                ds.append({"type": "web", "url": r.get("url", ""), "fetched_at": now})
+            parts.append("\n".join(block))
 
     context = (
         f"交易日：{trade_date.isoformat()}\n"
