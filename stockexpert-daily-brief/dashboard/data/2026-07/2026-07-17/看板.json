@@ -1,95 +1,125 @@
 {
   "schema_version": "1.0",
   "trade_date": "2026-07-17",
-  "generated_at": "2026-07-17T08:42:24.731551+08:00",
+  "generated_at": "2026-07-17T08:52:23.221800+08:00",
   "is_demo": false,
   "market_regime": {
-    "strength": "neutral",
+    "strength": "weak",
     "strength_source": "ai-synthesis",
-    "strength_reasoning": "模型调用失败，数据不可用，未生成研判。",
-    "indices": [],
+    "strength_reasoning": "根据虎扑社区复盘指出‘指数周期与题材周期脱钩’、‘权重崩塌’及‘各项数据低迷’，表明大盘整体承接力不足。同时炸板率较高，说明短线情绪虽有修复但缺乏统一高度，市场处于弱势震荡与结构分化阶段。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": null,
+        "price": null,
+        "change_pct": null,
+        "source": "web:用户提供的收评",
+        "fetched_at": "2026-07-17T00:00:00Z"
+      }
+    ],
     "breadth_up": null,
     "breadth_down": null,
-    "breadth_reasoning": "未获取"
+    "breadth_reasoning": "资料未提供具体涨跌家数，仅提及‘炸板率比较高但情绪面没死’。结合权重股下跌与题材修复特征，判断市场赚钱效应高度分化，整体宽度偏弱，资金偏向结构性博弈。"
   },
-  "themes": [],
+  "themes": [
+    {
+      "id": "端侧AI-2026-07-17",
+      "name": "端侧AI",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "资讯明确显示该题材‘净流入19.3亿首日登顶’，资金大幅抢筹且处于启动初期。在指数权重崩塌的背景下，该方向成为资金避险与进攻的首选，符合右侧交易捕捉新主线启动的特征。",
+      "strength": "high",
+      "strength_reasoning": "单日净流入超19亿元且登顶热点榜，说明机构与游资共识极强。作为指数脱钩日的独立修复主线，其资金容纳度与持续性有望支撑后续趋势延续，强度评级为高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "资金首日净流入19.3亿登顶，指数与题材脱钩下的防御性修复方向",
+      "source": "web:https://bbs.hupu.com/640931656_0.html",
+      "notes": ""
+    }
+  ],
   "midcaps": [],
   "data_sources": [
     {
       "type": "web",
       "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://m.163.com/dy/article/L20H44S90512B07B.html",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://v.ifeng.com/c/8upHXGUbrQt",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://www.sohu.com/a/1050915215_100132429?scm=10004.53710_15-300008.0.0-0-0-0-0.1101.topic:53710:5.0.9.a2_3X297",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://quote.eastmoney.com/us/ZH.html?date=2026-07-17",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A01UKI00",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "http://www.eeo.com.cn/2026/0716/960519.shtml",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://m.163.com/dy/article/L20H44S90512B07B.html",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://www.sohu.com/a/1050915215_100132429?scm=10004.53710_15-300008.0.0-0-0-0-0.1101.topic:53710:5.0.9.a2_3X297",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://v.ifeng.com/c/8upHXGUbrQt",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://finance.sina.com.cn/stock/usstock/c/2026-07-17/doc-inihzvzn7540541.shtml",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
-      "url": "https://bbs.hupu.com/640931656.html",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "url": "https://bbs.hupu.com/640931656_0.html",
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     },
     {
       "type": "web",
       "url": "https://emwap.eastmoney.com/a/202607163809164826.html",
-      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+      "fetched_at": "2026-07-17T08:50:50.567202+08:00"
     }
   ],
   "data_quality": {
-    "overall": "unavailable",
+    "overall": "partial",
     "missing": [
-      "Agnes 模型调用失败，全天数据不可用"
+      "指数具体收盘价与涨跌幅(抓取字段存在乱码)",
+      "行业板块涨跌数据",
+      "具体个股中军实时行情与市值",
+      "市场涨跌家数统计"
     ]
   },
   "methods_used": [
