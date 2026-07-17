@@ -151,6 +151,7 @@ async function render(day) {
   });
   html += "</div>";
   if (m.breadth_up != null) html += `<div class="str">涨跌家数 ${m.breadth_up} : ${m.breadth_down}</div>`;
+  if (m.limit_up != null) html += `<div class="str">涨停 ${m.limit_up} / 跌停 ${m.limit_down ?? "—"}</div>`;
   if (m.strength_reasoning) html += `<div class="reason">${m.strength_reasoning}</div>`;
   html += "</div>";
 
