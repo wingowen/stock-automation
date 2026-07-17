@@ -44,6 +44,7 @@ jobs:
           AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
           AGNES_BASE_URL: ${{ secrets.AGNES_BASE_URL }}
           AGNES_MODEL: ${{ secrets.AGNES_MODEL }}
+          BOCHA_API_KEY: ${{ secrets.BOCHA_API_KEY }}
           BRIEF_ROOT: ${{ github.workspace }}/stockexpert-daily-brief
         run: |
           if [ -n "${{ github.event.inputs.trade_date }}" ]; then

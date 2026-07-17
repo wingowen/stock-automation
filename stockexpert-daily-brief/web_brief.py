@@ -231,10 +231,12 @@ def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
         if txt:
             try:
                 j = json.loads(txt)
-                items = (j.get("data") or {}).get("diff") or []
-                for it in items[:12]:
-                    if isinstance(it, dict):
-                        idx_lines.append(f"{it.get('f14')}({it.get('f12')}) 涨跌幅={it.get('f3')}%")
+                data = j.get("data") if isinstance(j.get("data"), dict) else {}
+                items = data.get("diff") or []
+                if isinstance(items, list):
+                    for it in items[:12]:
+                        if isinstance(it, dict):
+                            idx_lines.append(f"{it.get('f14')}({it.get('f12')}) 涨跌幅={it.get('f3')}%")
                 if idx_lines:
                     parts.append("【指数/市场·东财】\n" + "\n".join(idx_lines))
                     ds.append({"type": "web", "url": em_url, "fetched_at": now})
@@ -252,11 +254,13 @@ def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
     if stxt:
         try:
             j = json.loads(stxt)
-            items = (j.get("data") or {}).get("diff") or []
+            data = j.get("data") if isinstance(j.get("data"), dict) else {}
+            items = data.get("diff") or []
             lines = []
-            for it in items[:15]:
-                if isinstance(it, dict):
-                    lines.append(f"{it.get('f14')} 涨幅={it.get('f3')}% 主力净流={it.get('f62')}")
+            if isinstance(items, list):
+                for it in items[:15]:
+                    if isinstance(it, dict):
+                        lines.append(f"{it.get('f14')} 涨幅={it.get('f3')}% 主力净流={it.get('f62')}")
             if lines:
                 parts.append("【行业板块涨幅 TOP】\n" + "\n".join(lines))
                 ds.append({"type": "web", "url": sector_url, "fetched_at": now})
