@@ -116,7 +116,10 @@ def latest_trade_day(from_date: dt.date | None = None) -> dt.date:
 
 
 def call_agnes(system: str, user: str) -> str | None:
-    """调用 Agnes（OpenAI 兼容）。返回模型文本，失败返回 None。"""
+    """调用 Agnes（OpenAI 兼容）。返回模型文本，失败返回 None。
+
+    增加单次重试与更长超时：免费 API 常冷启动慢。
+    """
     api_key = os.environ.get("AGNES_API_KEY")
     if not api_key:
         log("AGNES_API_KEY 未设置，无法调用模型")
@@ -134,23 +137,26 @@ def call_agnes(system: str, user: str) -> str | None:
     }
     data = json.dumps(payload).encode("utf-8")
     url = f"{base_url}/chat/completions"
-    req = urllib.request.Request(
-        url,
-        data=data,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "User-Agent": HEADERS["User-Agent"],
-        },
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            resp = json.loads(r.read().decode("utf-8"))
-        return resp["choices"][0]["message"]["content"]
-    except Exception as e:  # noqa: BLE001
-        log(f"Agnes 调用失败: {e}")
-        return None
+    last_err = None
+    for attempt in (1, 2):
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "User-Agent": HEADERS["User-Agent"],
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                resp = json.loads(r.read().decode("utf-8"))
+            return resp["choices"][0]["message"]["content"]
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            log(f"Agnes 调用失败(第{attempt}次): {e}")
+    return None
 
 
 def call_bocha(query: str, count: int = 8) -> list[dict] | None:
@@ -311,7 +317,9 @@ def generate_brief(trade_date: dt.date, dry_run: bool) -> int:
     data_dir.mkdir(parents=True, exist_ok=True)
 
     if not raw:
-        log("模型未返回，写入降级看板（标注数据不可用）")
+        log("模型未返回，写入降级看板（标注数据不可用），但保留 Web 上下文原文")
+        # 模型挂了也不丢抓取结果：落盘原始上下文，便于人工查看当天资讯
+        (data_dir / "web_context.txt").write_text(context, encoding="utf-8")
         payload = fallback_payload(trade_date, ds)
     else:
         try:
