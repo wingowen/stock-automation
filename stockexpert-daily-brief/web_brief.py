@@ -199,40 +199,66 @@ def call_bocha(query: str, count: int = 8) -> list[dict] | None:
         return None
 
 
-def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
+def _parse_tencent_quote(seg: str) -> dict | None:
+    """解析腾讯 qt.gtimg.cn 单条行情。
+
+    格式示例：v_sz000001="1~平安银行~000001~12.34~12.50~12.40~..."
+    按 ~ 切分后关键下标（腾讯标准）：
+      [1]=名称 [2]=代码 [3]=当前价 [4]=昨收 [5]=今开
+      [31]=涨跌额 [32]=涨跌幅(%) [33]=振幅(%) [34]=换手(%) [37]=最高 [38]=最低
+    返回 {name,code,price,change_pct} 或 None。
+    """
+    if "=" not in seg:
+        return None
+    rhs = seg.split("=", 1)[1].strip().strip('"')
+    parts = rhs.split("~")
+    if len(parts) < 33:
+        return None
+    try:
+        name = parts[1]
+        code = parts[2]
+        price = float(parts[3])
+        change_pct = float(parts[32]) if parts[32] not in ("", "-") else None
+    except (ValueError, IndexError):
+        return None
+    return {"name": name, "code": code, "price": price, "change_pct": change_pct}
+
+
+def build_web_context(trade_date: dt.date) -> tuple[str, list[dict], list[dict]]:
     """抓取公开 Web 财经信息，拼接成给模型的上下文。
 
     这里用公开可访问的财经页面做轻量抓取。若某源失败，标注缺失，不阻塞。
-    返回 (context_text, data_sources)
+    返回 (context_text, data_sources, structured_indices)
+      - structured_indices: 结构化指数硬数字（name/code/price/change_pct/source），
+        直接回填看板，不依赖模型回读，避免行情数字丢失。
     """
     ds: list[dict] = []
     parts: list[str] = []
+    idx_struct: list[dict] = []
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat()
 
-    # 1) 指数/市场 —— 东财 push2 优先，腾讯行情接口作为 CI 友好备用
-    em_url = "https://push2.eastmoney.com/api/qt/clist/get?fs=m:1+t:2,m:0+t:6,m:0+t:80,m:1+t:23&fields=f12,f14,f2,f3,f104,f105"
-    idx_lines: list[str] = []
-    # 腾讯行情：上证(1.000001) 深证(0.399001) 创业板(0.399006)
+    # 1) 指数/市场 —— 腾讯行情接口（CI 友好）优先，东财 push2 备用
     tencent_url = "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006"
     ttxt = http_get(tencent_url)
     if ttxt:
-        import re
         for seg in ttxt.split(";"):
             seg = seg.strip()
-            if not seg or "=" not in seg:
+            if not seg:
                 continue
-            code = seg.split("~")[0].split("=")[-1].strip("'\"")
-            m = re.search(r"~([^~]+)~([^~]+)~([^~]+)~([^~]+)", seg)
-            if not m:
+            rec = _parse_tencent_quote(seg)
+            if not rec:
                 continue
-            name, price, prev_close, pct = m.group(1), m.group(2), m.group(3), m.group(4)
-            # 腾讯返回的是涨跌额字段(~31~)，这里直接用 pct 近似：用 ~33(涨跌幅) 若存在
-            idx_lines.append(f"{name}({code}) 现价={price} 昨收={prev_close}")
-        if idx_lines:
-            parts.append("【指数/市场·腾讯】\n" + "\n".join(idx_lines))
+            idx_struct.append({
+                "name": rec["name"], "code": rec["code"],
+                "price": rec["price"], "change_pct": rec["change_pct"],
+                "source": f"web:{tencent_url}", "fetched_at": now,
+            })
+            parts.append(f"【指数·腾讯】{rec['name']}({rec['code']}) 现价={rec['price']} 涨跌幅={rec['change_pct']}%")
+        if idx_struct:
             ds.append({"type": "web", "url": tencent_url, "fetched_at": now})
-    # 若腾讯也没拿到，再试东财
-    if not idx_lines:
+    # 若腾讯没拿到，再试东财
+    if not idx_struct:
+        em_url = "https://push2.eastmoney.com/api/qt/clist/get?fs=m:1+t:2,m:0+t:6,m:0+t:80,m:1+t:23&fields=f12,f14,f2,f3,f104,f105"
         txt = http_get(em_url)
         if txt:
             try:
@@ -242,9 +268,18 @@ def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
                 if isinstance(items, list):
                     for it in items[:12]:
                         if isinstance(it, dict):
-                            idx_lines.append(f"{it.get('f14')}({it.get('f12')}) 涨跌幅={it.get('f3')}%")
-                if idx_lines:
-                    parts.append("【指数/市场·东财】\n" + "\n".join(idx_lines))
+                            try:
+                                price = float(it["f2"]) if it.get("f2") not in (None, "-", "") else None
+                                change_pct = float(it["f3"]) if it.get("f3") not in (None, "-", "") else None
+                            except (ValueError, TypeError):
+                                price, change_pct = None, None
+                            idx_struct.append({
+                                "name": it.get("f14"), "code": it.get("f12"),
+                                "price": price, "change_pct": change_pct,
+                                "source": f"web:{em_url}", "fetched_at": now,
+                            })
+                            parts.append(f"【指数·东财】{it.get('f14')}({it.get('f12')}) 现价={price} 涨跌幅={change_pct}%")
+                if idx_struct:
                     ds.append({"type": "web", "url": em_url, "fetched_at": now})
                 else:
                     parts.append("【指数/市场】接口返回空，未获取")
@@ -304,12 +339,12 @@ def build_web_context(trade_date: dt.date) -> tuple[str, list[dict]]:
         + "\n\n".join(parts)
         + "\n\n请基于以上信息完成研判，严格按 schema 输出 JSON。"
     )
-    return context, ds
+    return context, ds, idx_struct
 
 
 def generate_brief(trade_date: dt.date, dry_run: bool) -> int:
     log(f"生成看板：{trade_date.isoformat()} dry_run={dry_run}")
-    context, ds = build_web_context(trade_date)
+    context, ds, idx_struct = build_web_context(trade_date)
     raw = call_agnes(SYSTEM_PROMPT, context)
 
     root = Path(os.environ.get("BRIEF_ROOT", Path(__file__).resolve().parent))
@@ -320,11 +355,11 @@ def generate_brief(trade_date: dt.date, dry_run: bool) -> int:
         log("模型未返回，写入降级看板（标注数据不可用），但保留 Web 上下文原文")
         # 模型挂了也不丢抓取结果：落盘原始上下文，便于人工查看当天资讯
         (data_dir / "web_context.txt").write_text(context, encoding="utf-8")
-        payload = fallback_payload(trade_date, ds)
+        payload = fallback_payload(trade_date, ds, idx_struct)
     else:
         try:
             model_json = json.loads(raw)
-            payload = assemble(trade_date, model_json, ds)
+            payload = assemble(trade_date, model_json, ds, idx_struct)
         except Exception as e:  # noqa: BLE001
             log(f"模型输出解析失败: {e}，写入降级看板")
             payload = fallback_payload(trade_date, ds)
@@ -344,19 +379,34 @@ def generate_brief(trade_date: dt.date, dry_run: bool) -> int:
     return 0
 
 
-def assemble(trade_date: dt.date, mj: dict, ds: list[dict]) -> dict:
+def assemble(trade_date: dt.date, mj: dict, ds: list[dict], idx_struct: list[dict] | None = None) -> dict:
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat()
     mr = mj.get("market_regime", {})
-    indices = []
-    for ix in mr.get("indices", []) or []:
-        indices.append({
-            "name": ix.get("name"),
-            "code": ix.get("code"),
-            "price": ix.get("price"),
-            "change_pct": ix.get("change_pct"),
-            "source": ix.get("source", "web:eastmoney"),
-            "fetched_at": ix.get("fetched_at", now),
-        })
+    # 优先用结构化抓取的硬数字（price/change_pct 来自真实接口），
+    # 模型的 indices 仅作兜底/补充；避免行情数字因模型未回读而丢失。
+    if idx_struct:
+        indices = [
+            {
+                "name": ix.get("name"),
+                "code": ix.get("code"),
+                "price": ix.get("price"),
+                "change_pct": ix.get("change_pct"),
+                "source": ix.get("source", "web:eastmoney"),
+                "fetched_at": ix.get("fetched_at", now),
+            }
+            for ix in idx_struct
+        ]
+    else:
+        indices = []
+        for ix in mr.get("indices", []) or []:
+            indices.append({
+                "name": ix.get("name"),
+                "code": ix.get("code"),
+                "price": ix.get("price"),
+                "change_pct": ix.get("change_pct"),
+                "source": ix.get("source", "web:eastmoney"),
+                "fetched_at": ix.get("fetched_at", now),
+            })
     payload = {
         "schema_version": SCHEMA_VERSION,
         "trade_date": trade_date.isoformat(),
@@ -418,8 +468,19 @@ def assemble(trade_date: dt.date, mj: dict, ds: list[dict]) -> dict:
     return payload
 
 
-def fallback_payload(trade_date: dt.date, ds: list[dict]) -> dict:
+def fallback_payload(trade_date: dt.date, ds: list[dict], idx_struct: list[dict] | None = None) -> dict:
     now = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).isoformat()
+    indices = [
+        {
+            "name": ix.get("name"),
+            "code": ix.get("code"),
+            "price": ix.get("price"),
+            "change_pct": ix.get("change_pct"),
+            "source": ix.get("source", "web:eastmoney"),
+            "fetched_at": ix.get("fetched_at", now),
+        }
+        for ix in (idx_struct or [])
+    ]
     return {
         "schema_version": SCHEMA_VERSION,
         "trade_date": trade_date.isoformat(),
@@ -428,8 +489,8 @@ def fallback_payload(trade_date: dt.date, ds: list[dict]) -> dict:
         "market_regime": {
             "strength": "neutral",
             "strength_source": "ai-synthesis",
-            "strength_reasoning": "模型调用失败，数据不可用，未生成研判。",
-            "indices": [],
+            "strength_reasoning": "模型调用失败，研判不可用；指数硬数字（如有）仍来自行情接口。",
+            "indices": indices,
             "breadth_up": None,
             "breadth_down": None,
             "breadth_reasoning": "未获取",
