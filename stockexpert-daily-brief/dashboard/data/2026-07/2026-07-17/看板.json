@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0",
   "trade_date": "2026-07-17",
-  "generated_at": "2026-07-17T18:18:33.563753+08:00",
+  "generated_at": "2026-07-17T18:23:33.454209+08:00",
   "is_demo": false,
   "market_regime": {
     "strength": "weak",
     "strength_source": "ai-synthesis",
-    "strength_reasoning": "三大指数全线大幅下挫（上证-3.05%、深成指-5.4%、创业板-7.15%），市场呈现单边下跌态势。涨跌家数比极度悬殊（上涨405家对比下跌4758家），且跌停家数超过200家，表明资金恐慌性出逃，整体处于弱势退潮期。",
+    "strength_reasoning": "三大指数集体大跌（沪指-3.05%、深成指-5.40%、创业板指-7.15%），市场呈现极端普跌格局，仅防御性板块逆势护盘，整体情绪极弱。",
     "indices": [
       {
         "name": "ָ֤",
@@ -14,7 +14,7 @@
         "price": 3764.15,
         "change_pct": -3.05,
         "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
-        "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+        "fetched_at": "2026-07-17T18:22:32.714341+08:00"
       },
       {
         "name": "ָ֤",
@@ -22,7 +22,7 @@
         "price": 13706.88,
         "change_pct": -5.4,
         "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
-        "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+        "fetched_at": "2026-07-17T18:22:32.714341+08:00"
       },
       {
         "name": "ҵָ",
@@ -30,69 +30,71 @@
         "price": 3428.63,
         "change_pct": -7.15,
         "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
-        "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+        "fetched_at": "2026-07-17T18:22:32.714341+08:00"
       }
     ],
     "breadth_up": 405,
     "breadth_down": 4758,
-    "breadth_reasoning": "直接提取自Choice统计及界面新闻快讯数据，当日沪深两市可交易A股中上涨405只，下跌4758只，平盘34只，市场亏钱效应显著。",
-    "limit_up": 35,
+    "breadth_reasoning": "据Choice统计及证券时报收评，沪深两市可交易A股上涨405只，下跌4758只，平盘34只，呈现压倒性普跌。",
+    "limit_up": 34,
     "limit_down": 212
   },
   "themes": [
     {
-      "id": "电力改革/公用事业-2026-07-17",
-      "name": "电力改革/公用事业",
+      "id": "电力-2026-07-17",
+      "name": "电力",
       "stage": "trending",
       "stage_source": "ai-synthesis",
-      "stage_reasoning": "在大盘暴跌背景下逆势走强，形成明确的多股涨停梯队（桂冠电力、华银电力涨停，湖南发展3天2板）。受国家能源局6月用电数据催化，资金避险与政策博弈共振，趋势延续性较强。",
+      "stage_reasoning": "在大盘暴跌背景下逆市拉升，多股涨停且主力资金净流入居首，属于典型的避险趋势主线，尚未见明显退潮信号。",
       "strength": "high",
-      "strength_reasoning": "逆市领涨且涨停家数占全市场近三分之一，板块内高低切与跟风效应明显，属于当前弱势环境下的核心主线。",
+      "strength_reasoning": "板块内个股分化但核心容量票逆势走强，资金持续流入，具备强防御属性与趋势延续性。",
       "methods": [
         "right-side-core"
       ],
       "signals": [],
-      "related_midcap_codes": [],
-      "catalyst": "国家能源局发布6月份全社会用电量数据，电力体制改革预期升温。",
+      "related_midcap_codes": [
+        "600236"
+      ],
+      "catalyst": "国家能源局发布6月全社会用电量数据及迎峰度夏预期，资金寻求确定性避险。",
       "source": "web:https://news.qq.com/rain/a/20260717A04C1300",
       "notes": ""
     },
     {
-      "id": "大金融/券商-2026-07-17",
-      "name": "大金融/券商",
-      "stage": "launching",
+      "id": "股权转让/高标投机-2026-07-17",
+      "name": "股权转让/高标投机",
+      "stage": "fading",
       "stage_source": "ai-synthesis",
-      "stage_reasoning": "盘中指数急跌后资金尝试护盘，湘财股份直线涨停带动国盛证券、大智慧等快速跟涨。属于典型的指数超跌反弹与避险属性，尚未形成持续性的连板高度，处于启动试错阶段。",
-      "strength": "mid",
-      "strength_reasoning": "仅表现为盘中脉冲式拉升，跟风股多为快速套利，缺乏核心容量中军稳定承接，持续性有待明日放量确认。",
+      "stage_reasoning": "高位连板股（如艾艾精工9天7板）孤立抱团，缺乏新题材跟风，在全市场近200股跌停的退潮期，接力风险极高，处于退潮初期。",
+      "strength": "low",
+      "strength_reasoning": "涨停家数极少且高度集中在个别妖股，市场承接力差，盈亏比极低。",
       "methods": [
         "right-side-core"
       ],
       "signals": [],
       "related_midcap_codes": [],
-      "catalyst": "大盘连续暴跌后的技术性修复需求与资金避险情绪。",
-      "source": "web:https://c.m.163.com/news/a/L21KU4FT05198CJN.html",
+      "catalyst": "局部游资抱团博弈，缺乏基本面与政策催化支撑。",
+      "source": "web:https://news.qq.com/rain/a/20260717A079JI00",
       "notes": ""
     }
   ],
   "midcaps": [
     {
-      "code": "600021",
-      "name": "上海电力",
-      "theme_id": "电力改革",
-      "market_cap": 420.74,
-      "price": 14.91,
-      "change_pct": 15.29,
+      "code": "600236",
+      "name": "桂冠电力",
+      "theme_id": "电力",
+      "market_cap": 837.11,
+      "price": 10.62,
+      "change_pct": 10.62,
       "ma5": null,
       "quote_source": "web:https://qt.gtimg.cn",
       "position_eval": "good",
-      "position_reasoning": "资料明确标注该股为“跟涨”而非涨停，说明今日未过度透支涨幅，筹码结构相对健康。在指数重挫时能保持逆势走强，显示主力资金控盘有序，位置具备安全边际。",
+      "position_reasoning": "资料明确提及该股逆市跟涨且未涨停，符合大容量中军特征，当前处于趋势中继的合理介入位置。",
       "trend_status": "intact",
-      "trend_reasoning": "大盘暴跌日逆势跟涨，量价配合未现异常放量滞涨或断头铡刀形态，短期上升趋势未被破坏，符合右侧趋势跟踪条件。",
+      "trend_reasoning": "在大盘单边下跌环境中展现极强抗跌性，所属电力板块获主力净流入第一，中期上升趋势未破坏。",
       "suggested_zone": {
         "low": null,
         "high": null,
-        "reasoning": "资料未提供具体分时均价与均线数值，暂无法精确划定。建议明日以今日分时均价线或5日均线作为防守下沿，上方压力参考前期平台高点，需结合开盘量价动态确认。"
+        "reasoning": "资料未提供具体分时价位与均线数值，需待系统反查实时行情后结合5日/10日线测算支撑压力区间。"
       },
       "hold_horizon_days": 3,
       "methods": [
@@ -100,172 +102,146 @@
       ],
       "source": "web:https://news.qq.com/rain/a/20260717A0654300",
       "notes": ""
-    },
-    {
-      "code": "600137",
-      "name": "国盛证券",
-      "theme_id": "大金融",
-      "market_cap": 16.04,
-      "price": 16.5,
-      "change_pct": 17.2,
-      "ma5": null,
-      "quote_source": "web:https://qt.gtimg.cn",
-      "position_eval": "ok",
-      "position_reasoning": "作为券商跟风标的，资料提及“快速跟涨”，未出现涨停，位置相对合理。但券商板块今日仅为脉冲护盘，若明日不能持续放量，当前位置可能面临冲高回落风险。",
-      "trend_status": "watch",
-      "trend_reasoning": "今日属指数超跌反弹的跟随动作，趋势尚未完全确立。需观察明日能否脱离大盘独立走强，若缩量回调则趋势进入观察期。",
-      "suggested_zone": {
-        "low": null,
-        "high": null,
-        "reasoning": "资料缺失具体价格区间。右侧交易建议等待明日确认止跌企稳后再介入，下沿可参考今日开盘价或分时低点，上沿参考今日冲高回落的峰值。"
-      },
-      "hold_horizon_days": 3,
-      "methods": [
-        "right-side-core"
-      ],
-      "source": "web:https://c.m.163.com/news/a/L21KU4FT05198CJN.html",
-      "notes": ""
     }
   ],
   "data_sources": [
     {
       "type": "web",
       "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-17/c10631028.html",
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-17",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-17",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://caifuhao.eastmoney.com/news/20260717154144300850570",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://caifuhao.eastmoney.com/news/20260716162653942249050",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A079JI00",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
-    },
-    {
-      "type": "web",
-      "url": "https://q.stock.sohu.com/zs/399405/index.shtml?date=2026-07-17",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://www.stcn.com/article/detail/4025146.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A079JI00",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A04XFY00",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://wap.eastmoney.com/a/202607173811003046.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://finance.eastmoney.com/a/202607173811003046.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
-      "url": "https://www.jiemian.com/article/14783723.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "url": "https://finance.sina.com.cn/7x24/2026-07-17/doc-iniiaxpe1462989.shtml",
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://www.stcn.com/article/detail/4025146.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://finance.eastmoney.com/a/202607173811003046.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://wap.eastmoney.com/a/202607173811003046.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A079JI00",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-17",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
-      "url": "https://news.qq.com/rain/a/20260717A0795900",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "url": "https://finance.sina.com.cn/7x24/2026-07-17/doc-iniiaxpe1462989.shtml",
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://www.stcn.com/article/detail/4025146.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-17/c10631017.html",
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A04C1300",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://www.finet.com.cn/news/6a59e5c8cebf241b1ca86247.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://c.m.163.com/news/a/L21KU4FT05198CJN.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     },
     {
       "type": "web",
       "url": "https://news.qq.com/rain/a/20260717A0654300",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
-    },
-    {
-      "type": "web",
-      "url": "https://c.m.163.com/news/a/L21N5CLG0512B07B.html",
-      "fetched_at": "2026-07-17T18:17:06.761876+08:00"
+      "fetched_at": "2026-07-17T18:22:32.714341+08:00"
     }
   ],
   "data_quality": {
     "overall": "partial",
     "missing": [
-      "个股具体收盘价与涨跌幅明细",
-      "板块详细成交额与换手率",
-      "连板股完整梯队名单",
-      "中军个股实时均线与支撑压力位数据"
+      "个股实时精确价格与涨跌幅",
+      "行业板块完整涨幅排行数据",
+      "北证50指数精确收盘价"
     ]
   },
   "methods_used": [
