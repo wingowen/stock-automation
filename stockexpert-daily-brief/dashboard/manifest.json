@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-07-17T09:20:11.983011+08:00",
+  "generated_at": "2026-07-17T18:18:33.565012+08:00",
   "days": [
     {
       "trade_date": "2026-07-17",
       "path": "data/2026-07/2026-07-17/看板.json",
-      "regime": "neutral",
-      "theme_count": 4,
+      "regime": "weak",
+      "theme_count": 2,
       "is_demo": false
     },
     {
