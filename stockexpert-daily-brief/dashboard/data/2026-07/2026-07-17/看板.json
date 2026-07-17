@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-17",
+  "generated_at": "2026-07-17T08:42:24.731551+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "neutral",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "模型调用失败，数据不可用，未生成研判。",
+    "indices": [],
+    "breadth_up": null,
+    "breadth_down": null,
+    "breadth_reasoning": "未获取"
+  },
+  "themes": [],
+  "midcaps": [],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.163.com/dy/article/L20H44S90512B07B.html",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://v.ifeng.com/c/8upHXGUbrQt",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.sohu.com/a/1050915215_100132429?scm=10004.53710_15-300008.0.0-0-0-0-0.1101.topic:53710:5.0.9.a2_3X297",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/us/ZH.html?date=2026-07-17",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260717A01UKI00",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://www.eeo.com.cn/2026/0716/960519.shtml",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.163.com/dy/article/L20H44S90512B07B.html",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.sohu.com/a/1050915215_100132429?scm=10004.53710_15-300008.0.0-0-0-0-0.1101.topic:53710:5.0.9.a2_3X297",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://v.ifeng.com/c/8upHXGUbrQt",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.sina.com.cn/stock/usstock/c/2026-07-17/doc-inihzvzn7540541.shtml",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://bbs.hupu.com/640931656.html",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://emwap.eastmoney.com/a/202607163809164826.html",
+      "fetched_at": "2026-07-17T08:41:18.039784+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "unavailable",
+    "missing": [
+      "Agnes 模型调用失败，全天数据不可用"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
