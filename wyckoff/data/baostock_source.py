@@ -1,123 +1,114 @@
-"""Baostock 数据加载封装 (Phase B 子任务: T1 数据源验证)
+"""Baostock 数据源实现 (主拉取源)
 
-提供两个核心函数:
-    fetch_daily(code, start, end) -> pd.DataFrame
-    test_connection() -> bool
-
-输出 DataFrame 字段 (前复权):
-    date, code, name, open, high, low, close, volume, amount
-
-异常:
-    DataFetchError: 任何网络/解析问题
+基于 Baostock 库获取 A 股行情数据，免费、免注册、覆盖完整。
 """
 from __future__ import annotations
 
 import logging
-from datetime import date, datetime
+from datetime import date
 from typing import Optional
 
-import baostock as bs
 import pandas as pd
+
+from wyckoff.data.base import DataFormatError, DataSource, FetchError
 
 logger = logging.getLogger(__name__)
 
 
-class DataFetchError(RuntimeError):
-    """数据获取失败"""
+class BaostockSource(DataSource):
+    """Baostock 数据源
 
-
-# ---- 模块级单例 (Baostock 客户端) ----
-_bs_logged_in = False
-
-
-def _ensure_login() -> None:
-    """确保 Baostock 已登录 (全局只一次)"""
-    global _bs_logged_in
-    if not _bs_logged_in:
-        lg = bs.login()
-        if lg.error_code != "0":
-            raise DataFetchError(f"Baostock login failed: {lg.error_msg}")
-        _bs_logged_in = True
-
-
-def _fmt_date(d: date | str) -> str:
-    """Baostock 接受 'YYYY-MM-DD' 格式"""
-    if isinstance(d, str):
-        return d
-    return d.strftime("%Y-%m-%d")
-
-
-def fetch_daily(
-    code: str,
-    start: date | str,
-    end: date | str,
-    adjustflag: int = 2,  # 2=前复权
-) -> pd.DataFrame:
-    """拉取单只股票的日线数据
-
-    Args:
-        code: 6 位股票代码, 如 "600519" 或 "sh.600519"
-        start: 起始日期
-        end: 结束日期
-        adjustflag: 复权方式 1=后复权 2=前复权 3=不复权
-
-    Returns:
-        DataFrame, columns: date, code, name, open, high, low, close, volume, amount
-        (按 date 升序)
+    使用 Baostock 的 query_history_k_data_plus 接口获取前复权日线数据。
+    注意：Baostock 返回的成交量单位是"股"，统一契约要求"手"，因此内部会除以 100。
     """
-    _ensure_login()
 
-    # Baostock 接受 sh.600519 格式
-    if "." not in code:
-        if code.startswith(("5", "6", "9", "110", "113", "127")):
-            code = f"sh.{code}"
-        else:
-            code = f"sz.{code}"
+    def __init__(self):
+        self._logged_in = False
 
-    rs = bs.query_history_k_data_plus(
-        code,
-        "date,code,open,high,low,close,volume,amount",
-        start_date=_fmt_date(start),
-        end_date=_fmt_date(end),
-        frequency="d",
-        adjustflag=adjustflag,
-    )
-    if rs.error_code != "0":
-        raise DataFetchError(
-            f"Baostock query failed for {code}: {rs.error_msg}"
+    def _ensure_login(self) -> None:
+        """确保已登录 Baostock"""
+        if self._logged_in:
+            return
+        import baostock as bs
+        result = bs.login()
+        if result.error_code != "0":
+            raise FetchError(f"Baostock login failed: {result.error_msg}")
+        self._logged_in = True
+        logger.info("Baostock login success")
+
+    def fetch(
+        self,
+        code: str,
+        start_date: date,
+        end_date: date,
+        adjust: str = "qfq",
+    ) -> pd.DataFrame:
+        """拉取指定日期范围的数据
+
+        Args:
+            code: 6位股票代码（不带 sh/sz 前缀）
+            start_date: 起始日期
+            end_date: 结束日期（包含）
+            adjust: 复权方式，默认前复权 "qfq"
+
+        Returns:
+            DataFrame: 包含 date, code, open, high, low, close, volume
+            按 date 升序排列
+        """
+        self._ensure_login()
+
+        import baostock as bs
+
+        adjust_flag = {"qfq": "2", "hfq": "1", "": "0"}.get(adjust, "2")
+        exchange = "sh" if code.startswith("6") else "sz"
+        symbol = f"{exchange}.{code}"
+        fields = "date,open,high,low,close,volume"
+
+        start_str = start_date.strftime("%Y-%m-%d")
+        end_str = end_date.strftime("%Y-%m-%d")
+
+        logger.info(f"Baostock fetching {code} from {start_str} to {end_str}")
+
+        rs = bs.query_history_k_data_plus(
+            code=symbol,
+            fields=fields,
+            start_date=start_str,
+            end_date=end_str,
+            frequency="d",
+            adjustflag=adjust_flag,
         )
 
-    rows = []
-    while (rs.error_code == "0") and rs.next():
-        rows.append(rs.get_row_data())
+        if rs.error_code != "0":
+            raise FetchError(f"Baostock query failed: {rs.error_msg}")
 
-    if not rows:
-        raise DataFetchError(f"No data returned for {code} ({start} - {end})")
+        rows = []
+        while rs.next():
+            rows.append(rs.get_row_data())
 
-    df = pd.DataFrame(rows, columns=[
-        "date", "code", "open", "high", "low", "close", "volume", "amount"
-    ])
+        if not rows:
+            raise FetchError(f"Baostock returned empty data for {code}")
 
-    # 类型转换
-    df["date"] = pd.to_datetime(df["date"]).dt.date
-    for col in ["open", "high", "low", "close", "volume", "amount"]:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
+        df = pd.DataFrame(rows, columns=["date", "open", "high", "low", "close", "volume"])
+        df = self._normalize(df, code)
+        self.validate_response(df)
 
-    # Baostock 不返回 name 字段 (避免额外 query 性能开销)
-    # 解析 code 为市场 + 6 位数字
-    market, ticker = code.split(".")
-    df["name"] = ticker  # 占位; 真实名称需另查
+        logger.info(f"Baostock fetched {len(df)} rows for {code}")
+        return df
 
-    df = df[["date", "code", "name", "open", "high", "low", "close", "volume", "amount"]]
-    df = df.sort_values("date").reset_index(drop=True)
-    return df
+    def name(self) -> str:
+        return "Baostock"
 
+    def _normalize(self, df: pd.DataFrame, code: str) -> pd.DataFrame:
+        """规范化 Baostock 返回的数据格式"""
+        df["date"] = pd.to_datetime(df["date"]).dt.date
 
-def test_connection() -> bool:
-    """测试 Baostock 是否可用 (Phase B 冒烟测试)"""
-    try:
-        _ensure_login()
-        return True
-    except Exception as e:
-        logger.error("Baostock connection test failed: %s", e)
-        return False
+        for col in ["open", "high", "low", "close"]:
+            df[col] = pd.to_numeric(df[col], errors="coerce").round(2)
+
+        # Baostock 成交量单位是股，转换为手（1 手 = 100 股）
+        df["volume"] = (pd.to_numeric(df["volume"], errors="coerce") / 100).astype(int)
+
+        df["code"] = code
+        df = df[["date", "code", "open", "high", "low", "close", "volume"]]
+        df = df.sort_values("date").reset_index(drop=True)
+        return df
