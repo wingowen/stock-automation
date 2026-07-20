@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-20",
+  "generated_at": "2026-07-20T19:25:58.594848+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "neutral",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "未获取",
+    "indices": [
+      {
+        "name": "ָ֤",
+        "code": "000001",
+        "price": 3796.28,
+        "change_pct": 0.85,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+      },
+      {
+        "name": "ָ֤",
+        "code": "399001",
+        "price": 13610.23,
+        "change_pct": -0.71,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+      },
+      {
+        "name": "ҵָ",
+        "code": "399006",
+        "price": 3443.1,
+        "change_pct": 0.42,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+      }
+    ],
+    "breadth_up": null,
+    "breadth_down": null,
+    "breadth_reasoning": "",
+    "limit_up": null,
+    "limit_down": null
+  },
+  "themes": [],
+  "midcaps": [],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.sohu.com/a/1052491439_163278?scm=10001.1505_13-100000-0_922.0-0.0-0-0-0-0.a2_5X162X1628",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-20/c10634944.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://cj.sina.com.cn/articles/view/5993531560/m1653e08a803301mff4",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-20",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-17",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260720A04QWJ00",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260720A04QWJ00",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4029075.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-20/c10634929.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260720160943079880460",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://cj.sina.com.cn/articles/view/5993531560/m1653e08a803301mff4",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.yicai.com/news/103283462.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4029075.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tAja0LEu3w",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-20",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-20/c10634944.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-07-20",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.yicai.com/news/103283462.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260720A033OA00",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-20/c10634903.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4029075.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260720A0354200",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.cngold.org/c/2026-07-20/c10635237.html",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260720160943079880460",
+      "fetched_at": "2026-07-20T19:25:06.829244+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "个股中军实时行情未获取（无 code 或接口失败）"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
