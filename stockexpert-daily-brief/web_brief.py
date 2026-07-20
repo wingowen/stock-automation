@@ -39,10 +39,28 @@ DEFAULT_MODEL = "agnes-text"
 SCHEMA_VERSION = "1.0"
 METHOD = "right-side-core"
 
-# A股粗略交易日历：周一到周五，排除少数法定节假日（此处仅做基础过滤，
-# 生产环境可接入交易所日历 API。非交易日则跳过生成）。
-# 简单节假日集合（YYYY-MM-DD），按需补充。
-HOLIDAYS = set()
+# A股粗略交易日历：周一到周五，排除法定节假日。
+# 生产环境建议接入交易所日历 API；此处内置 2026 年官方休市日
+# （来源：沪深北交易所 2025-12-22 公告，证券时报等转载核对一致）。
+# 注意：2027 年及以后需按当年公告补充，否则对应节假日仍会触发生成。
+HOLIDAYS = {
+    # 元旦
+    "2026-01-01", "2026-01-02", "2026-01-03",
+    # 春节
+    "2026-02-15", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19",
+    "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23",
+    # 清明节
+    "2026-04-04", "2026-04-05", "2026-04-06",
+    # 劳动节
+    "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05",
+    # 端午节
+    "2026-06-19", "2026-06-20", "2026-06-21",
+    # 中秋节
+    "2026-09-25", "2026-09-26", "2026-09-27",
+    # 国庆节
+    "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05",
+    "2026-10-06", "2026-10-07",
+}
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; StockExpertBrief/1.0)",
@@ -96,14 +114,25 @@ def log(*a):
 
 
 def http_get(url: str, timeout: int = 15) -> str | None:
-    """简单 GET，失败返回 None（不抛异常，符合"缺失即标注"）。"""
+    """简单 GET，失败返回 None（不抛异常，符合"缺失即标注"）。
+
+    解码策略：腾讯 qt.gtimg.cn、新浪板块等接口返回 GBK 编码，先试 utf-8 再回退
+    gbk，避免中文乱码导致指数/板块数字被写成 null（修复 2026-07-17 指数全 null 问题）。
+    """
     try:
         req = urllib.request.Request(url, headers=HEADERS)
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.read().decode("utf-8", "ignore")
+            raw = r.read()
     except Exception as e:  # noqa: BLE001
         log(f"GET 失败 {url}: {e}")
         return None
+    # 优先 utf-8（JSON 类接口），失败回退 gbk（腾讯/新浪类接口）
+    for enc in ("utf-8", "gbk"):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("utf-8", "ignore")
 
 
 def is_trade_day(d: dt.date) -> bool:
@@ -547,6 +576,11 @@ def assemble(trade_date: dt.date, mj: dict, ds: list[dict], idx_struct: list[dic
         "data_quality": _build_data_quality(idx_struct, stock_quotes, mj, mr),
         "methods_used": [METHOD],
     }
+    # 校验关键枚举与观察区间，非法值回退安全默认并记入数据质量
+    issues = _validate_and_sanitize(payload)
+    if issues:
+        payload["data_quality"]["missing"].extend(issues)
+        payload["data_quality"]["overall"] = "partial"
     return payload
 
 
@@ -565,6 +599,46 @@ def _build_data_quality(idx_struct, stock_quotes, mj, mr) -> dict:
             missing.append(m)
     overall = "complete" if not missing else "partial"
     return {"overall": overall, "missing": missing}
+
+
+# ---------- 校验与清洗 ----------
+_ALLOWED_STRENGTH = {"strong", "neutral", "weak", "unknown"}
+_ALLOWED_STAGE = {"launching", "trending", "climax", "fading"}
+_ALLOWED_POS = {"good", "ok", "high", "avoid"}
+_ALLOWED_TREND = {"intact", "broken", "watch"}
+
+
+def _validate_and_sanitize(payload: dict) -> list[str]:
+    """校验关键枚举与观察区间，非法值回退到安全默认，返回问题清单。
+
+    目的：防止模型/上游异常输出污染看板（如 stage 拼错、区间 low>high 等），
+    所有问题追加到 data_quality.missing 便于审计。
+    """
+    issues: list[str] = []
+    mr = payload.get("market_regime") or {}
+    s = mr.get("strength")
+    if s not in _ALLOWED_STRENGTH:
+        mr["strength"] = "unknown"
+        issues.append(f"market_regime.strength 非法值({s})已置为 unknown")
+
+    for t in payload.get("themes") or []:
+        if t.get("stage") not in _ALLOWED_STAGE:
+            issues.append(f"题材[{t.get('name')}] stage 非法({t.get('stage')})已置 fading")
+            t["stage"] = "fading"
+
+    for c in payload.get("midcaps") or []:
+        if c.get("position_eval") not in _ALLOWED_POS:
+            issues.append(f"中军[{c.get('code')}] position_eval 非法({c.get('position_eval')})已置 ok")
+            c["position_eval"] = "ok"
+        if c.get("trend_status") not in _ALLOWED_TREND:
+            issues.append(f"中军[{c.get('code')}] trend_status 非法({c.get('trend_status')})已置 watch")
+            c["trend_status"] = "watch"
+        z = c.get("suggested_zone") or {}
+        lo, hi = z.get("low"), z.get("high")
+        if isinstance(lo, (int, float)) and isinstance(hi, (int, float)) and lo > hi:
+            issues.append(f"中军[{c.get('code')}] 观察区间 low({lo})>high({hi}) 矛盾已置空")
+            z["low"], z["high"] = None, None
+    return issues
 
 
 def fallback_payload(trade_date: dt.date, ds: list[dict], idx_struct: list[dict] | None = None) -> dict:
@@ -586,7 +660,7 @@ def fallback_payload(trade_date: dt.date, ds: list[dict], idx_struct: list[dict]
         "generated_at": now,
         "is_demo": False,
         "market_regime": {
-            "strength": "neutral",
+            "strength": "unknown",
             "strength_source": "ai-synthesis",
             "strength_reasoning": "模型调用失败，研判不可用；指数硬数字（如有）仍来自行情接口。",
             "indices": indices,

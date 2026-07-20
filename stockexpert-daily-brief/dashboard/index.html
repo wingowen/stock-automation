@@ -80,7 +80,7 @@
 <script>
 const STAGE_LABEL = { launching: "启动", trending: "趋势中", climax: "高潮", fading: "退潮" };
 const STAGE_CLASS = { launching: "b-launch", trending: "b-trend", climax: "b-climax", fading: "b-fade" };
-const STR_LABEL = { strong: "强", neutral: "中", weak: "弱" };
+const STR_LABEL = { strong: "强", neutral: "中", weak: "弱", unknown: "未知" };
 const POS_LABEL = { good: "好位置", ok: "可", high: "偏高谨慎", avoid: "排除" };
 const POS_CLASS = { good: "t-good", ok: "t-ok", high: "t-high", avoid: "t-avoid" };
 const TREND_LABEL = { intact: "趋势完整", broken: "破位", watch: "观察" };
@@ -115,7 +115,7 @@ async function loadAll() {
     const demoTag = d.is_demo ? ' <span class="demo">示例</span>' : "";
     const node = el(`<div class="day" data-i="${i}">
       <div class="d1">${d.trade_date}${demoTag}</div>
-      <div class="d2">${d.regime || ""} · ${d.theme_count || 0} 题材</div></div>`);
+      <div class="d2">${STR_LABEL[d.regime] || d.regime || ""} · ${d.theme_count || 0} 题材</div></div>`);
     node.onclick = () => select(days, i);
     sb.appendChild(node);
   });
