@@ -25,3 +25,12 @@ env/
 data/cache/*.csv
 data/cache/*.png
 !data/cache/.gitkeep
+
+# AI 技能 (通过 skills-lock.json 管理，不提交源码)
+agent/skills/
+
+# 临时调试目录
+tmp/
+
+# 流水线批次临时文件
+data/cache/tmp/

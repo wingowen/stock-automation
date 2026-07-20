@@ -13,10 +13,12 @@ authors = [
     { name = "wingo.wen" }
 ]
 dependencies = [
+    "akshare>=1.15",
     "baostock>=0.8.9",
-    "pandas>=2.0",
-    "numpy>=1.24",
     "matplotlib>=3.7",
+    "numpy>=1.24,<2",
+    "pandas>=2.0,<2.2",
+    "requests>=2.31",
 ]
 
 [project.optional-dependencies]
