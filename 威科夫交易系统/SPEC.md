@@ -182,7 +182,123 @@ GitHub Actions (每日 16:30)
 
 ***
 
-## 13. ✅ 6 个 Q 的确认结果（已批准）
+## 13. Commands
+
+```bash
+# 运行所有测试
+python -m pytest tests/ -v
+
+# 运行指定检测器测试
+python -m pytest tests/test_spring.py -v
+
+# 运行 Spring 检测器可视化
+python scripts/visualize_600519_spring.py
+
+# 数据流水线：拉取并验证 5 年数据
+python -m wyckoff.data.pipeline fetch --code 600519 --years 5
+
+# 数据流水线：仅验证已缓存数据
+python -m wyckoff.data.pipeline validate --code 600519
+
+# 数据流水线：生成审计报告
+python -m wyckoff.data.pipeline audit --code 600519
+
+# 运行数据流水线测试
+python -m pytest tests/test_pipeline.py -v
+```
+
+---
+
+## 14. Code Style
+
+```python
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import date
+from typing import Optional
+
+
+@dataclass
+class Event:
+    """统一事件输出"""
+    date: date
+    code: str
+    name: str
+    phase: str
+    events: list[str]
+    strength: float
+    rvol: float
+    price: float
+    context: dict
+
+
+class SpringDetector:
+    """检测器类 — PascalCase"""
+
+    def detect(self, df: pd.DataFrame) -> list[Event]:
+        """检测方法 — snake_case"""
+        ...
+```
+
+**命名规范**:
+- 类名：`PascalCase`（如 `SpringDetector`, `AkShareSource`）
+- 函数/方法：`snake_case`（如 `detect_spring`, `load_csv`）
+- 文件名：`snake_case`（如 `spring.py`, `tencent_source.py`）
+- 常量：`UPPER_CASE`（如 `PRICE_TOLERANCE = 0.01`）
+- 类型提示：必须使用（所有函数签名含类型注解）
+- 文档字符串：仅类和方法使用 docstring，逻辑行不写注释
+
+---
+
+## 15. Testing Strategy
+
+### 框架
+- **pytest**（Python 生态标准）
+- 测试文件放在 `tests/` 目录，与 `wyckoff/` 模块结构对应
+
+### 测试分层
+
+| 层级 | 覆盖内容 | 示例 |
+| --- | --- | --- |
+| 单元测试 | 单个检测器逻辑、验证规则 | `test_spring.py` |
+| 集成测试 | 流水线流程、多组件协作 | `test_pipeline.py` |
+| 端到端 | 真实数据拉取和验证 | `test_pipeline.py::TestE2E` |
+
+### 测试设计原则
+- **TDD**: 先写测试，再写实现（已完成 Phase B Spring 检测器 TDD 闭环）
+- **每个检测器 ≥ 3 个测试用例**：正常检测、边界情况、无信号
+- **数据源测试**: 使用 Mock 模拟 API 返回，避免依赖外部接口
+- **覆盖率目标**: 核心检测逻辑 ≥ 90%，流水线 ≥ 80%
+
+---
+
+## 16. Boundaries
+
+### Always
+- 形态检测必须用 Python 硬规则，**绝不**让 LLM 直接检测形态
+- 每批次数据拉取后必须做交叉验证，验证通过才能合并
+- 所有代码必须包含类型注解
+- 修改检测器逻辑后必须运行对应测试
+- 数据源必须处理 macOS 系统代理问题（`requests.Session.trust_env = False`）
+
+### Ask First
+- 数据库/数据契约 schema 变更
+- 添加新的数据源（需验证 API 稳定性和可靠性）
+- 修改容差阈值（PRICE_TOLERANCE、VOLUME_TOLERANCE）
+- 改变冲突仲裁策略
+- 添加新的 Python 依赖
+- 修改阶段机状态转换规则
+
+### Never
+- 让 LLM 直接输出形态检测结果作为交易信号
+- 跳过验证直接合并数据
+- 提交包含数据缺口的合并文件
+- 在实盘环境使用未经回测的策略
+- 提交 secrets 或凭证到版本控制
+
+---
+
+## 17. ✅ 6 个 Q 的确认结果（已批准）
 
 > 用户确认：**全同意默认**（2026-07-19）
 
@@ -197,7 +313,7 @@ GitHub Actions (每日 16:30)
 
 ***
 
-## 14. 不在 v1 范围但未来考虑
+## 18. 不在 v1 范围但未来考虑
 
 - 分钟级 K 线验证
 - 多策略组合（威科夫 + 趋势 + 套利）
@@ -208,12 +324,12 @@ GitHub Actions (每日 16:30)
 
 ***
 
-## 15. 评审记录
+## 19. 评审记录
 
 | 日期         | 评审人      | 状态         | 备注               |
 | ---------- | -------- | ---------- | ---------------- |
-| 2026-07-19 | AI v0 草稿 | ✅ 已批准      | 第 13 节 6 个 Q 全部同意默认；Phase A 完成 |
+| 2026-07-19 | AI v0 草稿 | ✅ 已批准      | 第 17 节 6 个 Q 全部同意默认；Phase A 完成 |
 
 ***
 
-*完成 Phase A 的标志：你 review 完本文档（重点看第 13 节），并对 6 个 Q 给出答案。*
+*完成 Phase A 的标志：你 review 完本文档（重点看第 17 节），并对 6 个 Q 给出答案。*
