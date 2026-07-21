@@ -10,10 +10,13 @@ __pycache__/
 .coverage
 htmlcov/
 
-# 虚拟环境
-venv/
-.venv/
-env/
+# 虚拟环境（各项目独立维护）
+wyckoff/.venv/
+wyckoff/venv/
+wyckoff/env/
+stockexpert-daily-brief/.venv/
+stockexpert-daily-brief/venv/
+stockexpert-daily-brief/env/
 
 # IDE
 .idea/
@@ -26,15 +29,11 @@ wyckoff/data/cache/*.csv
 wyckoff/data/cache/*.png
 !wyckoff/data/cache/.gitkeep
 
-# AI 技能 (通过 skills-lock.json 管理，不提交源码)
-agent/skills/
-skill/
-
 # 临时调试目录
 tmp/
 
 # 流水线批次临时文件
 wyckoff/data/cache/tmp/
 
-# 威科夫相关（已整合到 wyckoff/docs/）
+# 威科夫相关（已整合到 wyckoff/）
 威科夫操盘法-章节/

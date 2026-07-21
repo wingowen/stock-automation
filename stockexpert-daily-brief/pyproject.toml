@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stockexpert-daily-brief"
+version = "1.0.0"
+description = "A股每日简报自动化系统 - 零成本的每日市场分析看板"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+license = {text = "个人学习使用"}
+keywords = ["stock", "a股", "daily", "brief", "dashboard"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+]
+
+# 注意：本项目仅使用 Python 标准库，无需额外依赖
+# 但需要配置环境变量：AGNES_API_KEY, AGNES_BASE_URL 等
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.0",
+    "flake8>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-username/stock-automation"
+Documentation = "https://github.com/your-username/stock-automation/tree/main/stockexpert-daily-brief"
+Repository = "https://github.com/your-username/stock-automation"
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203", "E266", "E501", "W503"]
