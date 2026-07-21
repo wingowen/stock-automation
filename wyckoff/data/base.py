@@ -11,6 +11,51 @@ from typing import Optional
 import pandas as pd
 
 
+def normalize_ohlcv(
+    df: pd.DataFrame,
+    code: str,
+    *,
+    column_mapping: Optional[dict[str, str]] = None,
+    volume_divisor: int = 1,
+) -> pd.DataFrame:
+    """规范化 OHLCV 数据为统一标准格式
+
+    所有数据源的 _normalize() 应调用此函数，避免重复逻辑。
+    标准输出列：date, code, open, high, low, close, volume
+
+    Args:
+        df: 原始 DataFrame
+        code: 6 位股票代码
+        column_mapping: 列名映射 {原始列名: 标准列名}，AkShare 等中文列名需要
+        volume_divisor: 成交量除数（Baostock 单位是"股"，需除以 100 转为"手"）
+
+    Returns:
+        规范化后的 DataFrame，按 date 升序排列
+
+    Raises:
+        DataFormatError: 缺少必需列或类型错误
+    """
+    if column_mapping:
+        df = df.rename(columns=column_mapping)
+
+    required_cols = ["date", "open", "high", "low", "close", "volume"]
+    missing = [c for c in required_cols if c not in df.columns]
+    if missing:
+        raise DataFormatError(f"Missing columns after normalization: {missing}")
+
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+
+    for col in ["open", "high", "low", "close"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce").round(2)
+
+    df["volume"] = (pd.to_numeric(df["volume"], errors="coerce") / volume_divisor).astype(int)
+
+    df["code"] = code
+    df = df[["date", "code", "open", "high", "low", "close", "volume"]]
+    df = df.sort_values("date").reset_index(drop=True)
+    return df
+
+
 class DataFormatError(Exception):
     """数据格式不符合契约"""
     pass

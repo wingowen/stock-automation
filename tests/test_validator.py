@@ -10,11 +10,10 @@ from __future__ import annotations
 
 import unittest
 from datetime import date, timedelta
-from typing import Optional
 
 import pandas as pd
 
-from wyckoff.data.base import CacheMissError, DataFormatError, DataSource, FetchError
+from wyckoff.data.base import CacheMissError, DataSource
 from wyckoff.data.validator import (
     BatchValidator,
     MergeValidator,
@@ -22,73 +21,16 @@ from wyckoff.data.validator import (
     ValidationResult,
 )
 
-
-def make_ohlc_row(d: date, code: str = "600519", open_: float = 100.0,
-                  high: float = 101.0, low: float = 99.0, close: float = 100.5,
-                  volume: int = 1000) -> dict:
-    """生成单条 OHLCV 记录"""
-    return {
-        "date": d,
-        "code": code,
-        "open": open_,
-        "high": high,
-        "low": low,
-        "close": close,
-        "volume": volume,
-    }
-
-
-def make_ohlc_df(rows: list[dict]) -> pd.DataFrame:
-    """从记录列表生成规范 DataFrame"""
-    df = pd.DataFrame(rows)
-    for col in ["open", "high", "low", "close"]:
-        df[col] = df[col].astype(float).round(2)
-    df["volume"] = df["volume"].astype(int)
-    return df
-
-
-class MockSource(DataSource):
-    """可编程 mock 数据源"""
-
-    def __init__(self, name: str, data: Optional[pd.DataFrame] = None,
-                 raise_on_fetch: Optional[type] = None):
-        self._name = name
-        self._data = data
-        self._raise = raise_on_fetch
-
-    def fetch(self, code: str, start_date: date, end_date: date,
-              adjust: str = "qfq") -> pd.DataFrame:
-        if self._raise:
-            raise self._raise(f"{self._name} fetch failed")
-        if self._data is None:
-            raise FetchError(f"{self._name} has no data")
-
-        mask = (self._data["date"] >= start_date) & (self._data["date"] <= end_date)
-        df = self._data[mask].copy()
-        df["code"] = code
-        return df.reset_index(drop=True)
-
-    def name(self) -> str:
-        return self._name
+from tests.helpers import (
+    MockSource,
+    make_ohlc_row,
+    make_ohlc_df,
+    patch_trading_dates,
+)
 
 
 class TestBatchValidator(unittest.TestCase):
     """批次级验证器测试"""
-
-    def _trading_dates(self, start: date, end: date) -> set[date]:
-        """生成简单交易日集合（仅排除周末）"""
-        dates = set()
-        d = start
-        while d <= end:
-            if d.weekday() < 5:
-                dates.add(d)
-            d += timedelta(days=1)
-        return dates
-
-    def _patch_trading_dates(self, start: date, end: date):
-        """将 TradingDates 缓存替换为简单周末过滤结果"""
-        TradingDates._cache[f"{start}_{end}"] = self._trading_dates(start, end)
-        TradingDates._cache_timestamp = 1.0
 
     def test_two_identical_sources_pass(self):
         """两个完全一致的数据源应通过验证"""
@@ -98,7 +40,7 @@ class TestBatchValidator(unittest.TestCase):
         src2 = MockSource("B", df)
 
         validator = BatchValidator(sources=[src1, src2])
-        self._patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
+        patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
 
         result = validator.validate_batch("600519", date(2024, 1, 2), date(2024, 1, 8))
         self.assertTrue(result.passed)
@@ -117,7 +59,7 @@ class TestBatchValidator(unittest.TestCase):
         src2 = MockSource("B", df_b)
 
         validator = BatchValidator(sources=[src1, src2])
-        self._patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
+        patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
 
         result = validator.validate_batch("600519", date(2024, 1, 2), date(2024, 1, 8))
         self.assertFalse(result.passed)
@@ -136,7 +78,7 @@ class TestBatchValidator(unittest.TestCase):
         src2 = MockSource("B", df_b)
 
         validator = BatchValidator(sources=[src1, src2])
-        self._patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
+        patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
 
         result = validator.validate_batch("600519", date(2024, 1, 2), date(2024, 1, 8))
         self.assertFalse(result.passed)
@@ -152,7 +94,7 @@ class TestBatchValidator(unittest.TestCase):
         src2 = MockSource("B", df)
 
         validator = BatchValidator(sources=[src1, src2])
-        self._patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
+        patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
 
         result = validator.validate_batch("600519", date(2024, 1, 2), date(2024, 1, 8))
         self.assertFalse(result.passed)
@@ -166,7 +108,7 @@ class TestBatchValidator(unittest.TestCase):
         src2 = MockSource("B", raise_on_fetch=CacheMissError)
 
         validator = BatchValidator(sources=[src1, src2])
-        self._patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
+        patch_trading_dates(date(2024, 1, 2), date(2024, 1, 8))
 
         result = validator.validate_batch("600519", date(2024, 1, 2), date(2024, 1, 8))
         self.assertTrue(result.passed)

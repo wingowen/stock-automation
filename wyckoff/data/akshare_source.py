@@ -5,15 +5,19 @@
 from __future__ import annotations
 
 import logging
-import os
 import time
 from datetime import date
-from typing import Optional
 
 import pandas as pd
 import requests
 
-from wyckoff.data.base import CacheMissError, DataFormatError, DataSource, FetchError
+from wyckoff.data.base import (
+    CacheMissError,
+    DataFormatError,
+    DataSource,
+    FetchError,
+    normalize_ohlcv,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +40,6 @@ class AkShareSource(DataSource):
         self._max_retries = max_retries
         self._retry_delay = retry_delay
         
-        # 禁用 macOS 系统代理
-        import requests
         self._session = requests.Session()
         self._session.trust_env = False
 
@@ -103,22 +105,6 @@ class AkShareSource(DataSource):
         return "AkShare"
 
     def _normalize(self, df: pd.DataFrame, code: str) -> pd.DataFrame:
-        """规范化 AkShare 返回的数据格式
-        
-        将 AkShare 的列名和数据类型转换为统一格式：
-        - date: datetime.date
-        - code: str (6位股票代码)
-        - open/high/low/close: float (保留2位小数)
-        - volume: int (单位：手)
-        
-        Args:
-            df: AkShare 返回的原始 DataFrame
-            code: 股票代码
-        
-        Returns:
-            DataFrame: 规范化后的 DataFrame
-        """
-        # 列名映射（处理不同版本的列名差异）
         column_mapping = {
             "日期": "date",
             "股票代码": "code",
@@ -128,32 +114,4 @@ class AkShareSource(DataSource):
             "收盘": "close",
             "成交量": "volume",
         }
-        
-        # 尝试不同的列名组合
-        df = df.rename(columns=column_mapping)
-        
-        # 确保必需列存在
-        required_cols = ["date", "code", "open", "high", "low", "close", "volume"]
-        if not all(col in df.columns for col in required_cols):
-            raise DataFormatError(f"Missing columns after normalization. Got: {list(df.columns)}")
-        
-        # 转换日期类型
-        df["date"] = pd.to_datetime(df["date"]).dt.date
-        
-        # 转换价格类型（保留2位小数）
-        for col in ["open", "high", "low", "close"]:
-            df[col] = pd.to_numeric(df[col], errors="coerce").round(2)
-        
-        # 转换成交量类型（单位：手）
-        df["volume"] = pd.to_numeric(df["volume"], errors="coerce").astype(int)
-        
-        # 设置代码列
-        df["code"] = code
-        
-        # 只保留必需列
-        df = df[["date", "code", "open", "high", "low", "close", "volume"]]
-        
-        # 按日期排序
-        df = df.sort_values("date").reset_index(drop=True)
-        
-        return df
+        return normalize_ohlcv(df, code, column_mapping=column_mapping, volume_divisor=1)

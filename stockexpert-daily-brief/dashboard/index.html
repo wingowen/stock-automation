@@ -85,10 +85,21 @@ const POS_LABEL = { good: "好位置", ok: "可", high: "偏高谨慎", avoid: "
 const POS_CLASS = { good: "t-good", ok: "t-ok", high: "t-high", avoid: "t-avoid" };
 const TREND_LABEL = { intact: "趋势完整", broken: "破位", watch: "观察" };
 
+function esc(s) {
+  if (s === null || s === undefined) return "";
+  return String(s).replace(/[&<>"']/g, function (m) {
+    if (m === "&") return "&amp;";
+    if (m === "<") return "&lt;";
+    if (m === ">") return "&gt;";
+    if (m === '"') return "&quot;";
+    if (m === "'") return "&#39;";
+    return m;
+  });
+}
 function pct(v) {
   if (v === null || v === undefined) return "—";
   const cls = v >= 0 ? "up" : "down";
-  return `<span class="${cls}">${v >= 0 ? "+" : ""}${v}%</span>`;
+  return `<span class="${cls}">${v >= 0 ? "+" : ""}${esc(v)}%</span>`;
 }
 function el(html) { const d = document.createElement("div"); d.innerHTML = html; return d.firstChild; }
 
@@ -114,8 +125,8 @@ async function loadAll() {
   days.forEach((d, i) => {
     const demoTag = d.is_demo ? ' <span class="demo">示例</span>' : "";
     const node = el(`<div class="day" data-i="${i}">
-      <div class="d1">${d.trade_date}${demoTag}</div>
-      <div class="d2">${STR_LABEL[d.regime] || d.regime || ""} · ${d.theme_count || 0} 题材</div></div>`);
+      <div class="d1">${esc(d.trade_date)}${demoTag}</div>
+      <div class="d2">${STR_LABEL[d.regime] || esc(d.regime) || ""} · ${d.theme_count || 0} 题材</div></div>`);
     node.onclick = () => select(days, i);
     sb.appendChild(node);
   });
@@ -134,7 +145,7 @@ async function render(day) {
     const r = await fetch(day.path, { cache: "no-store" });
     data = await r.json();
   } catch (e) {
-    main.innerHTML = '<div class="empty">读取 ' + day.path + ' 失败</div>';
+    main.innerHTML = '<div class="empty">读取 ' + esc(day.path) + ' 失败</div>';
     return;
   }
   const m = data.market_regime || {};
@@ -145,53 +156,53 @@ async function render(day) {
   let html = "";
 
   html += '<div class="card"><div class="regime">';
-  html += `<div><div class="sub">大盘强度</div><div class="big">${STR_LABEL[m.strength] || m.strength || "—"}</div></div>`;
+  html += `<div><div class="sub">大盘强度</div><div class="big">${STR_LABEL[m.strength] || esc(m.strength) || "—"}</div></div>`;
   (m.indices || []).forEach(ix => {
-    html += `<div class="idx"><div class="n">${ix.name || ix.code}</div><div>${ix.price ?? "—"} ${pct(ix.change_pct)}</div></div>`;
+    html += `<div class="idx"><div class="n">${esc(ix.name || ix.code)}</div><div>${ix.price ?? "—"} ${pct(ix.change_pct)}</div></div>`;
   });
   html += "</div>";
-  if (m.breadth_up != null) html += `<div class="str">涨跌家数 ${m.breadth_up} : ${m.breadth_down}</div>`;
-  if (m.limit_up != null) html += `<div class="str">涨停 ${m.limit_up} / 跌停 ${m.limit_down ?? "—"}</div>`;
-  if (m.strength_reasoning) html += `<div class="reason">${m.strength_reasoning}</div>`;
+  if (m.breadth_up != null) html += `<div class="str">涨跌家数 ${esc(m.breadth_up)} : ${esc(m.breadth_down)}</div>`;
+  if (m.limit_up != null) html += `<div class="str">涨停 ${esc(m.limit_up)} / 跌停 ${esc(m.limit_down ?? "—")}</div>`;
+  if (m.strength_reasoning) html += `<div class="reason">${esc(m.strength_reasoning)}</div>`;
   html += "</div>";
 
-  html += '<h2 class="sec">题材阶段（' + (data.themes || []).length + '）</h2><div class="themes">';
+  html += '<h2 class="sec">题材阶段（' + esc((data.themes || []).length) + '）</h2><div class="themes">';
   (data.themes || []).forEach(t => {
     html += `<div class="theme">
-      <h3>${t.name || t.id}</h3>
-      <span class="badge ${STAGE_CLASS[t.stage] || "b-fade"}">${STAGE_LABEL[t.stage] || t.stage}</span>
-      <span class="str">强度：${t.strength || "—"}</span>
-      <div class="str">方法论：${(t.methods || []).join(", ") || "—"}</div>
-      ${t.stage_reasoning ? `<div class="reason">${t.stage_reasoning}</div>` : ""}
-      ${t.catalyst ? `<div class="src">催化：${t.catalyst}</div>` : ""}
-      <div class="src">来源：${t.source || "—"}</div>
+      <h3>${esc(t.name || t.id)}</h3>
+      <span class="badge ${STAGE_CLASS[t.stage] || "b-fade"}">${STAGE_LABEL[t.stage] || esc(t.stage)}</span>
+      <span class="str">强度：${esc(t.strength || "—")}</span>
+      <div class="str">方法论：${esc((t.methods || []).join(", ") || "—")}</div>
+      ${t.stage_reasoning ? `<div class="reason">${esc(t.stage_reasoning)}</div>` : ""}
+      ${t.catalyst ? `<div class="src">催化：${esc(t.catalyst)}</div>` : ""}
+      <div class="src">来源：${esc(t.source || "—")}</div>
     </div>`;
   });
   html += "</div>";
 
-  html += '<h2 class="sec">中军候选（' + (data.midcaps || []).length + '）</h2>';
+  html += '<h2 class="sec">中军候选（' + esc((data.midcaps || []).length) + '）</h2>';
   html += '<table><thead><tr><th>代码</th><th>名称</th><th>题材</th><th>现价</th><th>涨跌</th>'
     + '<th>位置</th><th>趋势</th><th>观察区间</th><th>推理</th></tr></thead><tbody>';
   (data.midcaps || []).forEach(c => {
     const z = c.suggested_zone || {};
     html += `<tr>
-      <td>${c.code}</td><td>${c.name}</td><td>${c.theme_id || ""}</td>
+      <td>${esc(c.code)}</td><td>${esc(c.name)}</td><td>${esc(c.theme_id || "")}</td>
       <td>${c.price ?? "—"}</td><td>${pct(c.change_pct)}</td>
-      <td><span class="tag ${POS_CLASS[c.position_eval] || ""}">${POS_LABEL[c.position_eval] || c.position_eval || "—"}</span></td>
-      <td class="s-${c.trend_status}">${TREND_LABEL[c.trend_status] || c.trend_status || "—"}</td>
+      <td><span class="tag ${POS_CLASS[c.position_eval] || ""}">${POS_LABEL[c.position_eval] || esc(c.position_eval) || "—"}</span></td>
+      <td class="s-${c.trend_status}">${TREND_LABEL[c.trend_status] || esc(c.trend_status) || "—"}</td>
       <td>${z.low ?? "—"} ~ ${z.high ?? "—"}</td>
-      <td>${c.position_reasoning || ""}</td>
+      <td>${esc(c.position_reasoning || "")}</td>
     </tr>`;
   });
   html += "</tbody></table>";
 
   const dq = data.data_quality || {};
   html += '<h2 class="sec">数据来源与质量</h2><div class="card"><div class="quality">';
-  html += "<div>整体：" + (dq.overall || "—") + "</div>";
+  html += "<div>整体：" + esc(dq.overall || "—") + "</div>";
   if ((data.data_sources || []).length) {
-    html += "<ul>" + data.data_sources.map(s => `<li>${s.type}: ${s.url || s.command || ""} @ ${s.fetched_at || ""}</li>`).join("") + "</ul>";
+    html += "<ul>" + data.data_sources.map(s => `<li>${esc(s.type)}: ${esc(s.url || s.command || "")} @ ${esc(s.fetched_at || "")}</li>`).join("") + "</ul>";
   }
-  if ((dq.missing || []).length) html += "<div>缺失：" + dq.missing.join("；") + "</div>";
+  if ((dq.missing || []).length) html += "<div>缺失：" + esc(dq.missing.join("；")) + "</div>";
   html += "</div></div>";
 
   main.innerHTML = html;

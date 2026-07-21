@@ -1,7 +1,6 @@
 """DataSource ABC 测试"""
 import unittest
 from datetime import date
-from typing import Optional
 
 import pandas as pd
 
@@ -13,18 +12,7 @@ from wyckoff.data.base import (
     CacheMissError,
 )
 
-
-class MockSource(DataSource):
-    """用于测试的模拟数据源"""
-    
-    def __init__(self, df: Optional[pd.DataFrame] = None):
-        self._df = df or pd.DataFrame()
-    
-    def fetch(self, code: str, start_date: date, end_date: date, adjust: str = "qfq") -> pd.DataFrame:
-        return self._df
-    
-    def name(self) -> str:
-        return "MockSource"
+from tests.helpers import MockSource
 
 
 class TestDataSourceABC(unittest.TestCase):
@@ -37,7 +25,7 @@ class TestDataSourceABC(unittest.TestCase):
     
     def test_mock_source_is_instance(self):
         """实现类是 DataSource 实例"""
-        mock = MockSource()
+        mock = MockSource("MockSource")
         self.assertIsInstance(mock, DataSource)
     
     def test_validate_response_success(self):
@@ -51,7 +39,7 @@ class TestDataSourceABC(unittest.TestCase):
             "close": [101.0, 102.0],
             "volume": [1000, 2000],
         })
-        mock = MockSource()
+        mock = MockSource("MockSource")
         # 不应抛出异常
         mock.validate_response(df)
     
@@ -66,14 +54,14 @@ class TestDataSourceABC(unittest.TestCase):
             "close": [101.0],
             # 缺少 volume
         })
-        mock = MockSource()
+        mock = MockSource("MockSource")
         with self.assertRaises(DataFormatError):
             mock.validate_response(df)
     
     def test_validate_response_empty(self):
         """验证空 DataFrame"""
         df = pd.DataFrame()
-        mock = MockSource()
+        mock = MockSource("MockSource")
         with self.assertRaises(DataFormatError):
             mock.validate_response(df)
     
@@ -88,7 +76,7 @@ class TestDataSourceABC(unittest.TestCase):
             "close": [101.0],
             "volume": [1000],
         })
-        mock = MockSource()
+        mock = MockSource("MockSource")
         with self.assertRaises(DataFormatError):
             mock.validate_response(df)
     
@@ -103,7 +91,7 @@ class TestDataSourceABC(unittest.TestCase):
             "close": [101.0],
             "volume": [1000],
         })
-        mock = MockSource()
+        mock = MockSource("MockSource")
         with self.assertRaises(DataFormatError):
             mock.validate_response(df)
     
@@ -118,13 +106,13 @@ class TestDataSourceABC(unittest.TestCase):
             "close": [101.0],
             "volume": [1000.5],  # float 而非 int
         })
-        mock = MockSource()
+        mock = MockSource("MockSource")
         with self.assertRaises(DataFormatError):
             mock.validate_response(df)
     
     def test_name_method(self):
         """测试 name() 方法"""
-        mock = MockSource()
+        mock = MockSource("MockSource")
         self.assertEqual(mock.name(), "MockSource")
 
 

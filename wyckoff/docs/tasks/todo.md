@@ -1,7 +1,8 @@
 # Tasks: 多源数据获取与交叉验证流水线
 
-> **版本**: v1.0
-> **日期**: 2026-07-19
+> **版本**: v1.1
+> **日期**: 2026-07-21
+> **状态**: ✅ **全部完成**（所有 7 项任务已实现并验证）
 > **关联 Plan**: [plan.md](plan.md)
 
 ---
@@ -10,7 +11,7 @@
 
 ### Task 1: 实现 DataSource ABC 抽象基类
 
-- [ ] **Task**: 创建 `wyckoff/data/base.py`，定义统一数据源接口
+- [x] **Task**: 创建 `wyckoff/data/base.py`，定义统一数据源接口
 - **Acceptance**: 
   - `DataSource` 抽象基类包含 `fetch()` 和 `name()` 抽象方法
   - `fetch()` 方法签名：`(code: str, start_date: date, end_date: date, adjust: str = "qfq") -> pd.DataFrame`
@@ -28,7 +29,7 @@
 
 ### Task 2: 实现 AkShareSource 数据源
 
-- [ ] **Task**: 创建 `wyckoff/data/akshare_source.py`，实现 AkShare 数据源
+- [x] **Task**: 创建 `wyckoff/data/akshare_source.py`，实现 AkShare 数据源
 - **Acceptance**: 
   - 继承 `DataSource` ABC，实现 `fetch()` 和 `name()` 方法
   - `fetch()` 返回前复权日线数据（OHLCV）
@@ -46,7 +47,7 @@
 
 ### Task 3: 重构 TencentSource 数据源（只读缓存模式）
 
-- [ ] **Task**: 重构 `wyckoff/data/tencent_source.py`，使其符合 DataSource 接口
+- [x] **Task**: 重构 `wyckoff/data/tencent_source.py`，使其符合 DataSource 接口
 - **Acceptance**: 
   - 新增 `TencentSource` 类，继承 `DataSource` ABC
   - `fetch()` 方法：**仅支持从缓存加载**，不支持在线拉取（因腾讯 API 域名解析失败）
@@ -64,7 +65,7 @@
 
 ### Task 4: 实现 BatchValidator 验证器
 
-- [ ] **Task**: 创建 `wyckoff/data/validator.py`，实现批次验证逻辑
+- [x] **Task**: 创建 `wyckoff/data/validator.py`，实现批次验证逻辑
 - **Acceptance**: 
   - `BatchValidator` 类接受多个 `DataSource` 实例
   - `validate_batch()` 方法执行完整验证流程：
@@ -87,7 +88,7 @@
 
 ### Task 5: 实现主流水线 pipeline.py
 
-- [ ] **Task**: 创建 `wyckoff/data/pipeline.py`，实现完整流水线和 CLI
+- [x] **Task**: 创建 `wyckoff/data/pipeline.py`，实现完整流水线和 CLI
 - **Acceptance**: 
   - `DataPipeline` 类包含核心流程：
     - `fetch(code, years)`: 拉取并验证指定标的的 N 年数据
@@ -108,7 +109,7 @@
 
 ### Task 6: 实现端到端测试
 
-- [ ] **Task**: 创建 `tests/test_pipeline.py`，实现流水线端到端测试
+- [x] **Task**: 创建 `tests/test_pipeline.py`，实现流水线端到端测试
 - **Acceptance**: 
   - `TestBatchValidation`: 测试批次验证逻辑（通过/失败场景）
   - `TestDateContinuity`: 测试日期连续性检查（缺日检测）
@@ -124,7 +125,7 @@
 
 ### Task 7: 补全 600519 数据缺口
 
-- [ ] **Task**: 使用新流水线补全 600519 的 72 天数据缺口
+- [x] **Task**: 使用新流水线补全 600519 的 72 天数据缺口
 - **Acceptance**: 
   - 成功拉取 2021-06-02 ~ 2021-09-09 的 71 天数据
   - 成功拉取 2022-06-30 的 1 天数据
@@ -174,4 +175,4 @@ Task 1: base.py
 
 ---
 
-> **评审请求**: 请审阅以上任务清单，确认后我将开始按顺序执行任务。
+> **状态**: 所有 7 项任务实现并验证完成。数据流水线可用 — 详情见 [data/cache/600519_full_audit.md](../data/cache/600519_full_audit.md)。

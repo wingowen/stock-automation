@@ -10,7 +10,7 @@ from typing import Optional
 
 import pandas as pd
 
-from wyckoff.data.base import DataFormatError, DataSource, FetchError
+from wyckoff.data.base import DataFormatError, DataSource, FetchError, normalize_ohlcv
 
 logger = logging.getLogger(__name__)
 
@@ -99,16 +99,5 @@ class BaostockSource(DataSource):
         return "Baostock"
 
     def _normalize(self, df: pd.DataFrame, code: str) -> pd.DataFrame:
-        """规范化 Baostock 返回的数据格式"""
-        df["date"] = pd.to_datetime(df["date"]).dt.date
-
-        for col in ["open", "high", "low", "close"]:
-            df[col] = pd.to_numeric(df[col], errors="coerce").round(2)
-
         # Baostock 成交量单位是股，转换为手（1 手 = 100 股）
-        df["volume"] = (pd.to_numeric(df["volume"], errors="coerce") / 100).astype(int)
-
-        df["code"] = code
-        df = df[["date", "code", "open", "high", "low", "close", "volume"]]
-        df = df.sort_values("date").reset_index(drop=True)
-        return df
+        return normalize_ohlcv(df, code, volume_divisor=100)

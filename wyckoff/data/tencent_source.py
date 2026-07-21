@@ -12,12 +12,18 @@ from typing import Optional
 import pandas as pd
 import requests
 
-from wyckoff.data.base import CacheMissError, DataFormatError, DataSource, FetchError
+from wyckoff.data.base import (
+    CacheMissError,
+    DataSource,
+    FetchError,
+    normalize_ohlcv,
+)
 
 logger = logging.getLogger(__name__)
 
 # 数据缓存根目录
-DEFAULT_CACHE_DIR = Path(__file__).parent.parent.parent / "data" / "cache"
+# 默认缓存目录（威科夫系统数据目录）
+DEFAULT_CACHE_DIR = Path(__file__).parent / "cache"
 
 # 腾讯 K 线 API
 TENCENT_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get"
@@ -193,16 +199,4 @@ class TencentSource(DataSource):
         return df
 
     def _normalize(self, df: pd.DataFrame, code: str) -> pd.DataFrame:
-        """规范化腾讯返回的数据格式"""
-        df["date"] = pd.to_datetime(df["date"]).dt.date
-
-        for col in ["open", "high", "low", "close"]:
-            df[col] = pd.to_numeric(df[col], errors="coerce").round(2)
-
-        # 腾讯成交量单位已是手
-        df["volume"] = pd.to_numeric(df["volume"], errors="coerce").astype(int)
-
-        df["code"] = code
-        df = df[["date", "code", "open", "high", "low", "close", "volume"]]
-        df = df.sort_values("date").reset_index(drop=True)
-        return df
+        return normalize_ohlcv(df, code, volume_divisor=1)

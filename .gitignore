@@ -22,15 +22,19 @@ env/
 .DS_Store
 
 # 数据 (大文件不入仓)
-data/cache/*.csv
-data/cache/*.png
-!data/cache/.gitkeep
+wyckoff/data/cache/*.csv
+wyckoff/data/cache/*.png
+!wyckoff/data/cache/.gitkeep
 
 # AI 技能 (通过 skills-lock.json 管理，不提交源码)
 agent/skills/
+skill/
 
 # 临时调试目录
 tmp/
 
 # 流水线批次临时文件
-data/cache/tmp/
+wyckoff/data/cache/tmp/
+
+# 威科夫相关（已整合到 wyckoff/docs/）
+威科夫操盘法-章节/

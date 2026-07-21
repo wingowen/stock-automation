@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 # 默认批次大小（季度）
 DEFAULT_BATCH_DAYS = 90
 
-# 默认缓存目录
-DEFAULT_CACHE_DIR = Path(__file__).parent.parent.parent / "data" / "cache"
+# 默认缓存目录（威科夫系统数据目录）
+DEFAULT_CACHE_DIR = Path(__file__).parent / "cache"
 
 
 class DataPipeline:
