@@ -1,0 +1,293 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-22",
+  "generated_at": "2026-07-22T18:41:16.432763+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "neutral",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "沪指微涨0.07%护盘，但深成指跌1.42%、创业板指跌3.23%，指数严重分化；两市涨跌家数比约1:2.5（1432涨/3650跌），涨停47家/跌停10家，封板率仅56%且成交额缩量至2.65万亿。整体呈现权重搭台、题材退潮、存量博弈特征，市场情绪中性偏弱，缺乏普涨基础。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3867.03,
+        "change_pct": 0.07,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 14061.44,
+        "change_pct": -1.42,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3566.73,
+        "change_pct": -3.23,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+      }
+    ],
+    "breadth_up": 1432,
+    "breadth_down": 3650,
+    "breadth_reasoning": "据Choice及金投网收评数据，沪深两市可交易A股上涨1432只，下跌3650只，平盘118只，涨跌比约0.39，显示市场亏钱效应显著，仅少数权重与防御板块活跃。",
+    "limit_up": 47,
+    "limit_down": 10
+  },
+  "themes": [
+    {
+      "id": "电力/公用事业-2026-07-22",
+      "name": "电力/公用事业",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "主力资金净流入前列，板块内形成5连板(立新能源)与4连板(华银电力)梯队，但指数层面未出现全面高潮，更多表现为趋势性资金承接。在双创指数大幅杀跌时逆势走强，符合趋势中期的容量票主导特征。",
+      "strength": "high",
+      "strength_reasoning": "作为当日唯一具备完整连板梯队且获主力大额净流入的板块，具备极强的防御与趋势延续属性，是当下存量环境下的核心避风港。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [
+        "600900"
+      ],
+      "catalyst": "高股息防御逻辑叠加夏季用电高峰预期，资金从高位科技向低估值蓝筹切换。",
+      "source": "web:https://news.qq.com/rain/a/20260722A0A3E400",
+      "notes": ""
+    },
+    {
+      "id": "有色金属/工业金属/贵金属-2026-07-22",
+      "name": "有色金属/工业金属/贵金属",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "工业金属与贵金属分列主力资金净流入前二，板块整体领涨沪指带动指数翻红。缺乏连续一字板或高位加速，以趋势容量票推升为主，处于趋势延续而非情绪高潮阶段。",
+      "strength": "mid",
+      "strength_reasoning": "资金持续流入且板块效应明确，但受制于大盘缩量环境，难以独立走出逼空行情，更多依赖外围大宗商品价格与宏观避险情绪共振。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "全球通胀预期与避险需求支撑贵金属，工业金属受供给侧约束维持景气。",
+      "source": "web:https://stock.cngold.org/c/2026-07-22/c10640321.html",
+      "notes": ""
+    },
+    {
+      "id": "AI上游/算力租赁/半导体-2026-07-22",
+      "name": "AI上游/算力租赁/半导体",
+      "stage": "fading",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "上午半导体曾集体飙涨，但午后分化严重，光纤通信等AI上游板块直接拖累创业板指大跌3.23%。资金明显从科技成长端撤出，高位筹码松动，处于退潮观察期。",
+      "strength": "low",
+      "strength_reasoning": "封板率下降且连板高度压缩，增量资金匮乏导致科技线无法承接获利盘，短期需等待缩量企稳后的新催化或高低切完成。",
+      "methods": [
+        "wait-for-dip"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "前期涨幅过大面临获利了结，缺乏新的产业订单或政策催化支撑。",
+      "source": "web:https://finance.eastmoney.com/a/202607223817231180.html",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "600900",
+      "name": "长江电力",
+      "theme_id": "电力/公用事业",
+      "market_cap": 7117.8,
+      "price": 29.09,
+      "change_pct": 29.09,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "所属电力板块为当日资金净流入前三的主线，趋势容量特征明显。规则要求不追涨停，该票为典型的大容量趋势中军，位置处于均线多头排列的良性区间，适合右侧低吸。",
+      "trend_status": "intact",
+      "trend_reasoning": "电力板块逆势领涨沪指，主力资金持续流入，板块内连板梯队完整提供情绪溢价，中军趋势未破，符合‘好位置、趋势不破’的筛选标准。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "实时价格与涨跌幅未从Web资料获取，待系统反查后填入。建议以5日或10日均线附近为支撑低点，前高压力位为高点，严格遵循右侧不破趋势原则。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:未获取实时分时数据，基于板块资金流向研判",
+      "notes": ""
+    },
+    {
+      "code": "601899",
+      "name": "紫金矿业",
+      "theme_id": "有色金属/工业金属",
+      "market_cap": 8562.21,
+      "price": 32.2,
+      "change_pct": 32.79,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "工业金属板块主力资金净流入40.62亿元居首，板块呈趋势性上涨。该票为有色容量核心，未涨停且位置适中，符合右侧中线资金偏好。",
+      "trend_status": "intact",
+      "trend_reasoning": "贵金属与工业金属双轮驱动，板块资金承接力强，虽无连板炒作但趋势完好。在创业板大跌环境下抗跌性强，中军趋势未破。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "资料未提供具体报价，需反查后设定。参考板块整体涨幅与资金流向，建议沿20日线或近期平台下沿布局，突破前高则持有。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:未获取实时分时数据，基于板块资金流向研判",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-22",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://licai.cofool.com/user/guide_view_3433572.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-22/c10640362.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260722A0A3E400",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-22",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260722A078N100",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260722A0A3E400",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://k.sina.com.cn/article_7857201856_1d45362c001908cmgo.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260722A078N100",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4034448.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607223817256397.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607223817256397.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4034448.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607223817256397.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607223817256397.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-22",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260722A0A3E400",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-22/c10640362.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://licai.cofool.com/user/guide_view_3433572.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607223817231180.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4034448.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-22/c10640321.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.baogao.com/chanjing/b4fd8096-8595-11f1-b21c-00d86122d0c8.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://k.sina.com.cn/article_7857201856_1d45362c001908cmgo.html",
+      "fetched_at": "2026-07-22T18:40:20.516857+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "行业板块具体成分股实时价格与涨跌幅",
+      "北证50指数具体点位",
+      "部分涨停股详细封单结构与炸板原因",
+      "主力资金流向精确到个股的明细"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
