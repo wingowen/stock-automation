@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-23",
+  "generated_at": "2026-07-23T18:50:18.774213+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "neutral",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数集体收涨但涨幅微弱（0.25%-0.44%），且成交额2.21万亿较前日缩量约4580亿元，显示增量资金不足，市场处于缩量震荡状态。虽然上涨家数多（超4200只），但涨停家数仅128只，赚钱效应集中在轮动而非普涨爆发，故判定为中性偏强震荡。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3876.78,
+        "change_pct": 0.25,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 14123.31,
+        "change_pct": 0.44,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3575.52,
+        "change_pct": 0.25,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+      }
+    ],
+    "breadth_up": 4200,
+    "breadth_down": 1143,
+    "breadth_reasoning": "资料提及全市场超4200只个股上涨（来源：证券日报、新浪新闻），下跌个股1143只（来源：Choice统计）。",
+    "limit_up": 128,
+    "limit_down": 2
+  },
+  "themes": [
+    {
+      "id": "电力设备/电网-2026-07-23",
+      "name": "电力设备/电网",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "板块内杭电股份、长缆科技、中能电气、宝光股份等多股涨停或触及涨停，且汉缆股份、远东股份等大容量票跟涨，显示资金介入深度较深，并非一日游，属于趋势中的加速阶段。",
+      "strength": "high",
+      "strength_reasoning": "涨停梯队完整（连板+首板+趋势中军），且涉及输变电、线缆等多个细分领域，共振效应明显。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [
+        "601179",
+        "600406"
+      ],
+      "catalyst": "电网设备、线缆部件板块异动拉升，立新能源等电力股表现强势。",
+      "source": "web:https://news.qq.com/rain/a/20260723A04Q7M00",
+      "notes": ""
+    },
+    {
+      "id": "有色金属/锂矿-2026-07-23",
+      "name": "有色金属/锂矿",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "早盘算力硬件、油气、锂矿等板块涨幅居前，但收盘时半导体设备产业链集体下挫，说明资金从科技向资源品进行高低切换，锂矿作为新热点刚刚启动。",
+      "strength": "mid",
+      "strength_reasoning": "板块涨幅居前但未出现大规模涨停潮，更多是趋势性上涨，需观察后续是否持续放量。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "早盘涨幅居前，资金从高位科技股流出至低位资源股。",
+      "source": "web:https://news.qq.com/rain/a/20260723A04IL000",
+      "notes": ""
+    },
+    {
+      "id": "半导体设备-2026-07-23",
+      "name": "半导体设备",
+      "stage": "fading",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "收评明确指出“半导体设备产业链集体下挫”，且淘股吧复盘提到“科技如期分歧”，表明该前期主线进入退潮或剧烈调整期。",
+      "strength": "low",
+      "strength_reasoning": "板块整体下挫，资金出逃迹象明显，短线风险较大。",
+      "methods": [],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "科技股分歧，资金高低切换。",
+      "source": "web:https://news.qq.com/rain/a/20260723A09YWO00",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "601179",
+      "name": "中国西电",
+      "theme_id": "电力设备/电网",
+      "market_cap": 699.68,
+      "price": 13.65,
+      "change_pct": 13.65,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "作为输变电设备龙头，盘中触及涨停，属于大容量中军。在电力设备趋势行情中，中军票通常承担趋势延续的角色，位置相对安全。",
+      "trend_status": "intact",
+      "trend_reasoning": "板块整体强势，中军未断板，趋势完好。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "未获取实时分时数据，无法计算具体支撑压力位。建议观察今日涨停价附近的承接力度，若明日缩量不破今日均价则持有。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:https://c.m.163.com/news/a/L2H086PI0512B07B.html",
+      "notes": ""
+    },
+    {
+      "code": "600406",
+      "name": "国电南瑞",
+      "theme_id": "电力设备/电网",
+      "market_cap": 1957.34,
+      "price": 24.37,
+      "change_pct": 24.5,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "ok",
+      "position_reasoning": "电网设备核心中军，虽未直接提及涨停，但板块效应带动下通常会有趋势性表现。相比小票，其波动更小，适合右侧低吸。",
+      "trend_status": "watch",
+      "trend_reasoning": "板块高潮期，中军可能跟随上涨但弹性不如小票，需观察量能配合。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "资料缺失具体价格，需结合实时盘面，在5日线附近寻找买点。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:未获取具体个股数据，仅基于板块逻辑推断",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-23/c10643178.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://k.sina.com.cn/article_7857201856_1d45362c001908did6.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://www.zqrb.cn/video/shichangkuaixun/2026-07-23/A1784792453007.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260723A09YWO00",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260723A096WZ00",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-23",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://k.sina.com.cn/article_7857201856_1d45362c001908did6.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4037224.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.china.com/socialgd/10000169/20260723/49630098.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tFq9nM2FH3",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607233818977260.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607233818977260.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4037224.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.china.com/socialgd/10000169/20260723/49630098.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607233818977260.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607233818977260.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-07-23",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-23",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260723A04Q7M00",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://c.m.163.com/news/a/L2GVHUOB0512B07B.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260723A04IL000",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4037224.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://c.m.163.com/news/a/L2H086PI0512B07B.html",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.sohu.com/a/1053827620_120388781?edtsign=FD1FD02BD1BDE0FF275206B50784EB2D3827048F&edtcode=urgGg3lvqugR8UK%2BHjigtw%3D%3D&scm=10001.280_14-200000.0.0-0-0-0-0.",
+      "fetched_at": "2026-07-23T18:49:58.842473+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "个股实时价格",
+      "具体涨停/跌停股的详细名单及连板高度细节",
+      "中军股的具体涨跌幅数值"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
