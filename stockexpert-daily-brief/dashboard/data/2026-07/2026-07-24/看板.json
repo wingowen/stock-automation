@@ -1,0 +1,266 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-24",
+  "generated_at": "2026-07-24T18:36:08.665882+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "weak",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数全线下行，上证指数跌1.61%，深成指跌2.47%，创业板指跌2.65%，且个股跌多涨少（超4900只下跌），市场情绪极弱。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3814.2,
+        "change_pct": -1.61,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 13774.68,
+        "change_pct": -2.47,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3480.87,
+        "change_pct": -2.65,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+      }
+    ],
+    "breadth_up": null,
+    "breadth_down": 4900,
+    "breadth_reasoning": "资料提及“沪深两市超4900只个股下跌”，未获取确切上涨家数，故填null。",
+    "limit_up": 42,
+    "limit_down": 25
+  },
+  "themes": [
+    {
+      "id": "电网设备-2026-07-24",
+      "name": "电网设备",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "长缆科技4连板，板块内有多股涨停，资金持续流入，处于趋势延续阶段，非单纯启动或高潮退潮。",
+      "strength": "high",
+      "strength_reasoning": "连板高度达4板，且有主力资金净流入支撑，是当日最强主线。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "电网设备板块活跃，长缆科技4连板引领。",
+      "source": "web:东方财富网",
+      "notes": ""
+    },
+    {
+      "id": "中兵系/地面兵装-2026-07-24",
+      "name": "中兵系/地面兵装",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "主力资金净流入3.82亿元排名第二，长城军工、湖南天雁2连板，建设工业等涨停，属于新晋热点。",
+      "strength": "mid",
+      "strength_reasoning": "连板梯队初步形成，但整体板块效应弱于电网设备。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "中兵系概念走强，主力资金大幅流入。",
+      "source": "web:界面新闻",
+      "notes": ""
+    },
+    {
+      "id": "大基金系/半导体-2026-07-24",
+      "name": "大基金系/半导体",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "至纯科技、博通集成涨停，主力资金净流入33.06亿元居首，虽板块收跌但个股活跃，资金承接力强。",
+      "strength": "mid",
+      "strength_reasoning": "资金净流入第一，但板块指数收跌，呈现分化趋势。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "大基金系概念活跃，半导体获主力大额净流入。",
+      "source": "web:金投网",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "603278",
+      "name": "大业股份",
+      "theme_id": "通用机械",
+      "market_cap": 28.06,
+      "price": 8.21,
+      "change_pct": 8.47,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "avoid",
+      "position_reasoning": "个股下跌3.07%，且所属题材非当日最强主线，位置不佳，不符合右侧趋势不破要求。",
+      "trend_status": "broken",
+      "trend_reasoning": "股价下跌，量能萎缩（量比0.62），趋势走坏。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "未获取有效支撑位，建议观望。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:搜狐证券",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-24",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-24",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-24/c10646022.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://cj.sina.com.cn/articles/view/9144031767/22106da1700102vw6m?finpagefr=p_103",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tH9npuh3ex",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/603278/index.shtml?date=2026-07-24",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607243820487241.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607243820487241.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14822743.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260724A06WMK00",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-24/c10646007.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://fund.eastmoney.com/a/202607243820249342.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607243820487241.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607243820487241.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-24",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-07-24",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://qjwb.tidenews.com.cn/html/2026-07/24/content_4504877.htm?div=-1",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14822743.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-24/c10646007.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607233819187547.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14822743.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://cj.sina.com.cn/articles/view/9144031767/22106da1700102vw6m?finpagefr=p_103",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.chinabgao.com/tag/tendency/weishengsu.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-24/c10645933.html",
+      "fetched_at": "2026-07-24T18:35:27.576253+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "行业板块具体涨幅排行数据为空",
+      "上涨家数未获取",
+      "中军容量票的具体实时价格（除大业股份外）未获取"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
