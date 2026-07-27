@@ -1,0 +1,250 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-27",
+  "generated_at": "2026-07-27T19:55:34.691971+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "strong",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数全线大幅上涨，创业板指涨幅3.16%表现最强，显示市场情绪明显修复。但涨停家数（121家）与跌停家数（6家）的严重分化，以及淘股吧复盘提到的'连板情绪较差'，说明资金主要集中在权重和趋势票，短线接力氛围较弱。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3858.25,
+        "change_pct": 1.15,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 14148.73,
+        "change_pct": 2.72,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3590.79,
+        "change_pct": 3.16,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+      }
+    ],
+    "breadth_up": 4885,
+    "breadth_down": 268,
+    "breadth_reasoning": "凤凰网及石城网Choice统计显示，7月27日上涨个股4885只，下跌个股268只，平盘42只，涨家数占比极高，市场普涨特征明显。",
+    "limit_up": 121,
+    "limit_down": 6
+  },
+  "themes": [
+    {
+      "id": "半导体/芯片-2026-07-27",
+      "name": "半导体/芯片",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "淘股吧复盘明确提到'最强板块芯片'，且虎扑策略中提及'上升震荡趋势涨幅高的板块：半导体'，结合创业板指大涨3.16%（科技属性强），判断该题材处于趋势中段而非启动或高潮。",
+      "strength": "high",
+      "strength_reasoning": "作为当日最强板块，获得指数大幅上涨的确认，且属于大容量赛道，符合右侧趋势跟踪逻辑。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [
+        "000938"
+      ],
+      "catalyst": "创业板指大涨3.16%带动科技权重活跃，芯片板块获明确点名最强。",
+      "source": "web:虎扑社区盘前策略/淘股吧7.27复盘",
+      "notes": ""
+    },
+    {
+      "id": "医药生物-2026-07-27",
+      "name": "医药生物",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "涨停分布显示医药生物涨停9只，诊断服务板块涨幅达2%，迪安诊断等个股表现活跃。但缺乏持续性连板龙头（最高仅4板且为长缆科技），且涨停数量虽多但未形成梯队，判断为初期发酵阶段。",
+      "strength": "mid",
+      "strength_reasoning": "涨停数量居前（9只）且有细分板块涨幅数据支持，但高度板未由医药贡献，强度弱于芯片。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "Choice统计显示医药生物为涨停集中行业之一，诊断服务板块盘中涨幅超2%。",
+      "source": "web:石城网涨停统计/东方财富网板块涨幅",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "000938",
+      "name": "紫光股份",
+      "theme_id": "半导体/芯片",
+      "market_cap": 1186.08,
+      "price": 41.47,
+      "change_pct": 42.68,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "淘股吧复盘提到'格局紫光股份'，显示其为资金关注的容量票。作为芯片/算力方向的大盘股，位置相对适中，适合右侧趋势操作。",
+      "trend_status": "intact",
+      "trend_reasoning": "虽无具体K线数据，但被游资点名格局且属于强势芯片板块，配合创业板趋势向好，判断趋势暂未破位。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "资料缺失具体价格区间，需结合实时行情设置止损位（如跌破5日线或前低）"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:淘股吧7.27复盘_浪浪山游资",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tH8VqFmqoT",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://bbs.hupu.com/641320145.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-27/c10649771.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-27/c10650016.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tM5N0x9Qs3",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-27",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://bbs.hupu.com/641320145.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260724A0DGTH00",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tLYHmeC12N",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://guba.eastmoney.com/news,688825,1750153351.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4042753.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tLVVoGnNUd",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4042753.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.ifeng.com/c/8v6Pn53XyhD",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://bbs.hupu.com/641320145.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tH8VqFmqoT",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://licai.cofool.com/user/guide_view_3436918.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607243820487241.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607273821544853.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607213815401818.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4042753.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.ifeng.com/c/8v6Pn53XyhD",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-27/c10650013.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.cngold.org/c/2026-07-27/c10649974.html",
+      "fetched_at": "2026-07-27T19:55:15.635716+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "紫光股份当日具体涨跌幅与收盘价",
+      "行业板块详细涨幅排名数据",
+      "中军标的3日技术面关键支撑位"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
