@@ -1,0 +1,249 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-28",
+  "generated_at": "2026-07-28T18:59:53.357750+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "weak",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数全线大幅下跌，创业板指跌幅达-7.35%，显示市场情绪极弱。虽然涨停个股有68只，但跌停个股高达50只，且两市超2700只个股下跌，涨跌家数比严重失衡，属于典型的指数与题材分化弱势格局。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3813.31,
+        "change_pct": -1.16,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 13509.68,
+        "change_pct": -4.52,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3327.03,
+        "change_pct": -7.35,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+      }
+    ],
+    "breadth_up": null,
+    "breadth_down": null,
+    "breadth_reasoning": "资料中仅提及'沪深两市超2700只个股下跌'，未提供具体上涨家数及总家数，无法计算准确涨跌家数比，故填null。",
+    "limit_up": 68,
+    "limit_down": 50
+  },
+  "themes": [
+    {
+      "id": "跨境支付-2026-07-28",
+      "name": "跨境支付",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "该题材今日天融信、南天信息等个股涨停，属于新启动的热点概念。在大盘退潮背景下，资金尝试挖掘新方向，符合右侧短线'启动阶段'特征。",
+      "strength": "mid",
+      "strength_reasoning": "涨停个股数量较少（仅提及天融信、南天信等），且缺乏持续性龙头带动，强度中等。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [
+        "002212"
+      ],
+      "catalyst": "跨境支付概念活跃，天融信、南天信息等涨停",
+      "source": "web:https://news.qq.com/rain/a/20260728A07FPK00",
+      "notes": ""
+    },
+    {
+      "id": "软件服务/AI-2026-07-28",
+      "name": "软件服务/AI",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "收评提到'科技板块预计会继续分歧'，且涨停复盘显示软件开发行业上榜个股居前（6只），说明该趋势性题材仍在延续但面临分化。",
+      "strength": "high",
+      "strength_reasoning": "作为前期主线题材，虽遇分歧但仍有资金承接，涨停数量在行业中居前，强度较高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "科技板块预计继续分歧，软件开发涨停个股居前",
+      "source": "web:https://caifuhao.eastmoney.com/news/20260728081453349467460",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "002212",
+      "name": "天融信",
+      "theme_id": "跨境支付",
+      "market_cap": 70.77,
+      "price": 6.0,
+      "change_pct": 6.0,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "作为跨境支付概念的涨停标的，位置处于近期震荡区间上沿，未出现破位走势，具备右侧观察价值。",
+      "trend_status": "intact",
+      "trend_reasoning": "今日涨停封住短期趋势，未出现断板或大幅回调迹象，趋势保持完好。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "因缺乏实时价格数据，无法测算具体支撑阻力位，建议参考前高压力与平台支撑进行后续观察。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:https://news.qq.com/rain/a/20260728A07FPK00",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260728081453349467460",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-28/c10652793.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-28",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://lzwb.lzbs.com.cn/pad/content/202607/28/content_210602865.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-28",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000003.html?date=2026-07-28",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607283823480932.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260728A0550100",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607283823480932.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wenchuang.dalw.com.cn/tags-147548.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260728081453349467460",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.southmoney.com/gegu/lianzhang/202607/66199090.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607283823480932.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607283823480932.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-28",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-28/c10652793.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260728A07FPK00",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14837709.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.baogao.com/chanjing/e8bb4398-8a57-11f1-8fff-cee04c2a1d57.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-28/c10652783.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.southmoney.com/gegu/lianzhang/202607/66199090.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14834055.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wenchuang.dalw.com.cn/tags-147548.html",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.stockstar.com/RB2026072800028814.shtml",
+      "fetched_at": "2026-07-28T18:59:33.320246+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "具体上涨家数与总家数（用于精确计算涨跌家数比）、个股实时价格与涨跌幅（用于中军候选量化评估）"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
