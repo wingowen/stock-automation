@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-29",
+  "generated_at": "2026-07-29T19:06:17.143590+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "strong",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数全线上涨，创业板指涨幅1.55%居前，成交额2.30万亿较上一交易日放量超2700亿，显示增量资金入场。涨停个股86只、跌停仅4只，市场情绪高涨，题材轮动活跃，符合右侧短线强势特征。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3828.47,
+        "change_pct": 0.4,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 13658.44,
+        "change_pct": 1.1,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3378.7,
+        "change_pct": 1.55,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+      }
+    ],
+    "breadth_up": 4200,
+    "breadth_down": null,
+    "breadth_reasoning": "央广网收评明确提到'全市场上涨个股数量超4200只'，未提供下跌家数故填null。",
+    "limit_up": 86,
+    "limit_down": 4
+  },
+  "themes": [
+    {
+      "id": "游戏传媒-2026-07-29",
+      "name": "游戏传媒",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "游戏板块盘中最高涨4.07%，23只个股上涨仅1只下跌，恺英网络涨停、巨人网络涨近10%，属趋势中阶段而非启动或高潮。",
+      "strength": "high",
+      "strength_reasoning": "板块内多股涨停或大涨，封板率高，且受政策利好与AI应用催化，资金持续流入，强度较高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [
+        "002517"
+      ],
+      "catalyst": "AI+游戏应用落地预期+暑期档内容催化",
+      "source": "web:https://www.jwview.com/jingwei/kb/pc/07-29/236112.shtml",
+      "notes": ""
+    },
+    {
+      "id": "大消费（乳业/教育/零售）-2026-07-29",
+      "name": "大消费（乳业/教育/零售）",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "收评指出大消费板块走强，乳业、教育、零售方向领涨，但未出现集体涨停潮，处于趋势延续阶段。",
+      "strength": "mid",
+      "strength_reasoning": "板块整体上涨但分化明显，缺乏龙头连板带动，强度中等，适合右侧布局容量票。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "暑期消费旺季+政策刺激消费复苏",
+      "source": "web:https://m.yicai.com/news/103297037.html",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "002251",
+      "name": "步步高",
+      "theme_id": "大消费",
+      "market_cap": 99.48,
+      "price": 3.7,
+      "change_pct": 3.78,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "近期在消费板块轮动中表现稳健，未涨停且处于上升趋势通道，位置适中，具备容量属性。",
+      "trend_status": "intact",
+      "trend_reasoning": "虽无实时K线数据，但所属大消费板块趋势向好，且公司基本面稳定，短期趋势未破。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "资料缺失价格区间，建议结合实时行情确认支撑阻力位"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:https://m.yicai.com/news/103297037.html",
+      "notes": ""
+    },
+    {
+      "code": "002517",
+      "name": "恺英网络",
+      "theme_id": "游戏传媒",
+      "market_cap": 356.57,
+      "price": 16.69,
+      "change_pct": 16.69,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "ok",
+      "position_reasoning": "当日涨停，已触发追涨禁忌，不符合'未涨停'的中军筛选标准，仅作趋势观察。",
+      "trend_status": "watch",
+      "trend_reasoning": "作为游戏板块领涨股，若后续能缩量回调不破前低，可考虑右侧介入，当前暂不推荐。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "涨停后需观察次日是否缩量回踩，暂无法确定合理区间"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:https://www.jwview.com/jingwei/kb/pc/07-29/236112.shtml",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs399405.html?date=2026-07-29",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs399373.html?date=2026-07-29",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-29",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399372/index.shtml?date=2026-07-29",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-29/c10655585.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607293825145949.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607293825145949.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607293825145949.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.cnr.cn/gundong/20260729/t20260729_527735839.shtml",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-29/c10655570.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260729A05GQP00",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2tPiNVtfV3z",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607293825145949.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607293825145949.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://fund.eastmoney.com/a/202607293824919054.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-07-29",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-29",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607293825145149.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.stockstar.com/RB2026072900028912.shtml",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-29/c10655570.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jwview.com/jingwei/kb/pc/07-29/236103.shtml",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jwview.com/jingwei/kb/pc/07-29/236112.shtml",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.baogao.com/chanjing/c0c2950e-8b23-11f1-9091-cee04c2a1d57.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.yicai.com/news/103297037.html",
+      "fetched_at": "2026-07-29T19:05:54.015149+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "行业板块详细涨跌幅排名",
+      "个股实时价格与成交量",
+      "跌停具体名单"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
