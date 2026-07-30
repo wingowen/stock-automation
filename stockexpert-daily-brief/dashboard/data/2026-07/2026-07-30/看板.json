@@ -1,0 +1,248 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-30",
+  "generated_at": "2026-07-30T18:40:33.613908+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "weak",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数全线下跌，创业板指跌近4%显示权重拖累明显；两市成交额2.34万亿虽放量但属下跌放量，属于典型的弱势格局。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3804.69,
+        "change_pct": -0.62,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 13285.8,
+        "change_pct": -2.73,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3244.62,
+        "change_pct": -3.97,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+      }
+    ],
+    "breadth_up": null,
+    "breadth_down": null,
+    "breadth_reasoning": "提供的收评资料中未明确提及具体的上涨和下跌家数数量，仅提到超4200个股上涨的日期为7月29日，故无法获取当日准确数据。",
+    "limit_up": 56,
+    "limit_down": 76
+  },
+  "themes": [
+    {
+      "id": "大消费（白酒/乳业）-2026-07-30",
+      "name": "大消费（白酒/乳业）",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "白酒与乳业板块在指数普跌背景下逆势走强，舍得酒业、金徽酒、均瑶健康等多股涨停，且午后有资金承接迹象，符合趋势中特征。",
+      "strength": "mid",
+      "strength_reasoning": "板块内多股涨停带动人气，但受大盘拖累整体涨幅有限，持续性需观察后续量能配合。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "白酒概念板块涨幅居前，午后大消费板块逆市走强，舍得酒业、金徽酒等涨停。",
+      "source": "web:界面新闻快讯及腾讯新闻收评",
+      "notes": ""
+    },
+    {
+      "id": "人形机器人/AI应用-2026-07-30",
+      "name": "人形机器人/AI应用",
+      "stage": "climax",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "明新旭腾4连板、传智教育4连板、爱丽家居8天8板等高位连板股频出，题材炒作进入高潮阶段，风险正在积聚。",
+      "strength": "high",
+      "strength_reasoning": "连板梯队丰富且高度较高，显示短线资金极度活跃，但高潮过后易出现退潮分化。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "连板股追踪显示人形机器人、AI教育、AI应用等多方向出现4连板及以上强势个股。",
+      "source": "web:东方财富网热点板块追踪",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "601919",
+      "name": "中远海控",
+      "theme_id": "航运/周期",
+      "market_cap": 2397.1,
+      "price": 15.7,
+      "change_pct": 15.7,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "作为航运龙头，具备大容量属性，且在近期市场波动中表现相对稳健，位置处于合理区间，适合右侧布局。",
+      "trend_status": "intact",
+      "trend_reasoning": "参考29日复盘提及该票，虽无当日具体走势，但作为权重股通常趋势较稳，暂无破位信号。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "缺乏实时价格数据，无法计算具体支撑阻力位，建议结合实时行情关注均线支撑。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:2026年7月29号复盘及个股走势预测",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260730114759753435570",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000003.html?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260729162322799267310",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/300879/index.shtml?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260730155747378789830",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260729162322799267310",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.ifeng.com/c/8vAzAOz0Wpc",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.yicai.com/news/103299007.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260730A08M5400",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260730A07O2Q00",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000003.html?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/603040/index.shtml?date=2026-07-30",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14850063.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.yicai.com/news/103299007.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607283823018531.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://www.cjxww.cn/new/cjwnews/cjwcnNews/202607/t20260729_35704348.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.ifeng.com/c/8vAya1jPjAe",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jwview.com/jingwei/kb/pc/07-30/236165.shtml",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.stcn.com/article/detail/4050181.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607293824609638.html",
+      "fetched_at": "2026-07-30T18:40:18.346527+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "涨跌家数具体数值（仅知跌停76只，涨停56只，但未给上涨家数）",
+      "中远海控当日涨跌幅及现价"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
