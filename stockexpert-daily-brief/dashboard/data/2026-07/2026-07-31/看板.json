@@ -1,0 +1,296 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-07-31",
+  "generated_at": "2026-07-31T19:10:17.423786+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "strong",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "三大指数全线上行，创业板指+3.06%、北证50+3.26%领涨；沪深两市成交2.54万亿较昨日放量近2000亿，量能充沛；上涨个股超4600只，市场赚钱效应好。但大盘价值指数(399373)跌1.02%显示风格分化，成长占优。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3832.26,
+        "change_pct": 0.72,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 13578.93,
+        "change_pct": 2.21,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3343.96,
+        "change_pct": 3.06,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+      }
+    ],
+    "breadth_up": 4600,
+    "breadth_down": null,
+    "breadth_reasoning": "收评提及'上涨个股超4600只'/'近4700只个股飘红'(来源:web:https://m.163.com/money/article/L364JOVR00258105.html、web:https://news.qq.com/rain/a/20260731A086YL00)，下跌家数资料未获取",
+    "limit_up": 101,
+    "limit_down": null
+  },
+  "themes": [
+    {
+      "id": "半导体-2026-07-31",
+      "name": "半导体",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "板块整体涨幅7.86%领涨A股，属今日最强主线；但涨停复盘显示全市场仅101只涨停、连板股10只，未见板块内批量涨停高潮，判断为趋势延续而非启动或高潮阶段。",
+      "strength": "high",
+      "strength_reasoning": "半导体板块涨幅7.86%为当日板块第一，且有'半导体板块领涨A股'明确表述(来源:web:https://www.topnews.cn/news/145ED4E342BA4875)，强度最高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "板块整体涨幅7.86%领涨，资金集中涌入",
+      "source": "web:https://www.topnews.cn/news/145ED4E342BA4875",
+      "notes": ""
+    },
+    {
+      "id": "AI应用-2026-07-31",
+      "name": "AI应用",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "收评明确'AI应用方向全面走强'且'AI应用概念股传'(来源:web:https://news.qq.com/rain/a/20260731A05PN000)，软件开发板块涨幅居前；结合创业板指盘中一度涨近6.8%后回落至3.06%，说明早盘有脉冲但后续有所分歧，处于趋势中而非启动初期。",
+      "strength": "high",
+      "strength_reasoning": "AI应用与半导体共振，创业板指大涨3.06%主要由科技成长驱动，收评点名'AI应用方向全面走强'，强度较高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [
+        "300308"
+      ],
+      "catalyst": "AI应用方向全面走强，软件开发板块涨幅居前",
+      "source": "web:https://www.bjnews.com.cn/detail/1785481888129381.html",
+      "notes": ""
+    },
+    {
+      "id": "红利/银行-2026-07-31",
+      "name": "红利/银行",
+      "stage": "fading",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "在大盘成长风格强势背景下'红利股逆势活跃'，建设银行、工商银行等被点名，但大盘价值指数(399373)跌1.02%说明价值风格整体偏弱，红利仅为防御性轮动而非主线，处于退潮或边缘状态。",
+      "strength": "low",
+      "strength_reasoning": "仅在成长股强势时'逆势活跃'，属于防御轮动，非当日主线，强度低。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "成长风格强势下的防御性轮动",
+      "source": "web:https://m.163.com/money/article/L364JOVR00258105.html",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "300308",
+      "name": "中际旭创",
+      "theme_id": "AI应用",
+      "market_cap": 10551.12,
+      "price": 902.01,
+      "change_pct": 986.89,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "ok",
+      "position_reasoning": "资料提及中际旭创但价格/涨跌幅'未获取'，无法精确评估位置；作为AI应用/光模块容量票，今日AI方向全面走强，需待实时行情反查确认是否处于合理位置。",
+      "trend_status": "watch",
+      "trend_reasoning": "AI应用方向今日全面走强，中际旭创作为相关容量票趋势应 intact，但具体K线形态和支撑位资料未获取，需反查实时行情后确认。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "价格数据未获取，无法计算观察区间，待实时行情反查后补充"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:https://stock.cngold.org/c/2026-07-31/c10660739.html",
+      "notes": ""
+    },
+    {
+      "code": "300879",
+      "name": "大叶股份",
+      "theme_id": "未获取",
+      "market_cap": 32.79,
+      "price": 16.2,
+      "change_pct": 16.4,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "good",
+      "position_reasoning": "现价16.20元涨2.60%，均价16.03元，换手率2.23%，量比1.14，涨幅温和未涨停，位置相对合理(来源:web:https://q.stock.sohu.com/cn/300879/index.shtml?date=2026-07-31)。",
+      "trend_status": "intact",
+      "trend_reasoning": "涨幅2.60%温和上行，量比1.14配合，未出现异常拉升，趋势 intact。但所属题材资料未获取，需进一步确认是否与半导体/AI应用主线相关。",
+      "suggested_zone": {
+        "low": 15.8,
+        "high": 17.0,
+        "reasoning": "均价16.03元附近为短期支撑，今日最高未突破17元，建议观察区间15.8-17.0元，等待回踩确认支撑后介入(来源:web:https://q.stock.sohu.com/cn/300879/index.shtml?date=2026-07-31)"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:https://q.stock.sohu.com/cn/300879/index.shtml?date=2026-07-31",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-31/c10661133.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-07-31",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/300879/index.shtml?date=2026-07-31",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-31",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.bjnews.com.cn/detail/1785481888129381.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-31/c10660739.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607313828358491.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607313828358491.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260731A05PN000",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://m.163.com/money/article/L364JOVR00258105.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260731A086YL00",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://fund.eastmoney.com/a/202607313828136368.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-07-31",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202607313828358491.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202607313828358491.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000003/index.shtml?date=2026-07-31",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-07-31",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-07-31/c10661133.html",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://finance.ce.cn/stock/gsgdbd/202607/t20260731_3120811.shtml",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.topnews.cn/news/145ED4E342BA4875",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260731A086YL00",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://finance.ce.cn/stock/gsgdbd/202607/t20260731_3120506.shtml",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.toutiao.com/article/7668567846867288616/",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.stockstar.com/RB2026073100029265.shtml",
+      "fetched_at": "2026-07-31T19:09:01.631018+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "下跌家数(breadth_down)",
+      "跌停家数(limit_down)",
+      "半导体板块具体个股行情数据",
+      "AI应用板块中军容量票的价格/涨跌幅/市值数据",
+      "中际旭创实时行情(价格/涨跌幅)",
+      "各题材具体龙头和中军个股列表"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
