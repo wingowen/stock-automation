@@ -30,7 +30,7 @@ jobs:
         env:
           FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
           NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
-        run: python -m scanner.price_scanner
+        run: python -m scanner.price_scanner --watchlist wyckoff-auto/watchlist.json
 
       - name: 提交日志
         run: |

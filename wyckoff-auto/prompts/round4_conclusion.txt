@@ -1,0 +1,53 @@
+## 第④步：结论/预测
+
+基于前三轮的分析，现在得出综合结论和预判。
+
+### 分析要求
+
+1. 综合背景、形态、性质三个维度的分析
+2. 对照历史简报（如有），验证上次预判的准确性
+3. 给出明确的短期方向判断
+4. 标注关键价位（阻力/支撑）
+5. 判断当前处于威科夫哪个阶段
+
+### 历史简报（如有）
+
+{history_brief}
+
+### 输出 JSON Schema
+
+```json
+{
+  "background_conclusion": "大背景结论（1-2句话）",
+  "short_term": "短期方向判断（1-2句话）",
+  "direction": "bullish|bearish|neutral",
+  "key_levels": {
+    "resistance": 0.0,
+    "resistance_2": 0.0,
+    "support": 0.0,
+    "support_2": 0.0
+  },
+  "current_phase": "当前威科夫阶段描述",
+  "prediction": {
+    "direction": "up|down|sideways",
+    "target_price": 0.0,
+    "time_window": "预计时间窗口",
+    "confidence": "high|mid|low",
+    "conditions": "预判成立的前提条件"
+  },
+  "history_comparison": {
+    "has_history": true,
+    "last_prediction": "上次预判摘要",
+    "actual_result": "实际走势对照",
+    "deviation": "偏差分析",
+    "lesson": "教训（如有）"
+  }
+}
+```
+
+### 注意
+
+- 关键价位必须来自 K 线数据中的实际价格节点
+- direction 和 prediction.direction 要一致
+- 如果有历史简报，必须对照上次预判进行迭代验证
+- confidence 要诚实评估，不确定就标 low

@@ -1,0 +1,63 @@
+name: 威科夫自动分析
+
+on:
+  schedule:
+    # 北京时间 17:00 ≈ UTC 09:00（收盘后30分钟，在每日看板之后）
+    - cron: "0 9 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      trade_date:
+        description: "指定交易日 YYYY-MM-DD（可选，默认最近交易日）"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wyckoff-auto
+  cancel-in-progress: false
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          pip install pandas requests
+          # 确保 skill 目录的 fetch_kline.py 可用
+          bash .agents/skills/a-share-kline-fetch/setup_env.sh || true
+
+      - name: Run analysis
+        env:
+          AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
+          AGNES_BASE_URL: ${{ secrets.AGNES_BASE_URL }}
+          AGNES_MODEL: ${{ secrets.AGNES_MODEL }}
+        run: |
+          cd ${{ github.workspace }}
+          if [ -n "${{ github.event.inputs.trade_date }}" ]; then
+            python wyckoff-auto/analyzer.py --trade-date "${{ github.event.inputs.trade_date }}"
+          else
+            python wyckoff-auto/analyzer.py
+          fi
+
+      - name: Commit briefs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add analysis-brief/
+          if git diff --cached --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "chore: 威科夫自动分析 $(date +%F)"
+            git push
+          fi

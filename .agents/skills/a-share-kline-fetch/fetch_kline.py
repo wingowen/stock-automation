@@ -79,6 +79,9 @@ def fetch_kline(code: str, start: str, end: str, adjust: str = "qfq") -> tuple[p
         if isinstance(qt_list, list) and len(qt_list) > 1:
             stock_name = str(qt_list[1]) if qt_list[1] else ""
 
+    # 腾讯接口可能在某些行（除权除息日）多返回一个分红信息字典，只取前6列
+    raw_rows = [row[:6] if len(row) > 6 else row for row in raw_rows]
+
     df = pd.DataFrame(raw_rows, columns=["date", "open", "close", "high", "low", "volume"])
     for c in ["open", "high", "low", "close"]:
         df[c] = pd.to_numeric(df[c], errors="coerce").round(2)

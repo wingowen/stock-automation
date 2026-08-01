@@ -1,0 +1,17 @@
+{
+  "stocks": [
+    {
+      "code": "002279",
+      "name": "久其软件",
+      "added": "2026-08-01",
+      "status": "active",
+      "note": "JOC回测闭环模式"
+    },
+    {
+      "code": "002611",
+      "name": "东方精工",
+      "added": "2026-08-01",
+      "status": "active"
+    }
+  ]
+}

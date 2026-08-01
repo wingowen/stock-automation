@@ -5,17 +5,40 @@
 适合 cron 调度（每 5 分钟一次），非交易时段自动跳过。
 
 用法：
-    python scanner/price_scanner.py
+    python -m scanner.price_scanner
+    python -m scanner.price_scanner --watchlist wyckoff-auto/watchlist.json
 """
 
 from __future__ import annotations
 
+import argparse
+import json
 import sys
 from datetime import datetime, time
+from pathlib import Path
 
 from scanner.brief_parser import parse_all_briefs
 from scanner.realtime_quote import fetch_quotes
 from scanner.alert import notify
+
+
+def load_watchlist_codes(watchlist_path: str) -> set[str] | None:
+    """从观察名单文件读取 active 股票代码集合。
+
+    Returns:
+        代码集合，如 {"002279", "002611"}；文件不存在或解析失败返回 None。
+    """
+    p = Path(watchlist_path)
+    if not p.exists():
+        print(f"观察名单文件不存在: {watchlist_path}")
+        return None
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        stocks = data.get("stocks", [])
+        return {s["code"] for s in stocks if s.get("status") == "active" and s.get("code")}
+    except Exception as e:
+        print(f"观察名单解析失败: {e}")
+        return None
 
 
 def is_trading_time() -> bool:
@@ -45,6 +68,14 @@ def is_trading_time() -> bool:
 
 def main() -> int:
     """主流程"""
+    ap = argparse.ArgumentParser(description="价格触发扫描器")
+    ap.add_argument(
+        "--watchlist",
+        default="wyckoff-auto/watchlist.json",
+        help="观察名单文件路径（默认 wyckoff-auto/watchlist.json）",
+    )
+    args = ap.parse_args()
+
     # 1. 交易时段检查
     if not is_trading_time():
         print(f"[{datetime.now().strftime('%H:%M:%S')}] 非交易时段，跳过")
@@ -56,11 +87,21 @@ def main() -> int:
         print("无可监控的股票（analysis-brief 下无简报文件）")
         return 0
 
-    # 3. 提取需要扫描的股票代码去重
+    # 3. 观察名单过滤
+    watchlist_codes = load_watchlist_codes(args.watchlist)
+    if watchlist_codes is not None:
+        before = len(triggers)
+        triggers = [t for t in triggers if t.code in watchlist_codes]
+        print(f"观察名单过滤: {before} -> {len(triggers)} 个触发点（{len(watchlist_codes)} 只 active 股票）")
+        if not triggers:
+            print("观察名单中的股票无简报触发点")
+            return 0
+
+    # 4. 提取需要扫描的股票代码去重
     codes = sorted(set(t.code for t in triggers))
     print(f"监控股票: {', '.join(codes)}  (触发点: {len(triggers)} 个)")
 
-    # 4. 获取实时行情
+    # 5. 获取实时行情
     quotes = fetch_quotes(codes)
     if not quotes:
         print("获取实时行情失败，跳过本轮")
@@ -68,7 +109,7 @@ def main() -> int:
 
     print(f"获取到 {len(quotes)} 只股票行情")
 
-    # 5. 比对触发条件
+    # 6. 比对触发条件
     alerts = 0
     for trigger in triggers:
         quote = quotes.get(trigger.code)

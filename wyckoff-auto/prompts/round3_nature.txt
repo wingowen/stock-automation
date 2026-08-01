@@ -1,0 +1,47 @@
+## 第③步：形态性质分析
+
+基于前两轮的背景判断和形态识别，现在分析形态的性质。
+
+### 分析要求
+
+运用威科夫三大原则分析：
+
+1. **供求关系原则**：当前是需求控制还是供应控制？力度如何？
+2. **因果关系原则**：是否有足够的准备过程（因）支撑趋势发展（果）？
+3. **努力和结果原则**：成交量（努力）与价格进展（结果）是否一致？有无停止行为？
+
+### 附加知识
+
+{selective_chapter}
+
+### 输出 JSON Schema
+
+```json
+{
+  "supply_demand": {
+    "dominant_force": "demand|supply|balanced",
+    "strength": "strong|moderate|weak",
+    "reasoning": "供求关系判断依据"
+  },
+  "cause_effect": {
+    "has_cause": true,
+    "cause_description": "准备过程描述（如有）",
+    "potential_effect": "预期趋势幅度描述",
+    "cause_sufficient": true
+  },
+  "effort_result": {
+    "consistent": true,
+    "stopping_action": "none|spring|upthrust|no_demand",
+    "stopping_description": "停止行为描述（如有）",
+    "absorption": "none|buying|selling",
+    "absorption_description": "吸收行为描述（如有）"
+  },
+  "nature_summary": "形态性质的综合判断（2-3句话）"
+}
+```
+
+### 注意
+
+- 停止行为是最重要的信号——成交量扩大但价格无进展
+- 吸收行为需要结合多次测试才能确认
+- 如果因果关系不成立（没有足够的准备过程），后续不应追趋势

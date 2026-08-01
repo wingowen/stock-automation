@@ -1,0 +1,47 @@
+## 第②步：价量形态识别
+
+基于第①步的背景判断，现在识别关键的价量形态。
+
+### 分析要求
+
+1. 识别威科夫关键行为：PS/SC/AR/ST/SOS/JOC/UT/SOW/BC/LPSY 等
+2. 每个形态标注发生的日期和关键特征
+3. 评估量价配合关系（放量/缩量与价格行为的一致性）
+4. 识别最近 5-10 个交易日的核心形态
+
+### 附加知识
+
+{selective_chapter}
+
+### 输出 JSON Schema
+
+```json
+{
+  "patterns": [
+    {
+      "name": "SC|AR|ST|SOS|JOC|UT|SOW|BC|LPSY|PS|Spring|Shakeout",
+      "date": "YYYY-MM-DD",
+      "description": "形态描述（1-2句话）",
+      "significance": "high|mid|low",
+      "volume_character": "放量|缩量|正常",
+      "price_action": "大阳|大阴|十字星|小阳|小阴"
+    }
+  ],
+  "recent_key_pattern": {
+    "name": "最近最重要的形态名",
+    "date": "YYYY-MM-DD",
+    "description": "为什么这是当前最关键的形态"
+  },
+  "volume_analysis": {
+    "recent_trend": "放量|缩量|平稳",
+    "vs_average": 1.5,
+    "interpretation": "量能解读"
+  }
+}
+```
+
+### 注意
+
+- 形态名称使用威科夫标准术语
+- 日期必须对应 K 线数据中的实际交易日
+- significance 评估该形态对后续走势的影响程度
