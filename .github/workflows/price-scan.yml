@@ -30,7 +30,7 @@ jobs:
         env:
           FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
           NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
-        run: python scanner/price_scanner.py
+        run: python -m scanner.price_scanner
 
       - name: 提交日志
         run: |
