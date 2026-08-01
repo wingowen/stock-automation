@@ -140,6 +140,39 @@ def load_watchlist(path: str | None = None) -> list[dict]:
         return []
 
 
+# ── 通知推送 ────────────────────────────────────────────────
+def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "") -> bool:
+    """发送 ntfy 推送通知（纯 urllib，无外部依赖）。
+
+    Args:
+        title: 通知标题
+        message: 通知正文
+        priority: default | high | urgent
+        tags: 标签图标，如 "chart_with_upwards_trend"
+    """
+    from config import NTFY_TOPIC_URL
+
+    if not NTFY_TOPIC_URL:
+        return False
+
+    headers = {"Title": title, "Priority": priority}
+    if tags:
+        headers["Tags"] = tags
+
+    try:
+        req = urllib.request.Request(
+            NTFY_TOPIC_URL,
+            data=message.encode("utf-8"),
+            headers=headers,
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return r.status == 200
+    except Exception as e:
+        log(f"ntfy 推送失败: {e}")
+        return False
+
+
 # ── 自测入口 ────────────────────────────────────────────────
 if __name__ == "__main__":
     if "--test" in sys.argv:

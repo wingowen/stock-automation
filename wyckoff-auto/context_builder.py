@@ -100,30 +100,62 @@ def fetch_kline_data(code: str, bg_months: int = BG_MONTHS, trade_date: str | No
 
 
 def _split_blocks(raw: str) -> dict[str, str]:
-    """按 === 分隔符切分 fetch_kline 的输出块。"""
-    blocks = {}
-    current_key = ""
-    current_lines: list[str] = []
+    """按 === 分隔符切分 fetch_kline 的输出块。
 
-    for line in raw.split("\n"):
-        if line.startswith("=" * 30):
-            if current_key:
-                blocks[current_key] = "\n".join(current_lines).strip()
+    fetch_kline.py 输出格式（每个块由 === 包围标题，然后是数据）：
+      =======...=======
+      本周 (...) 日线数据
+      =======...=======
+      <数据行>
+      =======...=======
+      近N个月背景数据
+      =======...=======
+      <数据行>
+
+    策略：遇到 === 后读标题行，跳过下一个 ===，然后收集数据行。
+    """
+    blocks = {}
+    lines = raw.split("\n")
+    i = 0
+    n = len(lines)
+
+    while i < n:
+        # 检测 === 分隔符（块标题的开始）
+        if lines[i].startswith("=" * 20):
+            i += 1
+            # 跳过空行，读取标题
+            while i < n and not lines[i].strip():
+                i += 1
+            if i >= n:
+                break
+
+            title = lines[i]
             current_key = ""
-            current_lines = []
-        elif current_key == "" and line.strip() and not line.startswith("="):
-            # 识别块标题
             for keyword in ("本周", "背景", "统计分析", "最近30"):
-                if keyword in line:
+                if keyword in title:
                     current_key = keyword
                     break
-            if not current_key:
-                current_lines.append(line) if current_lines else None
-        else:
-            current_lines.append(line)
 
-    if current_key:
-        blocks[current_key] = "\n".join(current_lines).strip()
+            if not current_key:
+                i += 1
+                continue
+
+            # 跳过标题后的 === 分隔符
+            i += 1
+            while i < n and not lines[i].startswith("=" * 20) and not lines[i].strip():
+                i += 1
+            if i < n and lines[i].startswith("=" * 20):
+                i += 1  # 跳过第二个 ===
+
+            # 收集数据行直到下一个 === 或文件结束
+            data_lines: list[str] = []
+            while i < n and not lines[i].startswith("=" * 20):
+                data_lines.append(lines[i])
+                i += 1
+
+            blocks[current_key] = "\n".join(data_lines).strip()
+        else:
+            i += 1
 
     return blocks
 
@@ -144,19 +176,16 @@ def load_chapter(chapter: str) -> str:
     Args:
         chapter: 章节标识，如 "ch01", "ch02", "ch04"
     """
-    ch_file = WYCKOFF_SKILL_DIR / "chapters" / f"{chapter}-accumulation.md"
-    if not ch_file.exists():
-        # 尝试模糊匹配
-        ch_dir = WYCKOFF_SKILL_DIR / "chapters"
-        if ch_dir.exists():
-            candidates = list(ch_dir.glob(f"{chapter}*.md"))
-            if candidates:
-                ch_file = candidates[0]
-            else:
-                return ""
-        else:
-            return ""
-    return ch_file.read_text(encoding="utf-8")
+    ch_dir = WYCKOFF_SKILL_DIR / "chapters"
+    if not ch_dir.exists():
+        log(f"章节目录不存在: {ch_dir}")
+        return ""
+    # 模糊匹配 ch01*.md, ch02*.md 等
+    candidates = sorted(ch_dir.glob(f"{chapter}*.md"))
+    if not candidates:
+        log(f"章节文件未找到: {chapter}*.md")
+        return ""
+    return candidates[0].read_text(encoding="utf-8")
 
 
 def load_chapters_for_round(round_num: int, background_phase: str = "") -> str:
@@ -196,8 +225,13 @@ def load_chapters_for_round(round_num: int, background_phase: str = "") -> str:
 
 
 # ── 历史简报获取 ──────────────────────────────────────────────
-def get_history_brief(code: str, trade_date: str) -> dict:
+def get_history_brief(code: str, trade_date: str, stock_name: str = "") -> dict:
     """调用 workflow.py 获取历史简报信息。
+
+    Args:
+        code: 6位股票代码
+        trade_date: 分析日期 YYYY-MM-DD
+        stock_name: 股票名称（传入则简报文件名带名称）
 
     Returns:
         {
@@ -209,6 +243,8 @@ def get_history_brief(code: str, trade_date: str) -> dict:
         }
     """
     cmd = [sys.executable, str(WORKFLOW_SCRIPT), code, trade_date]
+    if stock_name:
+        cmd.append(stock_name)
 
     log(f"准备简报: {' '.join(cmd)}")
     try:

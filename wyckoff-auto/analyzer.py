@@ -107,9 +107,9 @@ def analyze_stock(
     result["kline_data"] = kline
     result["name"] = kline.get("name", "")
 
-    # 2. 获取历史简报
+    # 2. 获取历史简报（传入 K线获取的股票名称）
     log(f"[{code}] 准备简报模板...")
-    history = get_history_brief(code, trade_date)
+    history = get_history_brief(code, trade_date, result["name"])
     result["history"] = history
     if not result["name"]:
         result["name"] = history.get("stock_name", "")
@@ -166,9 +166,11 @@ def analyze_stock(
         messages.append({"role": "user", "content": user_content})
 
         # 调用 LLM
+        log(f"[{code}] Round {i+1} 消息长度: system={len(messages[0]['content'])} user={len(user_content)}")
         round_result = client.chat_json(messages)
         if round_result is None:
-            log(f"[{code}] Round {i+1} LLM 调用失败，跳过后续轮次")
+            log(f"[{code}] Round {i+1} LLM 调用失败（API错误或JSON解析失败），跳过后续轮次")
+            result["error"] = f"Round {i+1} LLM 调用失败"
             break
 
         # 记录结果
@@ -277,7 +279,44 @@ def run(watchlist_path: str | None = None, code: str | None = None,
 
     log(f"完成: {total} 只 | 成功(5轮): {success} | 部分: {partial} | 失败: {failed}")
 
+    # ntfy 通知（非 dry-run）
+    if not dry_run:
+        _notify_results(td, results, total, success, partial, failed)
+
     return 0 if failed < total else 1
+
+
+def _notify_results(trade_date: str, results: list[dict], total: int, success: int, partial: int, failed: int) -> None:
+    """分析完成后发送 ntfy 通知。"""
+    from llm_client import send_ntfy
+
+    lines = [f"威科夫自动分析报告 {trade_date}", ""]
+    for r in results:
+        code = r["code"]
+        name = r.get("name", "")
+        rounds = r["completed_rounds"]
+        name_part = f" {name}" if name else ""
+
+        if rounds == 5:
+            r4 = r["rounds"][3] if len(r["rounds"]) > 3 else {}
+            pred = r4.get("prediction", {})
+            direction = pred.get("direction", r4.get("direction", "?"))
+            target = pred.get("target_price", "?")
+            confidence = pred.get("confidence", "?")
+            lines.append(f"✅ {code}{name_part} [{rounds}/5] 方向:{direction} 目标:{target} 置信:{confidence}")
+        elif rounds > 0:
+            lines.append(f"⚠️ {code}{name_part} [{rounds}/5] 部分完成 - {r.get('error', '')}")
+        else:
+            lines.append(f"❌ {code}{name_part} [0/5] 失败 - {r.get('error', '未知错误')}")
+
+    lines.append(f"\n总计: {total} | 成功: {success} | 部分: {partial} | 失败: {failed}")
+
+    priority = "urgent" if failed == total else "high" if failed > 0 else "default"
+    tags = "chart_with_upwards_trend" if failed == 0 else "warning"
+    title = f"威科夫分析 {trade_date} ({success}/{total})"
+
+    send_ntfy(title, "\n".join(lines), priority=priority, tags=tags)
+    log(f"ntfy 通知已发送: {title}")
 
 
 def main() -> int:

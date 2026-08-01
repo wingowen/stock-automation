@@ -38,6 +38,10 @@ MAX_RETRIES = 2        # LLM 调用重试次数
 REQUEST_TIMEOUT = 120  # API 超时（秒）
 TEMPERATURE = 0.3      # 采样温度
 
+# ── 通知配置 ────────────────────────────────────────────────
+NTFY_TOPIC_URL = os.environ.get("NTFY_TOPIC_URL", "")
+FEISHU_WEBHOOK_URL = os.environ.get("FEISHU_WEBHOOK_URL", "")
+
 # A 股交易日历（与 web_brief.py 同步）
 HOLIDAYS_2026 = {
     "2026-01-01", "2026-01-02", "2026-01-03",
