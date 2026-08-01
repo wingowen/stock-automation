@@ -151,11 +151,13 @@ def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "
         tags: 标签图标，如 "chart_with_upwards_trend"
     """
     from config import NTFY_TOPIC_URL
+    from urllib.parse import quote
 
     if not NTFY_TOPIC_URL:
         return False
 
-    headers = {"Title": title, "Priority": priority}
+    # HTTP header 只支持 latin-1，中文需 URL 编码
+    headers = {"Title": quote(title, safe=""), "Priority": priority}
     if tags:
         headers["Tags"] = tags
 
