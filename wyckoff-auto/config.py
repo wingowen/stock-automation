@@ -45,16 +45,16 @@ DEFAULT_GEMINI_BASE_URL = "https://generativelanguage.googleapis.com"
 DEFAULT_GEMINI_MODEL = "gemini-flash-latest"
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-GEMINI_BASE_URL = os.environ.get("GEMINI_BASE_URL", DEFAULT_GEMINI_BASE_URL).rstrip("/")
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
+GEMINI_BASE_URL = (os.environ.get("GEMINI_BASE_URL") or DEFAULT_GEMINI_BASE_URL).rstrip("/")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL") or DEFAULT_GEMINI_MODEL
 
 # Agnes（OpenAI 兼容网关，备选）
 DEFAULT_BASE_URL = "https://api.agnes-ai.com/v1"
 DEFAULT_MODEL = "agnes-text"
 
 AGNES_API_KEY = os.environ.get("AGNES_API_KEY", "")
-AGNES_BASE_URL = os.environ.get("AGNES_BASE_URL", DEFAULT_BASE_URL).rstrip("/")
-AGNES_MODEL = os.environ.get("AGNES_MODEL", DEFAULT_MODEL)
+AGNES_BASE_URL = (os.environ.get("AGNES_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
+AGNES_MODEL = os.environ.get("AGNES_MODEL") or DEFAULT_MODEL
 
 # ── 分析参数 ────────────────────────────────────────────────
 BG_MONTHS = 6          # 背景数据月数
