@@ -83,7 +83,7 @@ def main() -> int:
     for spec in model_specs:
         log(f"=== 评估模型: {spec.get('label', spec['id'])} ({spec['provider']}) ===")
         raw = run_model_eval(spec, stocks, trade_date)
-        rounds_by_model[spec["model_id"]] = raw
+        rounds_by_model[spec["id"]] = raw
         scored = score_model(raw)
         scored["model_id"] = raw["model_id"]
         scored["label"] = raw["label"]

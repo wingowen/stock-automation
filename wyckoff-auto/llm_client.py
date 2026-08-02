@@ -112,16 +112,79 @@ class LLMClient:
         messages: list[dict],
         temperature: float = TEMPERATURE,
     ) -> dict | None:
-        """调用 chat 并解析 JSON 输出。返回 dict 或 None。"""
+        """调用 chat 并解析 JSON 输出。返回 dict 或 None。
+
+        解析失败时尝试容错恢复（去 ``` 围栏 / 提取首个 JSON 对象），
+        覆盖模型偶发返回「尾部冗余文本」或代码块包裹的情况。
+        """
         raw = self.chat(messages, temperature=temperature, json_mode=True)
         if not raw:
             return None
         try:
             return json.loads(raw)
         except json.JSONDecodeError as e:
+            recovered = _recover_json(raw)
+            if recovered is not None:
+                log(f"JSON 解析失败已恢复（{e}），已提取首个 JSON 对象")
+                return recovered
             log(f"JSON 解析失败: {e}")
             log(f"原始输出前500字符: {raw[:500]}")
             return None
+
+
+def _recover_json(raw: str) -> dict | None:
+    """尽力从可能含 ``` 围栏或尾部冗余文本的响应中解析首个 JSON 对象。
+
+    返回解析后的 dict；彻底无法解析返回 None。仅依赖标准库 json。
+    """
+    if not raw or not raw.strip():
+        return None
+    s = raw.strip()
+
+    # 去 ```json ... ``` / ``` ... ``` 围栏
+    if s.startswith("```"):
+        # 去掉首行围栏（```json 或 ```）
+        s = s.split("\n", 1)[1] if "\n" in s else s[3:]
+    if s.endswith("```"):
+        s = s[: -3]
+    s = s.strip()
+
+    # 直接解析
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        pass
+
+    # 提取首个 { 到匹配的 }（括号匹配，忽略字符串内的括号）
+    start = s.find("{")
+    if start == -1:
+        return None
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(s)):
+        c = s[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+            continue
+        if c == '"':
+            in_str = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                cand = s[start:i + 1]
+                try:
+                    return json.loads(cand)
+                except json.JSONDecodeError:
+                    return None
+    return None
 
     # ── Gemini provider ───────────────────────────────────
     def _build_gemini_payload(
