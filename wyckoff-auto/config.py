@@ -48,7 +48,6 @@ BG_MONTHS = 6          # 背景数据月数
 MAX_RETRIES = 2        # LLM 调用重试次数
 REQUEST_TIMEOUT = 120  # API 超时（秒）
 TEMPERATURE = 0.3      # 采样温度
-MAX_OUTPUT_TOKENS = 4000  # 单轮输出上限（agnes-2.5-flash 输出上限 65.5K，此处设 cap 防啰嗦/省成本）
 
 # ── 通知配置 ────────────────────────────────────────────────
 NTFY_TOPIC_URL = os.environ.get("NTFY_TOPIC_URL", "")

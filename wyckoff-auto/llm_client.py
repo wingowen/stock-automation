@@ -27,7 +27,6 @@ from config import (
     AGNES_API_KEY,
     AGNES_BASE_URL,
     AGNES_MODEL,
-    MAX_OUTPUT_TOKENS,
     MAX_RETRIES,
     REQUEST_TIMEOUT,
     TEMPERATURE,
@@ -76,7 +75,6 @@ class LLMClient:
         messages: list[dict],
         temperature: float = TEMPERATURE,
         json_mode: bool = True,
-        max_tokens: int = MAX_OUTPUT_TOKENS,
     ) -> str | None:
         """调用 chat/completions，返回模型文本。失败返回 None。
 
@@ -93,7 +91,6 @@ class LLMClient:
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
-            "max_tokens": max_tokens,
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
