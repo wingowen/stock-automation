@@ -46,6 +46,14 @@ def log(*a):
     logger.info(" ".join(str(x) for x in a))
 
 
+def _safe_read(err) -> str:
+    """安全读取 HTTPError 的响应体（可能为空、非文本或超大）。"""
+    try:
+        return err.read().decode("utf-8", errors="replace")[:300]
+    except Exception:
+        return ""
+
+
 class LLMClient:
     """Agnes AI（OpenAI 兼容）调用客户端。
 
@@ -92,6 +100,7 @@ class LLMClient:
 
         data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         url = f"{self.base_url}/chat/completions"
+        last_status = None
 
         for attempt in range(1, MAX_RETRIES + 1):
             req = urllib.request.Request(
@@ -106,17 +115,19 @@ class LLMClient:
             )
             try:
                 with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as r:
+                    last_status = getattr(r, "status", None)
                     raw_body = r.read().decode("utf-8")
             except urllib.error.HTTPError as e:
+                body = _safe_read(e)
                 if e.code in (401, 403):
-                    log(f"API 鉴权失败({e.code})，请检查 AGNES_API_KEY，不再重试")
+                    log(f"API 鉴权失败({e.code})，请检查 AGNES_API_KEY：{body}")
                     return None
                 if e.code == 429:
                     wait = min(2 ** attempt, 30)
-                    log(f"API 限流(429)，退避 {wait}s 后重试(第{attempt}次)")
+                    log(f"API 限流(429)，退避 {wait}s 后重试(第{attempt}次)：{body}")
                     time.sleep(wait)
                     continue
-                log(f"API HTTP 错误({e.code})，重试(第{attempt}次)")
+                log(f"API HTTP 错误({e.code})，重试(第{attempt}次)：{body}")
                 time.sleep(2 * attempt)
                 continue
             except (urllib.error.URLError, TimeoutError, OSError) as e:
@@ -126,10 +137,16 @@ class LLMClient:
             # 网络层正常，但需校验响应结构（结构异常不应重试）
             try:
                 resp = json.loads(raw_body)
-                return resp["choices"][0]["message"]["content"]
+                content = resp["choices"][0]["message"]["content"]
             except (json.JSONDecodeError, KeyError, IndexError) as e:
-                log(f"API 响应结构异常（非重试性）: {e} | body前200: {raw_body[:200]}")
+                log(f"API 响应结构异常（非重试性）: {e} | HTTP {last_status} | body前300: {raw_body[:300]}")
                 return None
+            # 空响应诊断：HTTP 200 但 content 为空 == 静默失败，必须显式记录
+            if not content or not content.strip():
+                log(f"API 返回空响应（HTTP {last_status}）| body前300: {raw_body[:300]}")
+                return None
+            return content
+        log(f"API 调用最终失败（已重试 {MAX_RETRIES} 次），最后 HTTP 状态: {last_status}")
         return None
 
     def chat_json(

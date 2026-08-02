@@ -174,7 +174,7 @@ def analyze_stock(
         log(f"[{code}] Round {i+1} 消息长度: system={len(messages[0]['content'])} user={len(user_content)}")
         round_result = client.chat_json(messages)
         if round_result is None:
-            log(f"[{code}] Round {i+1} LLM 调用失败（API错误或JSON解析失败），跳过后续轮次")
+            log(f"[{code}] Round {i+1} LLM 调用未返回有效结果（详见上方 llm_client 诊断日志）")
             result["error"] = f"Round {i+1} LLM 调用失败"
             break
 
