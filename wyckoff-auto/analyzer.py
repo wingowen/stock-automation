@@ -73,8 +73,12 @@ def analyze_stock(
     trade_date: str,
     bg_months: int = BG_MONTHS,
     dry_run: bool = False,
+    max_rounds: int = 5,
 ) -> dict:
-    """对单只股票执行 5 轮分析。
+    """对单只股票执行多轮分析。
+
+    Args:
+        max_rounds: 1-5，限制分析轮次（用于快速测试/评估）
 
     Returns:
         {
@@ -82,7 +86,7 @@ def analyze_stock(
             "name": stock_name,
             "trade_date": trade_date,
             "rounds": [round1_json, round2_json, ...],
-            "completed_rounds": 0-5,
+            "completed_rounds": 0-max_rounds,
             "history": {...},
             "kline_data": {...},
             "brief_path": "...",
@@ -132,7 +136,9 @@ def analyze_stock(
     background_phase = ""
 
     for i, (round_name, round_label) in enumerate(zip(ROUND_NAMES, ROUND_LABELS)):
-        log(f"[{code}] Round {i+1}/5: {round_label}...")
+        if i >= max_rounds:
+            break
+        log(f"[{code}] Round {i+1}/{max_rounds}: {round_label}...")
 
         # 加载 prompt 模板
         prompt_template = load_prompt(round_name)

@@ -32,13 +32,14 @@ def _resolve_key(spec: dict) -> tuple[str, str]:
     return os.environ.get(key_env, ""), os.environ.get(url_env, "")
 
 
-def run_model_eval(spec: dict, stocks: list, trade_date: str) -> dict:
-    """对单模型跑所有标的的 5 轮分析，返回原始结果（含 rounds）。
+def run_model_eval(spec: dict, stocks: list, trade_date: str, max_rounds: int = 5) -> dict:
+    """对单模型跑所有标的的多轮分析，返回原始结果（含 rounds）。
 
     Args:
         spec: {"id","label","provider","model","api_key_env"?,"base_url_env"?}
         stocks: [{"code":..,"name":..}, ...] 或 ["002279", ...]
         trade_date: YYYY-MM-DD
+        max_rounds: 1-5，限制分析轮次（用于快速测试）
     Returns:
         {"model_id","label","provider","model","error"?, "stocks":[analyze_stock 结果...]}
     """
@@ -68,7 +69,7 @@ def run_model_eval(spec: dict, stocks: list, trade_date: str) -> dict:
         code = s["code"] if isinstance(s, dict) else s
         name = s.get("name", "") if isinstance(s, dict) else ""
         try:
-            res = analyze_stock(client, code, trade_date, dry_run=True)
+            res = analyze_stock(client, code, trade_date, dry_run=True, max_rounds=max_rounds)
             if not res.get("name"):
                 res["name"] = name
             results.append(res)

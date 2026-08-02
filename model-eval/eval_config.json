@@ -1,5 +1,6 @@
 {
   "trade_date": null,
+  "max_rounds": 1,
   "stocks": ["002279", "002611"],
   "models": [
     {

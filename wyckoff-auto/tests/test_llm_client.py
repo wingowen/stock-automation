@@ -158,10 +158,10 @@ def test_throttle_delays_between_calls():
     with mock.patch("llm_client.time.time", return_value=1001.0), \
          mock.patch("llm_client.time.sleep") as mock_sleep:
         c._throttle()
-        # RATE_LIMIT_DELAY=4, elapsed=1, 应 sleep 3s
+        # RATE_LIMIT_DELAY=6, elapsed=1, 应 sleep 5s
         mock_sleep.assert_called_once()
         actual_wait = mock_sleep.call_args[0][0]
-        assert 2.5 <= actual_wait <= 4.0, f"期望 sleep ~3s，实际 {actual_wait}"
+        assert 4.0 <= actual_wait <= 6.0, f"期望 sleep ~5s，实际 {actual_wait}"
 
 
 def test_throttle_skips_on_first_call():

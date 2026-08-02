@@ -68,7 +68,8 @@ def main() -> int:
     stocks = resolve_stocks(cfg)
 
     trade_date = args.trade_date or cfg.get("trade_date") or latest_trade_day().strftime("%Y-%m-%d")
-    log(f"交易日: {trade_date} | 标的: {[s['code'] for s in stocks]}")
+    max_rounds = int(cfg.get("max_rounds", 5))
+    log(f"交易日: {trade_date} | 标的: {[s['code'] for s in stocks]} | 轮次: {max_rounds}")
 
     model_specs = cfg.get("models", [])
     if args.models:
@@ -82,7 +83,7 @@ def main() -> int:
     rounds_by_model: dict[str, dict] = {}
     for spec in model_specs:
         log(f"=== 评估模型: {spec.get('label', spec['id'])} ({spec['provider']}) ===")
-        raw = run_model_eval(spec, stocks, trade_date)
+        raw = run_model_eval(spec, stocks, trade_date, max_rounds=max_rounds)
         rounds_by_model[spec["id"]] = raw
         scored = score_model(raw)
         scored["model_id"] = raw["model_id"]

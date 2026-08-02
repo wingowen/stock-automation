@@ -64,8 +64,8 @@ REQUEST_TIMEOUT = 300  # API 超时（秒）。agnes 为推理模型 + GitHub �
 TEMPERATURE = 0.3      # 采样温度
 
 # 速率控制：两次 API 调用之间的最小间隔（秒）
-# Gemini Flash 免费档 ~15 RPM => 4s/次；生产环境可按需调低
-RATE_LIMIT_DELAY = float(os.environ.get("RATE_LIMIT_DELAY", "4"))
+# Gemini Flash 免费档 ~15 RPM => 4s/次；调至 6s 留余量，避免边界触发 429
+RATE_LIMIT_DELAY = float(os.environ.get("RATE_LIMIT_DELAY", "6"))
 
 # ── 通知配置 ────────────────────────────────────────────────
 NTFY_TOPIC_URL = os.environ.get("NTFY_TOPIC_URL", "")
