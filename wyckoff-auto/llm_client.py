@@ -35,6 +35,8 @@ from config import (
     GEMINI_MODEL,
     LLM_PROVIDER,
     MAX_RETRIES,
+    MAX_RETRIES_429,
+    RATE_LIMIT_DELAY,
     REQUEST_TIMEOUT,
     TEMPERATURE,
 )
@@ -89,6 +91,22 @@ class LLMClient:
             self.base_url = (base_url or AGNES_BASE_URL).rstrip("/")
             self.model = model or AGNES_MODEL
 
+        self._last_call_ts: float = 0.0
+
+    def _throttle(self) -> None:
+        """主动速率控制：确保两次调用间隔不小于 RATE_LIMIT_DELAY 秒。
+
+        在每次 API 请求前调用。Gemini Flash 免费档 ~15 RPM，
+        无间隔密集调用会在第 2-3 请求即触发 429。
+        """
+        if RATE_LIMIT_DELAY <= 0 or self._last_call_ts <= 0:
+            return
+        elapsed = time.time() - self._last_call_ts
+        if elapsed < RATE_LIMIT_DELAY:
+            wait = RATE_LIMIT_DELAY - elapsed
+            log(f"速率控制：等待 {wait:.1f}s（最小间隔 {RATE_LIMIT_DELAY}s）")
+            time.sleep(wait)
+
     # ── 统一入口 ───────────────────────────────────────────
     def chat(
         self,
@@ -103,6 +121,8 @@ class LLMClient:
             temperature: 采样温度
             json_mode: 是否要求 JSON 格式输出
         """
+        self._throttle()
+        self._last_call_ts = time.time()
         if self.provider == "gemini":
             return self._chat_gemini(messages, temperature, json_mode)
         return self._chat_agnes(messages, temperature, json_mode)
@@ -178,7 +198,7 @@ class LLMClient:
         url = f"{self.base_url}/v1beta/models/{self.model}:generateContent"
         last_status = None
 
-        for attempt in range(1, MAX_RETRIES + 1):
+        for attempt in range(1, MAX_RETRIES + MAX_RETRIES_429 + 1):
             req = urllib.request.Request(
                 url,
                 data=data,
@@ -199,14 +219,23 @@ class LLMClient:
                     log(f"Gemini 鉴权/请求错误({e.code})，请检查 GEMINI_API_KEY 或请求格式：{body}")
                     return None
                 if e.code == 429:
-                    wait = min(2 ** attempt, 30)
-                    log(f"Gemini 限流(429)，退避 {wait}s 后重试(第{attempt}次)：{body}")
+                    if attempt > MAX_RETRIES_429:
+                        log(f"Gemini 限流(429)已达最大重试次数({MAX_RETRIES_429})，放弃")
+                        return None
+                    wait = min(4 * (2 ** (attempt - 1)), 60)
+                    log(f"Gemini 限流(429)，退避 {wait}s 后重试(第{attempt}/{MAX_RETRIES_429}次)：{body}")
                     time.sleep(wait)
                     continue
+                if attempt > MAX_RETRIES:
+                    log(f"Gemini HTTP 错误({e.code})已达最大重试次数({MAX_RETRIES})，放弃：{body}")
+                    return None
                 log(f"Gemini HTTP 错误({e.code})，重试(第{attempt}次)：{body}")
                 time.sleep(2 * attempt)
                 continue
             except (urllib.error.URLError, TimeoutError, OSError) as e:
+                if attempt > MAX_RETRIES:
+                    log(f"Gemini 网络错误已达最大重试次数({MAX_RETRIES}): {e}")
+                    return None
                 log(f"Gemini 网络错误(第{attempt}次): {e}")
                 time.sleep(2 * attempt)
                 continue
@@ -256,7 +285,7 @@ class LLMClient:
         url = f"{self.base_url}/chat/completions"
         last_status = None
 
-        for attempt in range(1, MAX_RETRIES + 1):
+        for attempt in range(1, MAX_RETRIES + MAX_RETRIES_429 + 1):
             req = urllib.request.Request(
                 url,
                 data=data,
@@ -277,14 +306,23 @@ class LLMClient:
                     log(f"API 鉴权失败({e.code})，请检查 AGNES_API_KEY：{body}")
                     return None
                 if e.code == 429:
-                    wait = min(2 ** attempt, 30)
-                    log(f"API 限流(429)，退避 {wait}s 后重试(第{attempt}次)：{body}")
+                    if attempt > MAX_RETRIES_429:
+                        log(f"API 限流(429)已达最大重试次数({MAX_RETRIES_429})，放弃")
+                        return None
+                    wait = min(4 * (2 ** (attempt - 1)), 60)
+                    log(f"API 限流(429)，退避 {wait}s 后重试(第{attempt}/{MAX_RETRIES_429}次)：{body}")
                     time.sleep(wait)
                     continue
+                if attempt > MAX_RETRIES:
+                    log(f"API HTTP 错误({e.code})已达最大重试次数({MAX_RETRIES})，放弃：{body}")
+                    return None
                 log(f"API HTTP 错误({e.code})，重试(第{attempt}次)：{body}")
                 time.sleep(2 * attempt)
                 continue
             except (urllib.error.URLError, TimeoutError, OSError) as e:
+                if attempt > MAX_RETRIES:
+                    log(f"API 网络错误已达最大重试次数({MAX_RETRIES}): {e}")
+                    return None
                 log(f"API 网络错误(第{attempt}次): {e}")
                 time.sleep(2 * attempt)
                 continue

@@ -50,7 +50,7 @@ GEMINI_MODEL = os.environ.get("GEMINI_MODEL") or DEFAULT_GEMINI_MODEL
 
 # Agnes（OpenAI 兼容网关，备选）
 DEFAULT_BASE_URL = "https://api.agnes-ai.com/v1"
-DEFAULT_MODEL = "agnes-text"
+DEFAULT_MODEL = "agnes-2.5-flash"
 
 AGNES_API_KEY = os.environ.get("AGNES_API_KEY", "")
 AGNES_BASE_URL = (os.environ.get("AGNES_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
@@ -58,9 +58,14 @@ AGNES_MODEL = os.environ.get("AGNES_MODEL") or DEFAULT_MODEL
 
 # ── 分析参数 ────────────────────────────────────────────────
 BG_MONTHS = 6          # 背景数据月数
-MAX_RETRIES = 2        # LLM 调用重试次数
+MAX_RETRIES = 2        # LLM 调用重试次数（非 429 错误）
+MAX_RETRIES_429 = 5    # 429 限流专用重试次数（退避更长，需更多耐心）
 REQUEST_TIMEOUT = 300  # API 超时（秒）。agnes 为推理模型 + GitHub 境外 runner 访问国内 API 延迟高，单轮推理常 >120s，120s 会误杀，放宽至 300s
 TEMPERATURE = 0.3      # 采样温度
+
+# 速率控制：两次 API 调用之间的最小间隔（秒）
+# Gemini Flash 免费档 ~15 RPM => 4s/次；生产环境可按需调低
+RATE_LIMIT_DELAY = float(os.environ.get("RATE_LIMIT_DELAY", "4"))
 
 # ── 通知配置 ────────────────────────────────────────────────
 NTFY_TOPIC_URL = os.environ.get("NTFY_TOPIC_URL", "")

@@ -5,6 +5,8 @@
 - Gemini payload 必须正确映射 OpenAI 风格 messages（system->systemInstruction，assistant->model）
 - 成功响应能解析出文本
 - 鉴权失败 / 空候选 / 空文本 必须返回 None（不得抛异常）
+- 429 限流退避重试后能恢复
+- 主动速率控制（_throttle）在连续调用时生效
 """
 from __future__ import annotations
 
@@ -58,7 +60,7 @@ def test_build_gemini_payload_maps_roles():
     ]
     payload = c._build_gemini_payload(messages, temperature=0.3, json_mode=True)
 
-    # system → systemInstruction
+    # system -> systemInstruction
     assert payload["systemInstruction"]["parts"][0]["text"] == "SYS"
     # 其余按角色映射，assistant 转为 model
     assert [c["role"] for c in payload["contents"]] == ["user", "model", "user"]
@@ -131,8 +133,40 @@ def test_chat_gemini_rate_limit_retries_then_succeeds():
         urllib.error.HTTPError("url", 429, "Too Many", {}, None),
         _fake_response(200, body),
     ]
-    with mock.patch(
+    with mock.patch("llm_client.time.sleep"), mock.patch(
         "llm_client.urllib.request.urlopen", side_effect=side
     ):
         out = c._chat_gemini([{"role": "user", "content": "hi"}], 0.3, True)
     assert out == '{"ok":1}'
+
+
+def test_chat_gemini_rate_limit_exhausts_retries():
+    """429 超过 MAX_RETRIES_429 次后必须返回 None，不得无限重试。"""
+    c = llm_client.LLMClient(provider="gemini", api_key="k", model="m")
+    err = urllib.error.HTTPError("url", 429, "Too Many", {}, None)
+    with mock.patch("llm_client.time.sleep"), mock.patch(
+        "llm_client.urllib.request.urlopen", side_effect=err
+    ):
+        out = c._chat_gemini([{"role": "user", "content": "hi"}], 0.3, True)
+    assert out is None
+
+
+def test_throttle_delays_between_calls():
+    """主动速率控制：连续调用时第二次会触发 sleep。"""
+    c = llm_client.LLMClient(provider="gemini", api_key="k", model="m")
+    c._last_call_ts = 1000.0  # 模拟刚调用过
+    with mock.patch("llm_client.time.time", return_value=1001.0), \
+         mock.patch("llm_client.time.sleep") as mock_sleep:
+        c._throttle()
+        # RATE_LIMIT_DELAY=4, elapsed=1, 应 sleep 3s
+        mock_sleep.assert_called_once()
+        actual_wait = mock_sleep.call_args[0][0]
+        assert 2.5 <= actual_wait <= 4.0, f"期望 sleep ~3s，实际 {actual_wait}"
+
+
+def test_throttle_skips_on_first_call():
+    """首次调用不需要等待。"""
+    c = llm_client.LLMClient(provider="gemini", api_key="k", model="m")
+    with mock.patch("llm_client.time.sleep") as mock_sleep:
+        c._throttle()
+        mock_sleep.assert_not_called()

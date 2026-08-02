@@ -12,7 +12,7 @@
       "id": "agnes-flash",
       "label": "Agnes 2.5 Flash",
       "provider": "agnes",
-      "model": "agnes-text"
+      "model": "agnes-2.5-flash"
     }
   ],
   "output_dir": "model-eval/reports"
