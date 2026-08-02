@@ -46,7 +46,7 @@ AGNES_MODEL = os.environ.get("AGNES_MODEL", DEFAULT_MODEL)
 # ── 分析参数 ────────────────────────────────────────────────
 BG_MONTHS = 6          # 背景数据月数
 MAX_RETRIES = 2        # LLM 调用重试次数
-REQUEST_TIMEOUT = 120  # API 超时（秒）
+REQUEST_TIMEOUT = 300  # API 超时（秒）。agnes 为推理模型 + GitHub 境外 runner 访问国内 API 延迟高，单轮推理常 >120s，120s 会误杀，放宽至 300s
 TEMPERATURE = 0.3      # 采样温度
 
 # ── 通知配置 ────────────────────────────────────────────────
