@@ -1,0 +1,5 @@
+# 开发/CI 质量门禁依赖（不参与线上运行时）
+pytest>=8.0
+ruff>=0.5
+pandas>=2.0
+requests>=2.28

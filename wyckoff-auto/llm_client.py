@@ -15,22 +15,35 @@
 from __future__ import annotations
 
 import json
-import os
+import logging
 import sys
+import time
+import urllib.error
+import urllib.parse
 import urllib.request
+from pathlib import Path
 
 from config import (
     AGNES_API_KEY,
     AGNES_BASE_URL,
     AGNES_MODEL,
+    MAX_OUTPUT_TOKENS,
     MAX_RETRIES,
     REQUEST_TIMEOUT,
     TEMPERATURE,
 )
 
+logger = logging.getLogger("wyckoff_auto.llm_client")
+if not logger.handlers:
+    _h = logging.StreamHandler(sys.stderr)
+    _h.setFormatter(logging.Formatter("[llm_client] %(levelname)s %(message)s"))
+    logger.addHandler(_h)
+    logger.setLevel(logging.INFO)
+
 
 def log(*a):
-    print("[llm_client]", *a, file=sys.stderr, flush=True)
+    """兼容壳：统一路由到标准 logging（info 级），便于分级过滤。"""
+    logger.info(" ".join(str(x) for x in a))
 
 
 class LLMClient:
@@ -55,6 +68,7 @@ class LLMClient:
         messages: list[dict],
         temperature: float = TEMPERATURE,
         json_mode: bool = True,
+        max_tokens: int = MAX_OUTPUT_TOKENS,
     ) -> str | None:
         """调用 chat/completions，返回模型文本。失败返回 None。
 
@@ -71,6 +85,7 @@ class LLMClient:
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
+            "max_tokens": max_tokens,
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
@@ -91,13 +106,30 @@ class LLMClient:
             )
             try:
                 with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as r:
-                    resp = json.loads(r.read().decode("utf-8"))
+                    raw_body = r.read().decode("utf-8")
+            except urllib.error.HTTPError as e:
+                if e.code in (401, 403):
+                    log(f"API 鉴权失败({e.code})，请检查 AGNES_API_KEY，不再重试")
+                    return None
+                if e.code == 429:
+                    wait = min(2 ** attempt, 30)
+                    log(f"API 限流(429)，退避 {wait}s 后重试(第{attempt}次)")
+                    time.sleep(wait)
+                    continue
+                log(f"API HTTP 错误({e.code})，重试(第{attempt}次)")
+                time.sleep(2 * attempt)
+                continue
+            except (urllib.error.URLError, TimeoutError, OSError) as e:
+                log(f"API 网络错误(第{attempt}次): {e}")
+                time.sleep(2 * attempt)
+                continue
+            # 网络层正常，但需校验响应结构（结构异常不应重试）
+            try:
+                resp = json.loads(raw_body)
                 return resp["choices"][0]["message"]["content"]
-            except Exception as e:
-                log(f"API 调用失败(第{attempt}次): {e}")
-                if attempt < MAX_RETRIES:
-                    import time
-                    time.sleep(2 * attempt)
+            except (json.JSONDecodeError, KeyError, IndexError) as e:
+                log(f"API 响应结构异常（非重试性）: {e} | body前200: {raw_body[:200]}")
+                return None
         return None
 
     def chat_json(
@@ -124,10 +156,9 @@ def load_watchlist(path: str | None = None) -> list[dict]:
     Returns:
         [{"code": "002279", "name": "久其软件", ...}, ...]
     """
-    import pathlib
     from config import WATCHLIST_PATH
 
-    wl_path = pathlib.Path(path) if path else WATCHLIST_PATH
+    wl_path = Path(path) if path else WATCHLIST_PATH
     if not wl_path.exists():
         log(f"观察名单不存在: {wl_path}")
         return []
@@ -151,13 +182,12 @@ def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "
         tags: 标签图标，如 "chart_with_upwards_trend"
     """
     from config import NTFY_TOPIC_URL
-    from urllib.parse import quote
 
     if not NTFY_TOPIC_URL:
         return False
 
     # HTTP header 只支持 latin-1，中文需 URL 编码
-    headers = {"Title": quote(title, safe=""), "Priority": priority}
+    headers = {"Title": urllib.parse.quote(title, safe=""), "Priority": priority}
     if tags:
         headers["Tags"] = tags
 

@@ -5,11 +5,22 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 # ── 路径约定 ────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MODULE_DIR = Path(__file__).resolve().parent
+
+# 让项目根进入导入路径，以便引用 common/ 共享包
+sys.path.insert(0, str(PROJECT_ROOT))
+
+# 交易日历统一数据源（消除与 web_brief.py 的重复定义）
+from common.trading_calendar import (  # noqa: F401  (再导出给下游 `from config import`)
+    HOLIDAYS_2026,
+    is_trade_day,
+    latest_trade_day,
+)
 
 WATCHLIST_PATH = MODULE_DIR / "watchlist.json"
 PROMPTS_DIR = MODULE_DIR / "prompts"
@@ -37,37 +48,11 @@ BG_MONTHS = 6          # 背景数据月数
 MAX_RETRIES = 2        # LLM 调用重试次数
 REQUEST_TIMEOUT = 120  # API 超时（秒）
 TEMPERATURE = 0.3      # 采样温度
+MAX_OUTPUT_TOKENS = 4000  # 单轮输出上限（agnes-2.5-flash 输出上限 65.5K，此处设 cap 防啰嗦/省成本）
 
 # ── 通知配置 ────────────────────────────────────────────────
 NTFY_TOPIC_URL = os.environ.get("NTFY_TOPIC_URL", "")
 FEISHU_WEBHOOK_URL = os.environ.get("FEISHU_WEBHOOK_URL", "")
 
-# A 股交易日历（与 web_brief.py 同步）
-HOLIDAYS_2026 = {
-    "2026-01-01", "2026-01-02", "2026-01-03",
-    "2026-02-15", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19",
-    "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23",
-    "2026-04-04", "2026-04-05", "2026-04-06",
-    "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05",
-    "2026-06-19", "2026-06-20", "2026-06-21",
-    "2026-09-25", "2026-09-26", "2026-09-27",
-    "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05",
-    "2026-10-06", "2026-10-07",
-}
-
-
-def is_trade_day(d) -> bool:
-    import datetime as dt
-    if d.weekday() >= 5:
-        return False
-    if d.strftime("%Y-%m-%d") in HOLIDAYS_2026:
-        return False
-    return True
-
-
-def latest_trade_day(from_date=None) -> "dt.date":
-    import datetime as dt
-    d = from_date or dt.date.today()
-    while not is_trade_day(d):
-        d -= dt.timedelta(days=1)
-    return d
+# 注：HOLIDAYS_2026 / is_trade_day / latest_trade_day 已迁移至
+#     common/trading_calendar.py 并由本模块再导出，请勿在此重复定义。

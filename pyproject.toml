@@ -1,0 +1,20 @@
+[tool.pytest.ini_options]
+# 让 pytest 能直接 import 各模块的扁平包（import config / from context_builder import ...）
+pythonpath = ["wyckoff-auto", "scanner", "wyckoff"]
+testpaths = ["wyckoff-auto/tests", "wyckoff/tests"]
+addopts = "-q"
+
+[tool.ruff]
+# 初始阶段只开「真实 bug 类」规则，避免一次性爆大量风格问题阻断 CI：
+#   F = pyflakes（未定义名/未使用导入/重复定义等，能抓真错）
+#   E9 = 语法错误类
+# 风格类（E1-E7 缩进/空格等）后续团队共识后再逐步开启。
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["F", "E9"]
+
+[tool.ruff.lint.per-file-ignores]
+# 技能目录为第三方/生成物，不纳入本项目质量门禁
+".agents/**" = ["ALL"]

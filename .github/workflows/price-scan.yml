@@ -21,10 +21,16 @@ jobs:
       - name: 设置 Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: 安装依赖
         run: pip install requests
+
+      - name: 质量门禁 (lint + test)
+        run: |
+          pip install pytest ruff
+          ruff check wyckoff-auto scanner wyckoff
+          python -m pytest wyckoff-auto/tests
 
       - name: 运行价格扫描
         env:

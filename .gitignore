@@ -37,3 +37,6 @@ wyckoff/data/cache/tmp/
 
 # 威科夫相关（已整合到 wyckoff/）
 威科夫操盘法-章节/
+
+# 智能体私有工作记忆（本地日志/上下文，禁止入库）
+.workbuddy/

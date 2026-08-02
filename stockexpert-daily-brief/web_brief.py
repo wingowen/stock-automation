@@ -33,34 +33,18 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+# 交易日历统一数据源（消除与 wyckoff-auto/config.py 的重复定义）
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from common.trading_calendar import HOLIDAYS_2026 as HOLIDAYS, is_trade_day, latest_trade_day
+
 # ---------- 配置 ----------
 DEFAULT_BASE_URL = "https://api.agnes-ai.com/v1"
 DEFAULT_MODEL = "agnes-text"
 SCHEMA_VERSION = "1.0"
 METHOD = "right-side-core"
 
-# A股粗略交易日历：周一到周五，排除法定节假日。
-# 生产环境建议接入交易所日历 API；此处内置 2026 年官方休市日
-# （来源：沪深北交易所 2025-12-22 公告，证券时报等转载核对一致）。
-# 注意：2027 年及以后需按当年公告补充，否则对应节假日仍会触发生成。
-HOLIDAYS = {
-    # 元旦
-    "2026-01-01", "2026-01-02", "2026-01-03",
-    # 春节
-    "2026-02-15", "2026-02-16", "2026-02-17", "2026-02-18", "2026-02-19",
-    "2026-02-20", "2026-02-21", "2026-02-22", "2026-02-23",
-    # 清明节
-    "2026-04-04", "2026-04-05", "2026-04-06",
-    # 劳动节
-    "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05",
-    # 端午节
-    "2026-06-19", "2026-06-20", "2026-06-21",
-    # 中秋节
-    "2026-09-25", "2026-09-26", "2026-09-27",
-    # 国庆节
-    "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05",
-    "2026-10-06", "2026-10-07",
-}
+# A股交易日历（周一到周五，排除法定节假日）已统一至 common/trading_calendar.py
+# （2026 年官方休市日来源：沪深北交易所 2025-12-22 公告；2027 起需按当年公告补充）。
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; StockExpertBrief/1.0)",
@@ -135,19 +119,7 @@ def http_get(url: str, timeout: int = 15) -> str | None:
     return raw.decode("utf-8", "ignore")
 
 
-def is_trade_day(d: dt.date) -> bool:
-    if d.weekday() >= 5:  # 周六日
-        return False
-    if d.strftime("%Y-%m-%d") in HOLIDAYS:
-        return False
-    return True
-
-
-def latest_trade_day(from_date: dt.date | None = None) -> dt.date:
-    d = from_date or dt.date.today()
-    while not is_trade_day(d):
-        d -= dt.timedelta(days=1)
-    return d
+# is_trade_day / latest_trade_day 已移至 common/trading_calendar.py 并由上方导入。
 
 
 def call_agnes(system: str, user: str) -> str | None:
