@@ -14,15 +14,12 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
-from pathlib import Path
 
 from config import (
     BG_MONTHS,
     KLINE_FETCH_SCRIPT,
-    KNOWLEDGE_FILE,
     PROMPTS_DIR,
     PROJECT_ROOT,
-    SKILL_DIR,
     WYCKOFF_SKILL_DIR,
     WORKFLOW_SCRIPT,
 )
@@ -161,13 +158,43 @@ def _split_blocks(raw: str) -> dict[str, str]:
 
 
 # ── Skill 知识加载 ───────────────────────────────────────────
+# System prompt 前置：角色 + 全局铁律。
+# 这些约束对所有轮次生效，并体现项目硬性规范（仅主板权限、数据真实可溯源）。
+SYSTEM_ROLE_PREFIX = """你是威科夫操盘法分析助手，专门对 A 股主板个股做结构化分析（用户仅有主板交易权限，禁止给出科创板/创业板标的建议）。
+你按「看盘五步法」分 5 轮顺序分析（背景 → 价量形态 → 形态性质 → 结论/预测 → 措施和行动），每轮只输出严格 JSON。
+
+全局铁律（每一轮都必须遵守）：
+- 所有价格、成交量、日期数字必须来自用户提供的 K 线数据，或前序轮次返回的 JSON；严禁编造或臆测。
+- 无法从数据得出的结论，在对应字段填 "" / null 并说明原因，不要猜测。
+- 背景优先于形态：熊市中的 Spring / 反弹视为陷阱，不给出追涨或抄底建议。
+- 普通投资者视角：仓位建议保守，宁可错过也不冒不可逆风险。
+
+以下是威科夫操盘法核心知识库（仅取核心框架，章节知识会在对应轮次按需注入）：
+
+"""
+
+
 def load_skill_core() -> str:
-    """加载 SKILL.md 核心框架（所有轮次的 system prompt 基础）。"""
+    """加载 system prompt 基础：从 SKILL.md 抽取「核心框架」段落。
+
+    剔除面向人工导航的 How to Use / 章节索引 / 主题索引 / 适用范围 等噪声，
+    这些段落对批量自动分析无意义，只会浪费 token 并干扰模型。结构变动时退回全文兜底。
+    """
     skill_md = WYCKOFF_SKILL_DIR / "SKILL.md"
     if not skill_md.exists():
         log(f"SKILL.md 不存在: {skill_md}")
         return ""
-    return skill_md.read_text(encoding="utf-8")
+    text = skill_md.read_text(encoding="utf-8")
+
+    start = text.find("## Core Frameworks")
+    end = text.find("## Chapter Index")
+    if start != -1 and end != -1 and end > start:
+        core = text[start:end].strip()
+    else:
+        log("SKILL.md 结构变动，退回全文作为 system prompt")
+        core = text
+
+    return SYSTEM_ROLE_PREFIX + core
 
 
 def load_chapter(chapter: str) -> str:
@@ -186,6 +213,19 @@ def load_chapter(chapter: str) -> str:
         log(f"章节文件未找到: {chapter}*.md")
         return ""
     return candidates[0].read_text(encoding="utf-8")
+
+
+def load_supporting(name: str) -> str:
+    """加载技能 Supporting Files（glossary.md / patterns.md / cheatsheet.md 等）。
+
+    这些文件列在 SKILL.md 的「Supporting Files」段，提供术语字典 / 速查纪律表等。
+    当前仅 cheatsheet 被第⑤步注入；其他按需扩展。
+    """
+    path = WYCKOFF_SKILL_DIR / name
+    if not path.exists():
+        log(f"Supporting 文件未找到: {path}")
+        return ""
+    return path.read_text(encoding="utf-8")
 
 
 def load_chapters_for_round(round_num: int, background_phase: str = "") -> str:

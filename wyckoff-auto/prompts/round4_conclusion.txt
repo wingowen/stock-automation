@@ -1,18 +1,22 @@
 ## 第④步：结论/预测
 
-基于前三轮的分析，现在得出综合结论和预判。
+基于前三轮（背景、形态、性质）的分析，现在得出综合结论和短期预判。这是连接「分析」与「行动」的关键一环。
 
 ### 分析要求
 
-1. 综合背景、形态、性质三个维度的分析
-2. 对照历史简报（如有），验证上次预判的准确性
-3. 给出明确的短期方向判断
-4. 标注关键价位（阻力/支撑）
-5. 判断当前处于威科夫哪个阶段
+1. 综合背景、形态、性质三个维度的分析，得出大背景结论。
+2. 对照下方历史简报（如有），验证上次预判的准确性，做迭代复盘。
+3. 给出明确的短期方向判断。
+4. 标注关键价位（阻力/支撑），必须来自 K 线真实价格节点。
+5. 判断当前处于威科夫哪个阶段。
 
 ### 历史简报（如有）
 
 {history_brief}
+
+### 附加知识（综合分析框架）
+
+{selective_chapter}
 
 ### 输出 JSON Schema
 
@@ -29,7 +33,7 @@
   },
   "current_phase": "当前威科夫阶段描述",
   "prediction": {
-    "direction": "up|down|sideways",
+    "direction": "bullish|bearish|neutral",
     "target_price": 0.0,
     "time_window": "预计时间窗口",
     "confidence": "high|mid|low",
@@ -45,9 +49,11 @@
 }
 ```
 
-### 注意
+### 输出要求
 
-- 关键价位必须来自 K 线数据中的实际价格节点
-- direction 和 prediction.direction 要一致
-- 如果有历史简报，必须对照上次预判进行迭代验证
-- confidence 要诚实评估，不确定就标 low
+- 只输出一个 JSON 对象，严格匹配 schema；不要任何解释文字或 ```json 代码块标记。
+- 所有字段必须出现；无历史简报时 `has_history` 填 false，其余历史字段填空字符串 ""。
+- `direction` 与 `prediction.direction` 必须使用同一套取值（bullish|bearish|neutral）并保持完全一致。
+- `resistance` / `support` 及扩展价位必须来自 K 线数据中的实际价格节点，禁止编造。
+- `confidence` 要诚实评估：逻辑链不完整或数据不足时标 "low"，不要为迎合方向而拔高置信度。
+- 若有历史简报，必须在 `history_comparison` 中对照上次预判进行迭代验证，提炼可复用的教训。

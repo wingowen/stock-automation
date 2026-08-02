@@ -8,7 +8,6 @@
 """
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -30,12 +29,13 @@ SYSTEM_PROMPT = """你是威科夫分析知识库管理员。基于今日的多�
 4. 失败案例库：被市场证伪的判断
 
 更新规则：
-- 只在有新发现时更新，无则返回空更新
+- 只在有新发现时更新，无则返回空更新（updates 各数组为空）
 - 新增条目追加到对应章节表格末尾
 - 每条必须标注来源简报路径
 - 不修改历史条目
+- `stock_iteration` 的 code 必须为 6 位股票代码，且与现有章节标题（如 ### 002279.SZ）格式一致，便于自动归并
 
-输出 JSON：
+输出 JSON（只输出 JSON 对象本身，不要任何解释文字或 ```json 代码块标记）：
 {
   "updates": {
     "patterns": [{"pattern": "...", "description": "...", "case": "...", "source": "..."}],

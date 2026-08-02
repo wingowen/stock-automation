@@ -21,7 +21,6 @@
 from __future__ import annotations
 
 import argparse
-import datetime as dt
 import json
 import sys
 import traceback
@@ -38,6 +37,7 @@ from context_builder import (
     load_chapters_for_round,
     load_prompt,
     load_skill_core,
+    load_supporting,
 )
 from llm_client import LLMClient, load_watchlist
 
@@ -154,14 +154,19 @@ def analyze_stock(
             compressed = compress_kline_for_later_rounds(kline, result["rounds"][0] if result["rounds"] else {})
             user_content += f"\n\n---\n\n【数据摘要】\n{compressed}"
         elif i == 3:
-            # Round 4: 注入历史简报
+            # Round 4: 注入历史简报 + 综合章节(ch05/ch06)
             history_content = history.get("history_content", "（无历史简报）")
+            selective_chapter = load_chapters_for_round(4, background_phase)
             user_content = prompt_template.replace("{history_brief}", history_content)
+            user_content = user_content.replace("{selective_chapter}", selective_chapter)
             compressed = compress_kline_for_later_rounds(kline, result["rounds"][0] if result["rounds"] else {})
             user_content += f"\n\n---\n\n【数据摘要】\n{compressed}"
         else:
-            # Round 5: 不需要额外数据
-            user_content = prompt_template
+            # Round 5: 注入综合章节(ch05/ch06) + 决策纪律速查表
+            selective_chapter = load_chapters_for_round(5, background_phase)
+            cheatsheet = load_supporting("cheatsheet.md")
+            user_content = prompt_template.replace("{selective_chapter}", selective_chapter)
+            user_content = user_content.replace("{cheatsheet}", cheatsheet)
 
         messages.append({"role": "user", "content": user_content})
 

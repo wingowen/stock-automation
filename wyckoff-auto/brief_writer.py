@@ -11,7 +11,6 @@
 """
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 
@@ -93,14 +92,14 @@ def write_brief(result: dict) -> Path:
     lines.append("")
     lines.append(f"> 分析日期：{trade_date}  |  版本：v{version}  |  完成轮次：{completed}/5")
     lines.append(f"> 历史简报：{history_ref_str}")
-    lines.append(f"> 知识库：[KNOWLEDGE.md](../KNOWLEDGE.md)")
+    lines.append("> 知识库：[KNOWLEDGE.md](../KNOWLEDGE.md)")
     lines.append("")
 
     # 〇 历史上下文
     lines.append("## 〇、历史上下文")
     lines.append("")
     if history.get("history_content") and history["history_content"] != "（无历史简报，首次分析）":
-        lines.append(f"参考上一版简报的核心预判：")
+        lines.append("参考上一版简报的核心预判：")
         lines.append("")
         # 提取上次预判摘要
         hc = history["history_content"]
