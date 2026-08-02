@@ -38,7 +38,8 @@ def render_markdown(
     L.append(f"- 评估日期（交易日）：`{trade_date}`")
     L.append(f"- 生成时间：`{now}`")
     L.append("- 评分维度权重：结构 25% / schema 25% / 一致性 25% / 约束 25%")
-    L.append(f"- 评估标的：{', '.join(r['model_id'] for r in scored_models) and ', '.join(sorted({s['code'] for m in scored_models for s in m.get('stocks', []) if s.get('code')}))}")
+    stocks_shown = sorted({s.get("code") for m in scored_models for s in m.get("per_stock", []) if s.get("code")})
+    L.append(f"- 评估标的：{', '.join(stocks_shown) if stocks_shown else '(无)'}")
     L.append("")
 
     # 排行榜
