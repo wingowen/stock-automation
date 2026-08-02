@@ -10,26 +10,151 @@
       "trade_date": "2026-07-31",
       "rounds": [
         {
-          "background": "trading_range",
-          "background_reasoning": "股价从2026年1月底高点11.31元一路下行至7月7日最低5.43元，随后止跌企稳并形成低位震荡区间；7月下旬成交量剧增并出现强力反弹，表明单边下行趋势中断，进入低位震荡结构。",
-          "phase": "accumulation",
-          "phase_stage": "D",
-          "phase_reasoning": "股价在7月7日触及5.43元低点后止跌，7月28日至31日成交量急剧放大（日均超100万手，远超背景期日均量37.1万手），大阳线连续向上推进突破前期短线平台，呈现典型的SOS（强势出现）特征，属于吸筹D阶段。",
-          "trend": "sideways",
-          "trend_description": "中期单边熊市在5.43元见底止跌，目前处于底部大箱体震荡且短期放量向上冲击的阶段。",
+          "background": "bear",
+          "background_reasoning": "股价从2026年1月29日的阶段高点11.31元一路阴跌，不断创出新低，至2026年7月7日触及低点5.43元，6个月内累计跌幅巨大，总体处于明显的熊市（下跌趋势）背景中。",
+          "phase": "none",
+          "phase_stage": "none",
+          "phase_reasoning": "大背景处于熊市下跌趋势中，7月下旬的价格反弹时间极短且尚在初段，未形成足够时间深度的震荡吸筹结构，按威科夫原则在熊市背景下填none。",
+          "trend": "down",
+          "trend_description": "中长期处于震荡走低的下行趋势，7月下旬低位出现放量强劲反弹。",
           "key_levels": {
             "support": 5.43,
-            "resistance": 7.68
+            "resistance": 7.11
           },
           "trading_range": {
-            "exists": true,
-            "high": 7.68,
-            "low": 5.43,
-            "duration_days": 45
+            "exists": false,
+            "high": null,
+            "low": null,
+            "duration_days": 0
           }
+        },
+        {
+          "patterns": [
+            {
+              "name": "SC",
+              "date": "2026-07-07",
+              "description": "股价探底至5.43元创背景期新低，抛压趋于衰竭并开始止跌，形成下行趋势末端的恐慌抛售低点。",
+              "significance": "mid",
+              "volume_character": "缩量",
+              "price_action": "小阴"
+            },
+            {
+              "name": "AR",
+              "date": "2026-07-13",
+              "description": "从5.43低点快速反弹至6.10元，成交量显著放大至48.9万手，完成触底后的自然反弹。",
+              "significance": "mid",
+              "volume_character": "放量",
+              "price_action": "大阳"
+            },
+            {
+              "name": "SOS",
+              "date": "2026-07-28",
+              "description": "放量拉出涨停大阳线收于6.47元，强力突破前期小盘整带，展现强劲的主动需求力量。",
+              "significance": "high",
+              "volume_character": "放量",
+              "price_action": "大阳"
+            },
+            {
+              "name": "BC",
+              "date": "2026-07-29",
+              "description": "价格快速冲高至7.11元，天量换手爆出122.3万手，但收盘剧烈回落至6.67元，显现极强的高位解套卖压与高潮性抛售。",
+              "significance": "high",
+              "volume_character": "放量",
+              "price_action": "十字星"
+            }
+          ],
+          "recent_key_pattern": {
+            "name": "SOS",
+            "date": "2026-07-28",
+            "description": "7月28日的放量涨停大阳线拉开了本轮快速强反弹的序幕，是多头需求集中爆发的核心标志，但次日即遭遇高位巨量抛压阻击。"
+          },
+          "volume_analysis": {
+            "recent_trend": "放量",
+            "vs_average": 2.16,
+            "interpretation": "本周日均成交量达80.0万手，为背景期日均量（37.1万手）的2.16倍。反弹伴随天量换手，表明多空资金在6.50-7.10元阻力带发生极剧烈的博弈，高位卖盘抛压不可忽视。"
+          }
+        },
+        {
+          "supply_demand": {
+            "dominant_force": "balanced",
+            "strength": "moderate",
+            "reasoning": "多头在7月28日以涨停板展现出强劲的主动需求，但在7月29日冲高至7.11元时遭遇巨量抛压，爆出122.3万手天量且大幅回落，表明上方解套卖盘（供应）极其强劲，多空力量在6.50-7.10元区域陷入剧烈博弈。"
+          },
+          "cause_effect": {
+            "has_cause": false,
+            "cause_description": "股价自11.31元长期阴跌至5.43元后直接发生快速V型反弹，未经过充分的震荡区吸筹阶段（未构建足够的时间与筹码积累之‘因’）。",
+            "potential_effect": "由于缺乏足够深度的吸筹准备，本轮反弹的持续性与上涨空间受限，难以直接形成大级别牛市趋势。",
+            "cause_sufficient": false
+          },
+          "effort_result": {
+            "consistent": false,
+            "stopping_action": "upthrust",
+            "stopping_description": "7月29日成交量猛增至122.3万手（极大的努力），但收盘价仅上涨0.15%且留下长上影线，属于典型的‘努力与结果不一致’，显示高位供应大量涌出阻止了价格进一步上涨。",
+            "absorption": "selling",
+            "absorption_description": "7月29日至31日连续3个交易日维持百万手巨量，但价格涨幅明显收窄，主力多头的买盘努力正在被高位积压的派发抛单持续吸收。"
+          },
+          "nature_summary": "当前走势属于大熊市背景下的低位超卖强反弹。虽然短期多头爆发力较强，但由于前期缺乏充分的吸筹准备（因不足），且冲高至7.10元附近时出现明显的放量滞涨与供应涌出（努力与结果背离），本轮反弹极易受阻，不宜盲目视为新一轮大牛市起点。"
+        },
+        {
+          "background_conclusion": "大背景总体处于从11.31元长期阴跌下来的熊市趋势中，近期在5.43元低点引发强劲反弹，但由于缺乏长时间的积累（因不足），整体仍处于熊市背景下的低位超卖反弹测试阶段。",
+          "short_term": "短期多头反弹动能强劲，但在触及7.11元阻力位后出现爆量滞涨（努力与结果背离），预计短期将面临回调压制或在6.47-7.11元区间陷入剧烈震荡。",
+          "direction": "neutral",
+          "key_levels": {
+            "resistance": 7.11,
+            "resistance_2": 7.68,
+            "support": 6.47,
+            "support_2": 5.8
+          },
+          "current_phase": "熊市低位超卖反弹/首次测试高位阻力阶段（尚未确立为吸筹Phase D）",
+          "prediction": {
+            "direction": "neutral",
+            "target_price": 6.47,
+            "time_window": "1周",
+            "confidence": "mid",
+            "conditions": "若高位抛压无法被彻底消化，价格将缩量回测6.47元支撑；若直接跌破5.80元则宣告反弹结束恢复熊市。"
+          },
+          "history_comparison": {
+            "has_history": true,
+            "last_prediction": "上次预判大背景为吸筹Phase D（bullish），目标价7.68，看好持续拉升。",
+            "actual_result": "股价冲高至7.11元后放量滞涨，未直接站稳并向7.68元挺进，高位遭遇巨量抛压（7月29日天量122.3万手）。",
+            "deviation": "上次预判将短期的急涨过早归因于‘吸筹Phase D’，忽略了熊市大背景下缺乏积累（因）直接V反易遭高位解套盘（供应）压制的风险。",
+            "lesson": "熊市中的强反弹不能盲目等同于吸筹结束后的主升段，必须警惕天量滞涨所反映的强供应风险，不能过早判定为Phase D。"
+          }
+        },
+        {
+          "entry_conditions": {
+            "scenario": "股价从7.11元高位受阻回落，缩量回测6.47元支撑位，出现低量小蜡烛或下影线止跌信号（测试高位抛压是否枯竭）。",
+            "price_range": {
+              "low": 6.47,
+              "high": 6.6
+            },
+            "volume_requirement": "日成交量需显著萎缩至400,000手以下（远低于近期100万手以上的极值天量）。",
+            "confirmation_signal": "在6.47-6.60元支撑区间企稳并收出小阳线或带下影线K线，确认二次测试无抛压。"
+          },
+          "abandon_conditions": {
+            "scenario": "若价格伴随大成交量阴线直接下破6.47元支撑带，或进一步跌破起涨关键平台5.80元，说明供应重新主导，反弹逻辑失效。",
+            "break_level": 5.8,
+            "reason": "跌破5.80元意味着7月下旬的快速反弹彻底沦为超卖陷阱，主跌熊市趋势恢复。"
+          },
+          "follow_up_conditions": {
+            "add_position": "若价格缩量企稳后再度放量突破7.11元前高阻力，并缩量回测确认，可考虑适度加仓。",
+            "take_profit": {
+              "level": 7.68,
+              "description": "到达前波阻力7.68元附近时，分批分段止盈离场。"
+            },
+            "trailing_stop": 6.47,
+            "time_stop": "建仓后5个交易日内若无法向上展开反弹或持续无量盘整，平仓离场。"
+          },
+          "position_size": "1/3仓",
+          "risk_reward": {
+            "risk": 0.7,
+            "reward": 1.21,
+            "ratio": 1.73
+          },
+          "action_summary": "鉴于7.11元高位天量滞涨风险，切忌追高；无仓者须耐受回调，仅当股价缩量回测6.47元企稳时方可1/3轻仓试多，跌破5.80元严格止损。"
         }
       ],
-      "completed_rounds": 1,
+      "completed_rounds": 5,
       "history": {
         "new_brief_path": "/home/runner/work/stock-automation/stock-automation/analysis-brief/2026-07/002279_久其软件_2026-07-31.md",
         "archived": "analysis-brief/archive/002279/002279_久其软件_2026-07-31_v5.md",
@@ -55,26 +180,151 @@
       "trade_date": "2026-07-31",
       "rounds": [
         {
-          "background": "bear",
-          "background_reasoning": "股价自2026年5月19日创出高点20.77后持续震荡下行，7月中旬放量跌破16元前期支撑区域，并于7月20日下探至新低13.36，高点与低点依次降低，整体呈现明确的下跌趋势。",
-          "phase": "none",
-          "phase_stage": "none",
-          "phase_reasoning": "当前背景为主导的下行趋势（熊市），尚未形成确立的长期震荡区，故无吸筹或派发阶段划分。",
-          "trend": "down",
-          "trend_description": "中期下行趋势确立，自20.77高点一路回落，近期在13.36见底后迎来超跌反弹，面临上方阻力。",
+          "background": "trading_range",
+          "background_reasoning": "股价于2026年5月19日触及阶段高点20.77后进入回落趋势，于2026年7月20日下探至低点13.36后触底，随后快速反弹至15.97，呈现宽幅震荡与底部筑底特征。",
+          "phase": "accumulation",
+          "phase_stage": "A",
+          "phase_reasoning": "2026年7月13日至7月20日出现加速下跌并在7月20日低点13.36形成抛售高潮（SC），随后本周（7月27日-31日）价格放量回升至15.97形成自然反弹（AR），符合吸筹A阶段的止跌特征。",
+          "trend": "sideways",
+          "trend_description": "中期经历自20.77至13.36的深幅回调后进入宽幅震荡，短期处于自13.36低位发起的触底反弹趋势中。",
           "key_levels": {
             "support": 13.36,
             "resistance": 16.27
           },
           "trading_range": {
-            "exists": false,
-            "high": 0.0,
-            "low": 0.0,
-            "duration_days": 0
+            "exists": true,
+            "high": 20.77,
+            "low": 13.36,
+            "duration_days": 122
           }
+        },
+        {
+          "patterns": [
+            {
+              "name": "PS",
+              "date": "2026-07-14",
+              "description": "加速下跌过程中成交量显著放大（57.9万手），显示主力需求资金首次介入接盘以阻止猛烈下跌。",
+              "significance": "mid",
+              "volume_character": "放量",
+              "price_action": "大阴"
+            },
+            {
+              "name": "SC",
+              "date": "2026-07-20",
+              "description": "价格下探至阶段最低点13.36，振幅8.13%，公众恐慌盘彻底涌出，形成恐慌抛售高潮。",
+              "significance": "high",
+              "volume_character": "放量",
+              "price_action": "小阴"
+            },
+            {
+              "name": "ST",
+              "date": "2026-07-24",
+              "description": "价格在13.99-14.39狭窄区间盘整，成交量骤降至地量148,828手，成功测试低位供应已基本枯竭。",
+              "significance": "high",
+              "volume_character": "缩量",
+              "price_action": "小阴"
+            },
+            {
+              "name": "AR",
+              "date": "2026-07-29",
+              "description": "空头回补与需求推升带来强劲反弹，收盘大涨6.27%，高点触及16.27，确立了吸筹A阶段的震荡区上界。",
+              "significance": "high",
+              "volume_character": "放量",
+              "price_action": "大阳"
+            }
+          ],
+          "recent_key_pattern": {
+            "name": "AR",
+            "date": "2026-07-29",
+            "description": "7月29日放量大阳线触及16.27高点，确认了SC（13.36）后的首波自然反弹上限，明确了当前吸筹震荡区的交易区间（13.36 - 16.27）。"
+          },
+          "volume_analysis": {
+            "recent_trend": "放量",
+            "vs_average": 1.07,
+            "interpretation": "在13.36低位缩量成功二次测试后，本周反弹过程中量能迅速回升，量增价升表明需求端主导了短期走势，但上方16.27附近面临筹码抛压，需要继续观察供求消化情况。"
+          }
+        },
+        {
+          "supply_demand": {
+            "dominant_force": "demand",
+            "strength": "moderate",
+            "reasoning": "7月20日触及13.36低点后，需求资金积极入场，本周（7月27日-29日）量能明显放大伴随大阳线反弹，表明多头力量在底部区域短期占据主导地位。"
+          },
+          "cause_effect": {
+            "has_cause": true,
+            "cause_description": "7月14日至7月24日经历了恐慌抛售与地量二次测试，初步具备止跌换手的准备过程，但吸筹时间较短（仅处于A阶段）。",
+            "potential_effect": "仅能支撑股价在13.36 - 16.27区间内进行反弹与震荡筑底，无法支撑长期趋势性上涨。",
+            "cause_sufficient": false
+          },
+          "effort_result": {
+            "consistent": true,
+            "stopping_action": "none",
+            "stopping_description": "7月20日SC下探13.36后迅速收回，随后7月24日缩量至14.8万手（地量），卖盘努力未带出下行结果，形成明显的底部止跌行为。",
+            "absorption": "buying",
+            "absorption_description": "主力机构在13.36-14.00低位区域挂单吸收恐慌盘，并在15.00-16.00反弹过程中消化筹码。"
+          },
+          "nature_summary": "当前走势属于熊市止跌后的吸筹初段（A阶段）自然反弹，需求短期释放推动股价回升，但因准备过程（因）严重不足，且上方16.27存在解套抛压，当前反弹性质为震荡区上轨试探而非牛市起点。"
+        },
+        {
+          "background_conclusion": "股价在经历深幅回调后于13.36元完成恐慌抛售（SC），随后快速强劲反弹至16.27元，确立了13.36-16.27元宽幅震荡筑底的吸筹初始框架。",
+          "short_term": "价格受阻于AR高点16.27元阻力位并出现滞涨，短期缺乏直接突破的蓄势积累，预计将展开回落以进行二次测试（ST）。",
+          "direction": "neutral",
+          "key_levels": {
+            "resistance": 16.27,
+            "resistance_2": 18.0,
+            "support": 14.1,
+            "support_2": 13.36
+          },
+          "current_phase": "吸筹阶段 A（停止原趋势并确立区间，等待二次测试 ST 确认）",
+          "prediction": {
+            "direction": "neutral",
+            "target_price": 14.1,
+            "time_window": "1-2周",
+            "confidence": "mid",
+            "conditions": "若回调至14.10-14.55元区域出现显著缩量小蜡烛（ST成功），则预判成立；若大阴线放量砸穿13.36元，则吸筹结构失效。"
+          },
+          "history_comparison": {
+            "has_history": true,
+            "last_prediction": "neutral，预判价格受阻于16.27元阻力后展开回落以进行二次测试（ST），目标价14.10元。",
+            "actual_result": "本周（7月27日-31日）价格触及16.27高点后受阻停滞，收于15.97，保持高位震荡但未实现向下回调或向上突破。",
+            "deviation": "价格在阻力区表现出的粘性高于预期，短期卖压虽使涨势趋缓但未立刻引发明显向下调整。",
+            "lesson": "SC后的首波AR反弹惯性较强，在需求未见明显衰退前，价格可能在阻力位下方横盘钝化，需警惕盲目预判即刻深度回调。"
+          }
+        },
+        {
+          "entry_conditions": {
+            "scenario": "股价从高位受阻回落，在二次测试（ST）支撑区域企稳。",
+            "price_range": {
+              "low": 14.1,
+              "high": 14.55
+            },
+            "volume_requirement": "成交量大幅缩减，显著低于背景期日均量（低于30万手，接近地量水平）",
+            "confirmation_signal": "在14.10-14.55元区间出现止跌小蜡烛（小阳线或十字星），且收盘价稳于14.10元之上"
+          },
+          "abandon_conditions": {
+            "scenario": "股价放量阴线击穿震荡区底部支撑位，或二次测试时伴随强烈的卖压抛盘",
+            "break_level": 13.36,
+            "reason": "跌破SC低点13.36元意味着底部支撑失效，吸筹结构被破坏，熊市下跌趋势恢复"
+          },
+          "follow_up_conditions": {
+            "add_position": "若成功建仓后，股价放量大阳线突破16.27元（JOC），并在随后的低量回测中确认无供应时加仓",
+            "take_profit": {
+              "level": 16.27,
+              "description": "价格反弹至震荡区上轨16.27元附近时分批止盈减仓"
+            },
+            "trailing_stop": 13.36,
+            "time_stop": "建仓后10个交易日内若无法突破15.00元且持续无量盘整，平仓出场"
+          },
+          "position_size": "空仓",
+          "risk_reward": {
+            "risk": 0.74,
+            "reward": 2.17,
+            "ratio": 2.93
+          },
+          "action_summary": "当前处于吸筹A阶段且价格位于阻力位16.27元附近，建议保持观望（空仓），静待回落至14.10-14.55元区域且缩量完成二次测试后再行介入。"
         }
       ],
-      "completed_rounds": 1,
+      "completed_rounds": 5,
       "history": {
         "new_brief_path": "/home/runner/work/stock-automation/stock-automation/analysis-brief/2026-07/002611_东方精工_2026-07-31.md",
         "archived": "analysis-brief/archive/002611/002611_东方精工_2026-07-31_v5.md",
