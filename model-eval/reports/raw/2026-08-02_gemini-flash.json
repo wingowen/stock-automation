@@ -1,0 +1,24 @@
+{
+  "model_id": "gemini-flash",
+  "label": "Gemini 2.5 Flash",
+  "provider": "gemini",
+  "model": "gemini-flash-latest",
+  "stocks": [
+    {
+      "code": "002279",
+      "name": "",
+      "trade_date": "2026-07-31",
+      "rounds": [],
+      "completed_rounds": 0,
+      "error": "分析异常: 'LLMClient' object has no attribute '_chat_gemini'"
+    },
+    {
+      "code": "002611",
+      "name": "",
+      "trade_date": "2026-07-31",
+      "rounds": [],
+      "completed_rounds": 0,
+      "error": "分析异常: 'LLMClient' object has no attribute '_chat_gemini'"
+    }
+  ]
+}

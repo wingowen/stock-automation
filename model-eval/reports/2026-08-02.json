@@ -1,0 +1,178 @@
+{
+  "trade_date": "2026-07-31",
+  "generated_at": "2026-08-02T04:33:40",
+  "weights": {
+    "structural": 0.25,
+    "schema": 0.25,
+    "consistency": 0.25,
+    "constraint": 0.25
+  },
+  "leaderboard": [
+    {
+      "model_id": "gemini-flash",
+      "label": "Gemini 2.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "total": 66.7,
+      "avg": {
+        "structural": 0.0,
+        "schema": 100.0,
+        "consistency": 100.0,
+        "constraint": 66.7,
+        "total": 66.7
+      },
+      "error": null,
+      "rank": 1
+    },
+    {
+      "model_id": "agnes-flash",
+      "label": "Agnes 2.5 Flash",
+      "provider": "agnes",
+      "model": "agnes-text",
+      "total": 66.7,
+      "avg": {
+        "structural": 0.0,
+        "schema": 100.0,
+        "consistency": 100.0,
+        "constraint": 66.7,
+        "total": 66.7
+      },
+      "error": null,
+      "rank": 2
+    }
+  ],
+  "models": [
+    {
+      "per_stock": [
+        {
+          "code": "002279",
+          "name": "",
+          "completed_rounds": 0,
+          "error": "分析异常: 'LLMClient' object has no attribute '_chat_gemini'",
+          "scores": {
+            "structural": 0.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 66.7,
+            "total": 66.7,
+            "completed_rounds": 0,
+            "notes": {
+              "schema": [
+                "必填字段 0/0 合法"
+              ],
+              "consistency": [],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        },
+        {
+          "code": "002611",
+          "name": "",
+          "completed_rounds": 0,
+          "error": "分析异常: 'LLMClient' object has no attribute '_chat_gemini'",
+          "scores": {
+            "structural": 0.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 66.7,
+            "total": 66.7,
+            "completed_rounds": 0,
+            "notes": {
+              "schema": [
+                "必填字段 0/0 合法"
+              ],
+              "consistency": [],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        }
+      ],
+      "avg": {
+        "structural": 0.0,
+        "schema": 100.0,
+        "consistency": 100.0,
+        "constraint": 66.7,
+        "total": 66.7
+      },
+      "total": 66.7,
+      "model_id": "gemini-flash",
+      "label": "Gemini 2.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-flash-latest"
+    },
+    {
+      "per_stock": [
+        {
+          "code": "002279",
+          "name": "",
+          "completed_rounds": 0,
+          "error": "分析异常: 'LLMClient' object has no attribute '_chat_agnes'",
+          "scores": {
+            "structural": 0.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 66.7,
+            "total": 66.7,
+            "completed_rounds": 0,
+            "notes": {
+              "schema": [
+                "必填字段 0/0 合法"
+              ],
+              "consistency": [],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        },
+        {
+          "code": "002611",
+          "name": "",
+          "completed_rounds": 0,
+          "error": "分析异常: 'LLMClient' object has no attribute '_chat_agnes'",
+          "scores": {
+            "structural": 0.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 66.7,
+            "total": 66.7,
+            "completed_rounds": 0,
+            "notes": {
+              "schema": [
+                "必填字段 0/0 合法"
+              ],
+              "consistency": [],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        }
+      ],
+      "avg": {
+        "structural": 0.0,
+        "schema": 100.0,
+        "consistency": 100.0,
+        "constraint": 66.7,
+        "total": 66.7
+      },
+      "total": 66.7,
+      "model_id": "agnes-flash",
+      "label": "Agnes 2.5 Flash",
+      "provider": "agnes",
+      "model": "agnes-text"
+    }
+  ]
+}
