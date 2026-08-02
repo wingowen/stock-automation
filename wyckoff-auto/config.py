@@ -36,6 +36,19 @@ KNOWLEDGE_FILE = BRIEF_ROOT / "KNOWLEDGE.md"
 ARCHIVE_ROOT = BRIEF_ROOT / "archive"
 
 # ── LLM API 配置 ────────────────────────────────────────────
+# LLM 提供商：gemini（默认，Google 直连，GitHub 境外 runner 稳定）|
+#              agnes（OpenAI 兼容，国内网关，作为可切换备选）
+LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "gemini").lower()
+
+# Gemini（Google Generative Language API）
+DEFAULT_GEMINI_BASE_URL = "https://generativelanguage.googleapis.com"
+DEFAULT_GEMINI_MODEL = "gemini-flash-latest"
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_BASE_URL = os.environ.get("GEMINI_BASE_URL", DEFAULT_GEMINI_BASE_URL).rstrip("/")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
+
+# Agnes（OpenAI 兼容网关，备选）
 DEFAULT_BASE_URL = "https://api.agnes-ai.com/v1"
 DEFAULT_MODEL = "agnes-text"
 

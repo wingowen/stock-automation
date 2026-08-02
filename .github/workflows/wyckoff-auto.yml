@@ -45,6 +45,9 @@ jobs:
 
       - name: Run analysis
         env:
+          LLM_PROVIDER: gemini
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
           AGNES_API_KEY: ${{ secrets.AGNES_API_KEY }}
           AGNES_BASE_URL: ${{ secrets.AGNES_BASE_URL }}
           AGNES_MODEL: ${{ secrets.AGNES_MODEL }}

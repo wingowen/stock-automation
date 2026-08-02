@@ -8,7 +8,10 @@
 - 生成结构化简报到 analysis-brief/ 目录。
 
 环境变量（GitHub Actions secrets）：
-  AGNES_API_KEY    Agnes AI 的 API Key（必填）
+  LLM_PROVIDER     gemini（默认）| agnes（OpenAI 兼容）
+  GEMINI_API_KEY   Google Gemini API Key（默认 provider 必填）
+  GEMINI_MODEL     Gemini 模型名（默认 gemini-flash-latest）
+  AGNES_API_KEY    Agnes AI 的 API Key（备选 provider 必填）
   AGNES_BASE_URL   Agnes API 网关
   AGNES_MODEL      文本模型名
 
@@ -232,7 +235,7 @@ def run(watchlist_path: str | None = None, code: str | None = None,
     # 初始化 LLM 客户端
     client = LLMClient()
     if not client.api_key:
-        log("AGNES_API_KEY 未设置，无法分析")
+        log(f"{client.provider.upper()}_API_KEY 未设置，无法分析")
         return 1
 
     # 逐只分析
