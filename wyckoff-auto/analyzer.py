@@ -300,28 +300,120 @@ def run(watchlist_path: str | None = None, code: str | None = None,
     return 0 if failed < total else 1
 
 
+# 方向与置信的中文/图标映射，供 ntfy 通知使用
+_DIR_EMOJI = {"bullish": "📈", "bearish": "📉", "neutral": "➖"}
+_DIR_CN = {"bullish": "看多", "bearish": "看空", "neutral": "中性"}
+_CONF_CN = {"high": "高", "mid": "中", "low": "低"}
+
+# ntfy.sh 默认正文上限约 4096 字节，预留尾部与余量，超出则停止追加股票明细
+_NTFY_MAX_BYTES = 3800
+
+
+def _fmt(v, suffix: str = "") -> str:
+    """格式化数值/字符串，空值统一显示破折号（0.0 视为有效价格）。"""
+    if v is None:
+        return "—"
+    if isinstance(v, str) and v.strip() == "":
+        return "—"
+    return f"{v}{suffix}"
+
+
+def _truncate(s, n: int = 42) -> str:
+    """单行截断：去换行、超长加省略号（用于摘要类长文本）。"""
+    if not s:
+        return ""
+    s = str(s).replace("\n", " ").strip()
+    return s if len(s) <= n else s[:n] + "…"
+
+
+def _format_stock_block(r: dict, name_part: str, rounds_done: int) -> list[str]:
+    """把单只股票的多轮分析结果格式化为 ntfy 的多行摘要块。
+
+    优先用 round4(结论) 与 round5(行动) 的结构化字段，缺失则回落占位符，
+    避免上游字段不全时崩溃。
+    """
+    rounds = r.get("rounds", [])
+    r4 = rounds[3] if len(rounds) > 3 else {}
+    r5 = rounds[4] if len(rounds) > 4 else {}
+    pred = r4.get("prediction", {}) or {}
+    direction = pred.get("direction") or r4.get("direction") or "neutral"
+    kl = r4.get("key_levels", {}) or {}
+    entry = r5.get("entry_conditions", {}) or {}
+    er = entry.get("price_range", {}) or {}
+    rr = r5.get("risk_reward", {}) or {}
+    abandon = r5.get("abandon_conditions", {}) or {}
+
+    emoji = _DIR_EMOJI.get(direction, "➖")
+    head = (
+        f"{emoji} {r['code']}{name_part} [{rounds_done}/5] "
+        f"{_DIR_CN.get(direction, direction)} | "
+        f"阶段:{_truncate(r4.get('current_phase', ''), 16) or '—'} | "
+        f"置信:{_CONF_CN.get(pred.get('confidence', ''), pred.get('confidence', '')) or '—'}"
+    )
+    block = [head]
+
+    price_line = f"  目标:{_fmt(pred.get('target_price'))}"
+    tw = r4.get("time_window") or pred.get("time_window")
+    if tw:
+        price_line += f"({_truncate(tw, 10)})"
+    price_line += (
+        f" | 支撑:{_fmt(kl.get('support'))}/{_fmt(kl.get('support_2'))} "
+        f"阻力:{_fmt(kl.get('resistance'))}/{_fmt(kl.get('resistance_2'))}"
+    )
+    block.append(price_line)
+
+    low, high = er.get("low"), er.get("high")
+    if low is not None and high is not None:
+        entry_range = f"{low}-{high}"
+    elif low is not None:
+        entry_range = f"{low}+"
+    elif high is not None:
+        entry_range = f"≤{high}"
+    else:
+        entry_range = "—"
+    entry_line = f"  进场:{entry_range} | 仓位:{_fmt(r5.get('position_size'))}"
+    if rr.get("ratio") is not None:
+        entry_line += f" | 盈亏比:{_fmt(rr.get('ratio'))}"
+    if abandon.get("break_level") is not None:
+        entry_line += f" | 放弃破:{_fmt(abandon.get('break_level'))}"
+    block.append(entry_line)
+
+    short_term = r4.get("short_term", "")
+    if short_term:
+        block.append(f"  短期:{_truncate(short_term, 60)}")
+    act = r5.get("action_summary", "")
+    if act:
+        block.append(f"  行动:{_truncate(act, 60)}")
+    return block
+
+
 def _notify_results(trade_date: str, results: list[dict], total: int, success: int, partial: int, failed: int) -> None:
-    """分析完成后发送 ntfy 通知。"""
+    """分析完成后发送 ntfy 通知；每只股票展开方向/阶段/关键位/进场/仓位等结构化摘要。"""
     from llm_client import send_ntfy
 
-    lines = [f"威科夫自动分析报告 {trade_date}", ""]
+    header = f"威科夫自动分析简报 {trade_date}"
+    lines: list[str] = [header, ""]
+    # 预留尾部（总计行）与余量；超长则停止追加股票明细，避免 ntfy 截断
+    budget = _NTFY_MAX_BYTES - len(header.encode("utf-8")) - 200
+
     for r in results:
         code = r["code"]
         name = r.get("name", "")
-        rounds = r["completed_rounds"]
+        rounds_done = r["completed_rounds"]
         name_part = f" {name}" if name else ""
 
-        if rounds == 5:
-            r4 = r["rounds"][3] if len(r["rounds"]) > 3 else {}
-            pred = r4.get("prediction", {})
-            direction = pred.get("direction", r4.get("direction", "?"))
-            target = pred.get("target_price", "?")
-            confidence = pred.get("confidence", "?")
-            lines.append(f"✅ {code}{name_part} [{rounds}/5] 方向:{direction} 目标:{target} 置信:{confidence}")
-        elif rounds > 0:
-            lines.append(f"⚠️ {code}{name_part} [{rounds}/5] 部分完成 - {r.get('error', '')}")
+        if rounds_done >= 4:
+            block = _format_stock_block(r, name_part, rounds_done)
+        elif rounds_done > 0:
+            block = [f"⚠️ {code}{name_part} [{rounds_done}/5] 部分完成 - {r.get('error', '')}"]
         else:
-            lines.append(f"❌ {code}{name_part} [0/5] 失败 - {r.get('error', '未知错误')}")
+            block = [f"❌ {code}{name_part} [0/5] 失败 - {r.get('error', '未知错误')}"]
+
+        candidate = lines + [""] + block
+        if len("\n".join(candidate).encode("utf-8")) > budget and len(lines) > 2:
+            lines.append("… 更多股票明细见 GitHub Pages / analysis-brief")
+            break
+        lines = candidate
 
     lines.append(f"\n总计: {total} | 成功: {success} | 部分: {partial} | 失败: {failed}")
 
