@@ -1,0 +1,19 @@
+{
+  "trade_date": null,
+  "stocks": ["002279", "002611"],
+  "models": [
+    {
+      "id": "gemini-flash",
+      "label": "Gemini 2.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-flash-latest"
+    },
+    {
+      "id": "agnes-flash",
+      "label": "Agnes 2.5 Flash",
+      "provider": "agnes",
+      "model": "agnes-text"
+    }
+  ],
+  "output_dir": "model-eval/reports"
+}
