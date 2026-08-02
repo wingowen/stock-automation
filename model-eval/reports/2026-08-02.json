@@ -1,6 +1,6 @@
 {
   "trade_date": "2026-07-31",
-  "generated_at": "2026-08-02T06:44:43",
+  "generated_at": "2026-08-02T13:15:22",
   "weights": {
     "structural": 0.25,
     "schema": 0.25,
@@ -9,33 +9,33 @@
   },
   "leaderboard": [
     {
-      "model_id": "gemini-flash",
-      "label": "Gemini 2.5 Flash",
-      "provider": "gemini",
-      "model": "gemini-flash-latest",
-      "total": 66.7,
+      "model_id": "agnes-flash",
+      "label": "Agnes 2.5 Flash",
+      "provider": "agnes",
+      "model": "agnes-2.5-flash",
+      "total": 69.2,
       "avg": {
-        "structural": 0.0,
-        "schema": 100.0,
+        "structural": 20.0,
+        "schema": 90.0,
         "consistency": 100.0,
         "constraint": 66.7,
-        "total": 66.7
+        "total": 69.2
       },
       "error": null,
       "rank": 1
     },
     {
-      "model_id": "agnes-flash",
-      "label": "Agnes 2.5 Flash",
-      "provider": "agnes",
-      "model": "agnes-2.5-flash",
-      "total": 66.7,
+      "model_id": "gemini-flash",
+      "label": "Gemini 2.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "total": 67.5,
       "avg": {
-        "structural": 0.0,
+        "structural": 20.0,
         "schema": 100.0,
         "consistency": 100.0,
-        "constraint": 66.7,
-        "total": 66.7
+        "constraint": 50.0,
+        "total": 67.5
       },
       "error": null,
       "rank": 2
@@ -46,21 +46,23 @@
       "per_stock": [
         {
           "code": "002279",
-          "name": "",
-          "completed_rounds": 0,
-          "error": "K线拉取失败: empty output",
+          "name": "久其软件",
+          "completed_rounds": 1,
+          "error": null,
           "scores": {
-            "structural": 0.0,
+            "structural": 20.0,
             "schema": 100.0,
             "consistency": 100.0,
             "constraint": 66.7,
-            "total": 66.7,
-            "completed_rounds": 0,
+            "total": 71.7,
+            "completed_rounds": 1,
             "notes": {
               "schema": [
-                "必填字段 0/0 合法"
+                "必填字段 15/15 合法"
               ],
-              "consistency": [],
+              "consistency": [
+                "R1.phase 枚举合法: ✓"
+              ],
               "constraint": [
                 "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
                 "价格字段均为正数: ✓",
@@ -71,38 +73,41 @@
         },
         {
           "code": "002611",
-          "name": "",
-          "completed_rounds": 0,
-          "error": "K线拉取失败: empty output",
+          "name": "东方精工",
+          "completed_rounds": 1,
+          "error": null,
           "scores": {
-            "structural": 0.0,
+            "structural": 20.0,
             "schema": 100.0,
             "consistency": 100.0,
-            "constraint": 66.7,
-            "total": 66.7,
-            "completed_rounds": 0,
+            "constraint": 33.3,
+            "total": 63.3,
+            "completed_rounds": 1,
             "notes": {
               "schema": [
-                "必填字段 0/0 合法"
+                "必填字段 15/15 合法"
               ],
-              "consistency": [],
+              "consistency": [
+                "R1.phase 枚举合法: ✓"
+              ],
               "constraint": [
                 "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
-                "价格字段均为正数: ✓",
-                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+                "价格字段均为正数: ✗",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗",
+                "非正价格: [('high', 0.0), ('low', 0.0)]"
               ]
             }
           }
         }
       ],
       "avg": {
-        "structural": 0.0,
+        "structural": 20.0,
         "schema": 100.0,
         "consistency": 100.0,
-        "constraint": 66.7,
-        "total": 66.7
+        "constraint": 50.0,
+        "total": 67.5
       },
-      "total": 66.7,
+      "total": 67.5,
       "model_id": "gemini-flash",
       "label": "Gemini 2.5 Flash",
       "provider": "gemini",
@@ -112,21 +117,23 @@
       "per_stock": [
         {
           "code": "002279",
-          "name": "",
-          "completed_rounds": 0,
-          "error": "K线拉取失败: empty output",
+          "name": "久其软件",
+          "completed_rounds": 1,
+          "error": null,
           "scores": {
-            "structural": 0.0,
-            "schema": 100.0,
+            "structural": 20.0,
+            "schema": 80.0,
             "consistency": 100.0,
             "constraint": 66.7,
             "total": 66.7,
-            "completed_rounds": 0,
+            "completed_rounds": 1,
             "notes": {
               "schema": [
-                "必填字段 0/0 合法"
+                "必填字段 12/15 合法"
               ],
-              "consistency": [],
+              "consistency": [
+                "R1.phase 枚举合法: ✓"
+              ],
               "constraint": [
                 "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
                 "价格字段均为正数: ✓",
@@ -137,21 +144,23 @@
         },
         {
           "code": "002611",
-          "name": "",
-          "completed_rounds": 0,
-          "error": "K线拉取失败: empty output",
+          "name": "东方精工",
+          "completed_rounds": 1,
+          "error": null,
           "scores": {
-            "structural": 0.0,
+            "structural": 20.0,
             "schema": 100.0,
             "consistency": 100.0,
             "constraint": 66.7,
-            "total": 66.7,
-            "completed_rounds": 0,
+            "total": 71.7,
+            "completed_rounds": 1,
             "notes": {
               "schema": [
-                "必填字段 0/0 合法"
+                "必填字段 15/15 合法"
               ],
-              "consistency": [],
+              "consistency": [
+                "R1.phase 枚举合法: ✓"
+              ],
               "constraint": [
                 "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
                 "价格字段均为正数: ✓",
@@ -162,13 +171,13 @@
         }
       ],
       "avg": {
-        "structural": 0.0,
-        "schema": 100.0,
+        "structural": 20.0,
+        "schema": 90.0,
         "consistency": 100.0,
         "constraint": 66.7,
-        "total": 66.7
+        "total": 69.2
       },
-      "total": 66.7,
+      "total": 69.2,
       "model_id": "agnes-flash",
       "label": "Agnes 2.5 Flash",
       "provider": "agnes",
