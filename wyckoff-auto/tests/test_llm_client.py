@@ -1,7 +1,8 @@
 """LLMClient 的 Gemini provider 单测（mock 网络，不依赖真实 API）。
 
 回归守卫：
-- Gemini payload 必须正确映射 OpenAI 风格 messages（system→systemInstruction，assistant→model）
+- LLMClient 必须暴露所有 provider 方法（防止模块级函数误插入类体导致方法丢失）
+- Gemini payload 必须正确映射 OpenAI 风格 messages（system->systemInstruction，assistant->model）
 - 成功响应能解析出文本
 - 鉴权失败 / 空候选 / 空文本 必须返回 None（不得抛异常）
 """
@@ -29,6 +30,22 @@ def test_client_defaults_to_gemini_provider():
     # 未传 provider 时跟随 config.LLM_PROVIDER（默认 gemini）
     c = llm_client.LLMClient(api_key="k", model="m")
     assert c.provider == "gemini"
+
+
+def test_llmclient_exposes_all_provider_methods():
+    """回归守卫：_recover_json 误插入类体导致 _chat_gemini/_chat_agnes 丢失。
+
+    确保 LLMClient 实例可访问所有 provider 分发方法，且 _recover_json
+    是模块级函数（不是类方法）。
+    """
+    c = llm_client.LLMClient(provider="gemini", api_key="k", model="m")
+    # chat 入口必须能分发到 provider 方法
+    assert callable(getattr(c, "_chat_gemini", None)), "_chat_gemini 不是 LLMClient 方法"
+    assert callable(getattr(c, "_chat_agnes", None)), "_chat_agnes 不是 LLMClient 方法"
+    assert callable(getattr(c, "_build_gemini_payload", None)), "_build_gemini_payload 不是 LLMClient 方法"
+    # _recover_json 应为模块级函数，不是类方法
+    assert not hasattr(c, "_recover_json"), "_recover_json 不应是 LLMClient 的方法"
+    assert callable(llm_client._recover_json), "_recover_json 应为模块级函数"
 
 
 def test_build_gemini_payload_maps_roles():

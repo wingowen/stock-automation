@@ -132,60 +132,6 @@ class LLMClient:
             return None
 
 
-def _recover_json(raw: str) -> dict | None:
-    """尽力从可能含 ``` 围栏或尾部冗余文本的响应中解析首个 JSON 对象。
-
-    返回解析后的 dict；彻底无法解析返回 None。仅依赖标准库 json。
-    """
-    if not raw or not raw.strip():
-        return None
-    s = raw.strip()
-
-    # 去 ```json ... ``` / ``` ... ``` 围栏
-    if s.startswith("```"):
-        # 去掉首行围栏（```json 或 ```）
-        s = s.split("\n", 1)[1] if "\n" in s else s[3:]
-    if s.endswith("```"):
-        s = s[: -3]
-    s = s.strip()
-
-    # 直接解析
-    try:
-        return json.loads(s)
-    except json.JSONDecodeError:
-        pass
-
-    # 提取首个 { 到匹配的 }（括号匹配，忽略字符串内的括号）
-    start = s.find("{")
-    if start == -1:
-        return None
-    depth = 0
-    in_str = False
-    esc = False
-    for i in range(start, len(s)):
-        c = s[i]
-        if in_str:
-            if esc:
-                esc = False
-            elif c == "\\":
-                esc = True
-            elif c == '"':
-                in_str = False
-            continue
-        if c == '"':
-            in_str = True
-        elif c == "{":
-            depth += 1
-        elif c == "}":
-            depth -= 1
-            if depth == 0:
-                cand = s[start:i + 1]
-                try:
-                    return json.loads(cand)
-                except json.JSONDecodeError:
-                    return None
-    return None
-
     # ── Gemini provider ───────────────────────────────────
     def _build_gemini_payload(
         self, messages: list[dict], temperature: float, json_mode: bool
@@ -415,6 +361,61 @@ def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "
 
 
 # ── 自测入口 ────────────────────────────────────────────────
+
+
+def _recover_json(raw: str) -> dict | None:
+    """尽力从可能含 ``` 围栏或尾部冗余文本的响应中解析首个 JSON 对象。
+
+    返回解析后的 dict；彻底无法解析返回 None。仅依赖标准库 json。
+    """
+    if not raw or not raw.strip():
+        return None
+    s = raw.strip()
+
+    # 去 ```json ... ``` / ``` ... ``` 围栏
+    if s.startswith("```"):
+        # 去掉首行围栏（```json 或 ```）
+        s = s.split("\n", 1)[1] if "\n" in s else s[3:]
+    if s.endswith("```"):
+        s = s[: -3]
+    s = s.strip()
+
+    # 直接解析
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        pass
+
+    # 提取首个 { 到匹配的 }（括号匹配，忽略字符串内的括号）
+    start = s.find("{")
+    if start == -1:
+        return None
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(s)):
+        c = s[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+            continue
+        if c == '"':
+            in_str = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                cand = s[start:i + 1]
+                try:
+                    return json.loads(cand)
+                except json.JSONDecodeError:
+                    return None
+    return None
 if __name__ == "__main__":
     if "--test" in sys.argv:
         client = LLMClient()
