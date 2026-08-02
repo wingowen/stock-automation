@@ -6,11 +6,10 @@ from __future__ import annotations
 
 import logging
 from datetime import date
-from typing import Optional
 
 import pandas as pd
 
-from wyckoff.data.base import DataFormatError, DataSource, FetchError, normalize_ohlcv
+from wyckoff.data.base import DataSource, FetchError, normalize_ohlcv
 
 logger = logging.getLogger(__name__)
 

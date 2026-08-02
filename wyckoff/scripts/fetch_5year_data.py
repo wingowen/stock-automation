@@ -67,14 +67,14 @@ def main():
     else:
         cache_dir = Path(__file__).parent.parent / "data" / "cache"
 
-    logger.info(f"=== 数据获取任务 ===")
+    logger.info("=== 数据获取任务 ===")
     logger.info(f"股票代码: {args.code}")
     logger.info(f"日期范围: {start_date} ~ {end_date}")
     logger.info(f"批次大小: {args.batch_days} 天")
     logger.info(f"缓存目录: {cache_dir}")
 
     # 创建数据源：Baostock 为主源（覆盖完整），腾讯为校验源
-    logger.info(f"\n=== 初始化数据源 ===")
+    logger.info("\n=== 初始化数据源 ===")
     bs_src = BaostockSource()
     tc_src = TencentSource(cache_dir=cache_dir)
 
@@ -83,7 +83,7 @@ def main():
 
     # 创建数据管道
     # 注意：不同数据源前复权基准不同，价格可能偏差数十元；这里用相对宽松的容差避免误报
-    logger.info(f"\n=== 创建数据管道 ===")
+    logger.info("\n=== 创建数据管道 ===")
     pipeline = DataPipeline(
         sources=[bs_src, tc_src],
         cache_dir=cache_dir,
@@ -93,18 +93,18 @@ def main():
     )
 
     # 运行管道
-    logger.info(f"\n=== 开始获取数据 ===")
+    logger.info("\n=== 开始获取数据 ===")
     try:
         df = pipeline.run(args.code, start_date, end_date)
         
         # 输出统计信息
-        logger.info(f"\n=== 获取完成 ===")
+        logger.info("\n=== 获取完成 ===")
         logger.info(f"总行数: {len(df)}")
         logger.info(f"日期范围: {df['date'].iloc[0]} ~ {df['date'].iloc[-1]}")
         logger.info(f"数据已保存到: {cache_dir / f'{args.code}_full.csv'}")
         
         # 输出前5行
-        logger.info(f"\n前 5 行数据:")
+        logger.info("\n前 5 行数据:")
         print(df.head().to_string(index=False))
         
         return 0

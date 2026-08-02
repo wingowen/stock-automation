@@ -12,8 +12,6 @@ import pandas as pd
 import requests
 
 from wyckoff.data.base import (
-    CacheMissError,
-    DataFormatError,
     DataSource,
     FetchError,
     normalize_ohlcv,

@@ -18,7 +18,7 @@ from typing import List, Optional
 import pandas as pd
 
 from wyckoff.data.base import CacheMissError, DataSource, FetchError
-from wyckoff.data.validator import BatchValidator, MergeValidator, ValidationResult
+from wyckoff.data.validator import BatchValidator, MergeValidator
 
 logger = logging.getLogger(__name__)
 
@@ -181,7 +181,7 @@ class DataPipeline:
 
         result = self.batch_validator.validate_batch(code, start_date, end_date, primary_data=df)
         if not result.passed:
-            logger.warning(f"Batch validation warnings:")
+            logger.warning("Batch validation warnings:")
             if result.discrepancies:
                 logger.warning(f"  - {len(result.discrepancies)} discrepancies")
             if result.missing_dates:

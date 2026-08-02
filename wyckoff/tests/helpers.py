@@ -9,7 +9,7 @@ from typing import Optional
 
 import pandas as pd
 
-from wyckoff.data.base import CacheMissError, DataSource, FetchError
+from wyckoff.data.base import DataSource, FetchError
 from wyckoff.data.validator import TradingDates
 
 
