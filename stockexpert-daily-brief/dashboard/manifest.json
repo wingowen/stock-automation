@@ -1,6 +1,13 @@
 {
-  "generated_at": "2026-08-03T20:02:18.357954+08:00",
+  "generated_at": "2026-08-04T19:08:53.433688+08:00",
   "days": [
+    {
+      "trade_date": "2026-08-04",
+      "path": "data/2026-08/2026-08-04/看板.json",
+      "regime": "strong",
+      "theme_count": 3,
+      "is_demo": false
+    },
     {
       "trade_date": "2026-08-03",
       "path": "data/2026-08/2026-08-03/看板.json",

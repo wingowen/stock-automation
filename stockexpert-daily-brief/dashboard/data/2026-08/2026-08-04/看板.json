@@ -1,0 +1,292 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-08-04",
+  "generated_at": "2026-08-04T19:08:53.429389+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "strong",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "创业板指大涨5.64%、深成指涨3.25%，大盘高贝指数涨4.18%，成交2.21万亿放量2162亿，涨停140只、封板率88%，市场情绪活跃；但沪指仅涨0.33%、大盘价值指数跌2.12%，呈现明显成长风格分化，整体仍属强势格局。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3822.28,
+        "change_pct": 0.33,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 13885.71,
+        "change_pct": 3.25,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3488.97,
+        "change_pct": 5.64,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+      }
+    ],
+    "breadth_up": 3600,
+    "breadth_down": null,
+    "breadth_reasoning": "界面新闻快讯称'上涨个股超3600只'；下跌家数资料未获取，填null。",
+    "limit_up": 140,
+    "limit_down": null
+  },
+  "themes": [
+    {
+      "id": "AI应用/算力-2026-08-04",
+      "name": "AI应用/算力",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "传智教育7连板为市场最高连板标杆，美利云等算力股活跃，封板率88%显示资金认可度高；但尚未出现批量高潮（涨停家数140只分散多板块），判断为趋势中阶段。",
+      "strength": "high",
+      "strength_reasoning": "7连板标杆+算力板块共振+成交放量2.21万亿，资金持续流入，强度最高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "AI应用概念持续发酵，传智教育7连板形成情绪标杆，算力板块美利云等跟涨。",
+      "source": "web:https://finance.eastmoney.com/a/202608043831236933.html",
+      "notes": ""
+    },
+    {
+      "id": "元件/印制电路板-2026-08-04",
+      "name": "元件/印制电路板",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "午评显示'元件板块高开后持续强势'，收盘涨停榜元件居首15只，板块刚启动特征明显，尚未进入趋势确认或高潮阶段。",
+      "strength": "mid",
+      "strength_reasoning": "涨停15只居各行业之首，但板块整体涨幅未达创业板指5.64%的强度，处于启动初期。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "元件板块早盘高开后持续强势，印制电路板板块领涨，收盘涨停榜元件行业15只居首。",
+      "source": "web:https://stock.cngold.org/c/2026-08-04/c10667786.html",
+      "notes": ""
+    },
+    {
+      "id": "医疗服务-2026-08-04",
+      "name": "医疗服务",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "开盘即领涨创业板，百花医药涨停，但收盘数据未显示板块持续发酵或多只涨停，判断为启动初期观察。",
+      "strength": "mid",
+      "strength_reasoning": "开盘领涨但收盘强度未进一步确认，涨停仅百花医药1只明确提及，强度中等。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "医疗服务板块开盘领涨，百花医药涨停带动板块情绪。",
+      "source": "web:https://www.jwview.com/jingwei/html/08-04/682092.shtml",
+      "notes": ""
+    }
+  ],
+  "midcaps": [
+    {
+      "code": "300251",
+      "name": "光线传媒",
+      "theme_id": "AI应用",
+      "market_cap": 359.07,
+      "price": 12.24,
+      "change_pct": 12.5,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "avoid",
+      "position_reasoning": "资料未获取当日价格及涨跌幅，无法判断位置；且光线传媒非当日涨停标杆股，作为中军候选信息不足。",
+      "trend_status": "watch",
+      "trend_reasoning": "AI应用板块趋势向上，但该股当日无明确数据支撑，需后续观察。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "资料未获取价格数据，无法给出建议区间。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:未获取",
+      "notes": ""
+    },
+    {
+      "code": "002761",
+      "name": "多伦科技",
+      "theme_id": "AI应用",
+      "market_cap": 97.78,
+      "price": 7.38,
+      "change_pct": 7.55,
+      "ma5": null,
+      "quote_source": "web:https://qt.gtimg.cn",
+      "position_eval": "avoid",
+      "position_reasoning": "资料未获取当日价格及涨跌幅，无法判断位置；非当日标杆股，信息不足。",
+      "trend_status": "watch",
+      "trend_reasoning": "AI应用板块趋势向上，但该股当日无明确数据支撑。",
+      "suggested_zone": {
+        "low": null,
+        "high": null,
+        "reasoning": "资料未获取价格数据，无法给出建议区间。"
+      },
+      "hold_horizon_days": 3,
+      "methods": [
+        "right-side-core"
+      ],
+      "source": "web:未获取",
+      "notes": ""
+    }
+  ],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://www.zqrb.cn/video/shichangkuaixun/2026-08-04/A1785831135225.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399405/index.shtml?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-04/c10667964.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000003.html?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://cj.sina.com.cn/articles/view/2868676035/aafc85c302001u4do",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608043831236933.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202608043831236933.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260804A073MY00",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-04/c10667846.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260804060459643143390",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000003/index.shtml?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608043831236933.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202608043831236933.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jiemian.com/article/14870675.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-08-04",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://finance.ce.cn/stock/gsgdbd/202608/t20260804_3128246.shtml",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-04/c10667786.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jwview.com/jingwei/html/08-04/682092.shtml",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260804A053SU00",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-04/c10667846.html",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260804A0738V00",
+      "fetched_at": "2026-08-04T19:06:18.265761+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "涨跌家数未获取（资料无具体数字）",
+      "各板块具体个股代码及价格涨跌幅",
+      "跌停家数",
+      "中军候选股实时行情数据",
+      "元件/医疗服务板块具体容量票信息"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
