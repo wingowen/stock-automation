@@ -1,0 +1,275 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-08-06",
+  "generated_at": "2026-08-06T19:06:35.939069+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "neutral",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "沪指+0.57%微涨，深成指-0.24%、创业板-0.55%走弱，指数分化；成交额2.53万亿较昨日缩量1308亿，量能萎缩；涨停83只较昨日104只减少，连板股20只，市场情绪从昨日高潮转入分歧，整体偏中性偏弱。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3900.35,
+        "change_pct": 0.57,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 14110.12,
+        "change_pct": -0.24,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3515.56,
+        "change_pct": -0.55,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+      }
+    ],
+    "breadth_up": 2789,
+    "breadth_down": 2590,
+    "breadth_reasoning": "来自腾讯新闻收评：全市场2789只股票上涨、2590只下跌，涨跌比接近均衡。",
+    "limit_up": 83,
+    "limit_down": null
+  },
+  "themes": [
+    {
+      "id": "煤炭开采-2026-08-06",
+      "name": "煤炭开采",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "今日煤炭板块在多数板块走低之际持续拉升，沪指飘红主要靠煤炭支撑，属防御性轮动板块，昨日未见明显高潮，今日首次成为焦点，判断为启动阶段。",
+      "strength": "mid",
+      "strength_reasoning": "板块有异动但非主线，仅6只个股涨停居首，持续性待观察。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "沪指震荡分化，资金避险流入煤炭等防御板块",
+      "source": "web:https://www.nbd.com.cn/articles/2026-08-06/4534011.html",
+      "notes": ""
+    },
+    {
+      "id": "PCB/电子元件-2026-08-06",
+      "name": "PCB/电子元件",
+      "stage": "fading",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "虎扑社区用户反馈'大盘科技连续两天高潮，今天大概率是分歧兑现的'，且昨日104只涨停今日降至83只，PCB板块昨日高潮后今日进入分歧退潮期。",
+      "strength": "low",
+      "strength_reasoning": "板块从昨日高潮转入今日分歧，涨停家数减少，量能萎缩，短线情绪退潮。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "科技板块连续两日高潮后分歧，资金兑现",
+      "source": "web:https://bbs.hupu.com/641612075.html",
+      "notes": ""
+    },
+    {
+      "id": "AI硬件/通信芯片元器件-2026-08-06",
+      "name": "AI硬件/通信芯片元器件",
+      "stage": "fading",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "昨日AI硬件-通信芯片元器件多只首板（谐威特、通宇通信、景旺电子等），今日仅个别首板，虎扑社区明确判断'今天大概率是分歧兑现'，板块进入退潮阶段。",
+      "strength": "low",
+      "strength_reasoning": "昨日高潮后今日分歧，首板数量减少，连板高度受限（最高爱丽家居10板为并购重组而非AI）。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "AI硬件连续炒作后分歧兑现",
+      "source": "web:https://www.tgb.cn/a/2u2BDYQJtpj",
+      "notes": ""
+    },
+    {
+      "id": "并购重组-2026-08-06",
+      "name": "并购重组",
+      "stage": "trending",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "爱丽家居10连板为当前市场最高连板，豪尔赛5连板（液冷概念叠加），连板梯队完整，题材有持续性，判断为趋势中阶段。",
+      "strength": "high",
+      "strength_reasoning": "10板龙头+5板跟风，连板梯队完整，封板率75%，题材强度较高。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "并购重组政策预期+市场风险偏好支撑",
+      "source": "web:https://finance.eastmoney.com/a/2026-08-063833896183.html",
+      "notes": ""
+    },
+    {
+      "id": "软件开发-2026-08-06",
+      "name": "软件开发",
+      "stage": "launching",
+      "stage_source": "ai-synthesis",
+      "stage_reasoning": "今日午盘软件开发板块短线拉升，泛微网络涨停，亚信安全、天融信等跟涨，为当日新启动板块，首板居多，判断为启动阶段。",
+      "strength": "mid",
+      "strength_reasoning": "板块有拉升但仅4只涨停，非市场主线，强度中等。",
+      "methods": [
+        "right-side-core"
+      ],
+      "signals": [],
+      "related_midcap_codes": [],
+      "catalyst": "板块轮动补涨，资金从高位科技切换至软件",
+      "source": "web:https://c.m.163.com/news/a/L3L0DOIO0512B07B.html",
+      "notes": ""
+    }
+  ],
+  "midcaps": [],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-06/c10673638.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-08-06",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260806091410577937140",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://bbs.hupu.com/641612075.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-08-06",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/603278/index.shtml?date=2026-08-06",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260806A08GE900",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608063833896183.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202608063833896183.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.tgb.cn/a/2u2BDYQJtpj",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260806A06E6D00",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stcn.com/article/detail/4061274.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608063833896183.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202608063833896183.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-08-06",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-06/c10673638.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/603040/index.shtml?date=2026-08-06",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-08-06",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://c.m.163.com/news/a/L3L0DOIO0512B07B.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260806A08GE900",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260806A09JE100",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.cngold.org/c/2026-08-06/c10673518.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.nbd.com.cn/articles/2026-08-06/4534011.html",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://stock.stockstar.com/RB2026080600028577.shtml",
+      "fetched_at": "2026-08-06T19:04:14.062218+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "partial",
+    "missing": [
+      "个股中军实时行情未获取（无 code 或接口失败）",
+      "各题材板块成分股及中军标的行情数据",
+      "跌停家数",
+      "北证50涨跌幅",
+      "个股实时价格与趋势数据（无法筛选符合'未涨停、位置好、趋势不破'条件的中军候选）"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
