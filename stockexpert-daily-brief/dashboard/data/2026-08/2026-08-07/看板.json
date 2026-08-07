@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "trade_date": "2026-08-07",
+  "generated_at": "2026-08-07T17:39:52.969111+08:00",
+  "is_demo": false,
+  "market_regime": {
+    "strength": "unknown",
+    "strength_source": "ai-synthesis",
+    "strength_reasoning": "模型调用失败，研判不可用；指数硬数字（如有）仍来自行情接口。",
+    "indices": [
+      {
+        "name": "上证指数",
+        "code": "000001",
+        "price": 3940.04,
+        "change_pct": 1.02,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+      },
+      {
+        "name": "深证成指",
+        "code": "399001",
+        "price": 14311.01,
+        "change_pct": 1.42,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+      },
+      {
+        "name": "创业板指",
+        "code": "399006",
+        "price": 3563.12,
+        "change_pct": 1.35,
+        "source": "web:https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+        "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+      }
+    ],
+    "breadth_up": null,
+    "breadth_down": null,
+    "breadth_reasoning": "未获取"
+  },
+  "themes": [],
+  "midcaps": [],
+  "data_sources": [
+    {
+      "type": "web",
+      "url": "https://qt.gtimg.cn/q=sh000001,sz399001,sz399006",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://np-anotice-stock.eastmoney.com/api/security/ann?sr=-1&page_size=10&page_index=1",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399373/index.shtml?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260807053954253710980",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/399405/index.shtml?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260807075304816394280",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000003.html?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.sina.com.cn/roll/2026-08-07/doc-inimnrak9970782.shtml",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://caifuhao.eastmoney.com/news/20260807053954253710980",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260807A07TFI00",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.cnr.cn/ycbd/20260807/t20260807_527751626.shtml",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260807A05HIE00",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608073835189251.html",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000002.html?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/zs/000002/index.shtml?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://q.stock.sohu.com/cn/603040/index.shtml?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://quote.eastmoney.com/zs000003.html?date=2026-08-07",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608073835189251.html",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://wap.eastmoney.com/a/202608073835189251.html",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "http://finance.ce.cn/stock/gsgdbd/202608/t20260807_3134302.shtml",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.chinanews.com/cj/2026/08-07/10673677.shtml",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608073835202626.html",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://finance.eastmoney.com/a/202608073835062054.html",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://www.jwview.com/jingwei/html/08-07/682596.shtml",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    },
+    {
+      "type": "web",
+      "url": "https://news.qq.com/rain/a/20260807A09PXL00",
+      "fetched_at": "2026-08-07T17:35:47.158978+08:00"
+    }
+  ],
+  "data_quality": {
+    "overall": "unavailable",
+    "missing": [
+      "Agnes 模型调用失败，全天数据不可用"
+    ]
+  },
+  "methods_used": [
+    "right-side-core"
+  ]
+}
