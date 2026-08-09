@@ -409,6 +409,98 @@ def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "
 # ── 自测入口 ────────────────────────────────────────────────
 
 
+def _fix_json_syntax(s: str) -> str:
+    """尝试修复常见的 JSON 语法错误（中文标点、缺少逗号）。
+
+    使用状态机遍历 JSON 文本，在值与值之间自动补全缺失的逗号。
+    同时替换中文标点为对应的 ASCII 标点。
+    """
+    # 1. 替换中文标点
+    s = s.replace("\uff0c", ",")  # ，
+    s = s.replace("\uff1a", ":")  # ：
+    s = s.replace("\u201c", '"').replace("\u201d", '"')  # “”
+    s = s.replace("\u3001", ",")  # 、
+
+    # 2. 状态机修复缺少的逗号
+    result = []
+    i = 0
+    n = len(s)
+    in_string = False
+    escape = False
+    # state: 'start', 'after_value', 'after_string', 'after_colon', 'after_comma'
+    state = "start"
+
+    while i < n:
+        c = s[i]
+
+        if in_string:
+            result.append(c)
+            if escape:
+                escape = False
+            elif c == "\\":
+                escape = True
+            elif c == '"':
+                in_string = False
+                state = "after_string"
+            i += 1
+            continue
+
+        # 不在字符串内
+        if c == '"':
+            # 值后面直接跟新 key，说明缺少逗号
+            if state in ("after_value", "after_string"):
+                result.append(",")
+            in_string = True
+            result.append(c)
+            i += 1
+            continue
+
+        if c == ":":
+            state = "after_colon"
+            result.append(c)
+            i += 1
+            continue
+
+        if c == ",":
+            state = "after_comma"
+            result.append(c)
+            i += 1
+            continue
+
+        if c in " \t\n\r":
+            result.append(c)
+            i += 1
+            continue
+
+        if c in "{}[]":
+            if c in "{[":
+                if state in ("after_value", "after_string"):
+                    result.append(",")
+                state = "start"
+            else:  # } or ]
+                state = "after_value"
+            result.append(c)
+            i += 1
+            continue
+
+        # 数字、true、false、null
+        if c.isalnum() or c in ".+-":
+            if state in ("after_value", "after_string"):
+                result.append(",")
+            j = i
+            while j < n and (s[j].isalnum() or s[j] in ".+-"):
+                result.append(s[j])
+                j += 1
+            state = "after_value"
+            i = j
+            continue
+
+        result.append(c)
+        i += 1
+
+    return "".join(result)
+
+
 def _recover_json(raw: str) -> dict | None:
     """尽力从可能含 ``` 围栏或尾部冗余文本的响应中解析首个 JSON 对象。
 
@@ -429,6 +521,14 @@ def _recover_json(raw: str) -> dict | None:
     # 直接解析
     try:
         return json.loads(s)
+    except json.JSONDecodeError:
+        pass
+
+    # 尝试修复语法错误后解析
+    try:
+        fixed = _fix_json_syntax(s)
+        if fixed != s:
+            return json.loads(fixed)
     except json.JSONDecodeError:
         pass
 
@@ -460,7 +560,12 @@ def _recover_json(raw: str) -> dict | None:
                 try:
                     return json.loads(cand)
                 except json.JSONDecodeError:
-                    return None
+                    # 尝试修复提取出的 JSON 片段
+                    try:
+                        fixed = _fix_json_syntax(cand)
+                        return json.loads(fixed)
+                    except json.JSONDecodeError:
+                        return None
     return None
 if __name__ == "__main__":
     if "--test" in sys.argv:
