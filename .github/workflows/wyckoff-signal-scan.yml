@@ -1,0 +1,76 @@
+name: 威科夫信号扫描
+
+on:
+  schedule:
+    # 每天 16:00 UTC = 北京时间 00:00（盘后数据已出，数据源已更新）
+    - cron: "0 8 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      trade_date:
+        description: "指定交易日 YYYY-MM-DD（可选，默认最近交易日）"
+        required: false
+      days:
+        description: "拉取数据天数（默认 120）"
+        required: false
+        default: "120"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wyckoff-signal-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          pip install pandas requests akshare pyyaml numpy
+          # 确保 skill 目录的 fetch_kline.py 可用
+          bash .agents/skills/a-share-kline-fetch/setup_env.sh
+
+      - name: Run signal scan
+        id: scan
+        env:
+          NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
+        run: |
+          cd ${{ github.workspace }}
+          OUTPUT_FILE="wyckoff/scan_results/scan_$(date +%F).json"
+          mkdir -p wyckoff/scan_results
+
+          if [ -n "${{ github.event.inputs.trade_date }}" ]; then
+            python -m wyckoff.signal_scanner \
+              --trade-date "${{ github.event.inputs.trade_date }}" \
+              --days "${{ github.event.inputs.days || 120 }}" \
+              --output "$OUTPUT_FILE"
+          else
+            python -m wyckoff.signal_scanner \
+              --days "${{ github.event.inputs.days || 120 }}" \
+              --output "$OUTPUT_FILE"
+          fi
+
+          echo "output_file=$OUTPUT_FILE" >> $GITHUB_OUTPUT
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add wyckoff/scan_results/
+          if git diff --cached --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "chore: 威科夫信号扫描 $(date +%F)"
+            git push
+          fi

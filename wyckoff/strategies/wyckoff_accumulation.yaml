@@ -1,0 +1,49 @@
+# 威科夫吸筹识别策略 (Wyckoff Accumulation Detection)
+# 基于《威科夫操盘法》第二章 - 吸筹阶段
+name: wyckoff_accumulation
+display_name: 威科夫吸筹识别
+description: 检测威科夫吸筹阶段 (Phase A→B→C) 的形态特征。
+category: pattern
+required_tools:
+  - get_daily_history
+  - analyze_trend
+aliases: [吸筹, 底部建仓, Accumulation]
+default_priority: 60
+market_regimes: [trending_down, consolidation]
+instructions: |
+  **威科夫吸筹阶段识别（Wyckoff Accumulation）**
+
+  吸筹是威科夫交易法的核心概念，分为 A→B→C→D→E 五个阶段。
+
+  各阶段判定标准：
+
+  1. **Phase A - 停止行为**：
+     - PS（初次支撑）：下跌末端放量，跌幅收窄。
+     - SC（恐慌抛售）：最大量下跌，卖方耗尽。
+     - AR（自动反弹）：SC 后放量反弹。
+     - ST（二次测试）：缩量回踩 SC 低点，不破新低。
+
+  2. **Phase B - 建仓**：
+     - 价格在 SC 和 AR 之间的区间震荡。
+     - 震荡时间至少 3-6 个月（日线）。
+     - 成交量逐渐萎缩（浮动供应减少）。
+     - 区间内出现多次 Spring 和 Test。
+
+  3. **Phase C - 终极震仓**：
+     - Spring（弹簧效应）：跌破区间下沿后快速收回。
+     - 这是最可靠的买入信号之一。
+     - 量能放大显示买方吸收。
+
+  4. **Phase D - 确认**：
+     - SOS（强势信号）：放量突破区间上沿。
+     - LPS（最后支撑点）：突破后缩量回踩区间上沿。
+     - 均线开始多头排列。
+
+  5. **Phase E - 脱离**：
+     - 放量脱离吸筹区。
+     - 进入上升趋势。
+     - 缩量回调是加仓机会。
+
+  关键信号优先级：
+  - Spring > SOS > LPS > ST > SC
+  - 多个信号同时出现 → 置信度更高
