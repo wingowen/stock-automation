@@ -158,8 +158,8 @@ class LLMClient:
     ) -> dict:
         """将 OpenAI 风格 messages 转为 Gemini generateContent 格式。
 
-        - system 消息 → systemInstruction
-        - user / assistant 交替 → contents（assistant 映射为 model）
+        - system 消息 -> systemInstruction
+        - user / assistant 交替 -> contents（assistant 映射为 model）
         """
         system_text = ""
         contents = []
@@ -377,6 +377,7 @@ def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "
     from config import NTFY_TOPIC_URL
 
     if not NTFY_TOPIC_URL:
+        log("ntfy 推送跳过: NTFY_TOPIC_URL 未配置或为空")
         return False
 
     # HTTP header 只支持 latin-1，中文需 URL 编码
@@ -392,9 +393,16 @@ def send_ntfy(title: str, message: str, priority: str = "default", tags: str = "
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=10) as r:
-            return r.status == 200
+            if r.status == 200:
+                return True
+            else:
+                log(f"ntfy 推送失败: HTTP {r.status}")
+                return False
+    except urllib.error.HTTPError as e:
+        log(f"ntfy 推送失败: HTTP {e.code} {e.reason}")
+        return False
     except Exception as e:
-        log(f"ntfy 推送失败: {e}")
+        log(f"ntfy 推送失败: {type(e).__name__}: {e}")
         return False
 
 

@@ -312,9 +312,9 @@ _NTFY_MAX_BYTES = 3800
 def _fmt(v, suffix: str = "") -> str:
     """格式化数值/字符串，空值统一显示破折号（0.0 视为有效价格）。"""
     if v is None:
-        return "—"
+        return "-"
     if isinstance(v, str) and v.strip() == "":
-        return "—"
+        return "-"
     return f"{v}{suffix}"
 
 
@@ -347,8 +347,8 @@ def _format_stock_block(r: dict, name_part: str, rounds_done: int) -> list[str]:
     head = (
         f"{emoji} {r['code']}{name_part} [{rounds_done}/5] "
         f"{_DIR_CN.get(direction, direction)} | "
-        f"阶段:{_truncate(r4.get('current_phase', ''), 16) or '—'} | "
-        f"置信:{_CONF_CN.get(pred.get('confidence', ''), pred.get('confidence', '')) or '—'}"
+        f"阶段:{_truncate(r4.get('current_phase', ''), 16) or '-'} | "
+        f"置信:{_CONF_CN.get(pred.get('confidence', ''), pred.get('confidence', '')) or '-'}"
     )
     block = [head]
 
@@ -370,7 +370,7 @@ def _format_stock_block(r: dict, name_part: str, rounds_done: int) -> list[str]:
     elif high is not None:
         entry_range = f"≤{high}"
     else:
-        entry_range = "—"
+        entry_range = "-"
     entry_line = f"  进场:{entry_range} | 仓位:{_fmt(r5.get('position_size'))}"
     if rr.get("ratio") is not None:
         entry_line += f" | 盈亏比:{_fmt(rr.get('ratio'))}"
@@ -421,8 +421,11 @@ def _notify_results(trade_date: str, results: list[dict], total: int, success: i
     tags = "chart_with_upwards_trend" if failed == 0 else "warning"
     title = f"威科夫分析 {trade_date} ({success}/{total})"
 
-    send_ntfy(title, "\n".join(lines), priority=priority, tags=tags)
-    log(f"ntfy 通知已发送: {title}")
+    ok = send_ntfy(title, "\n".join(lines), priority=priority, tags=tags)
+    if ok:
+        log(f"ntfy 通知已发送: {title}")
+    else:
+        log(f"ntfy 通知发送失败（请检查 NTFY_TOPIC_URL 是否配置正确）: {title}")
 
 
 def main() -> int:
