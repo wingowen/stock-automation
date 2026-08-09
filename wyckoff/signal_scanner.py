@@ -373,17 +373,13 @@ def _notify_results(
     failed: int,
 ) -> None:
     """发送 ntfy 通知"""
-    try:
-        from wyckoff_auto.llm_client import send_ntfy
-    except ImportError:
-        logger.info("ntfy 模块未导入，跳过通知")
-        return
+    from wyckoff.notify import send_ntfy
 
     header = f"威科夫信号扫描 {trade_date}"
     lines = [header, ""]
 
     for r in reports:
-        emoji = "🟢" if r.signal_score >= 65 else "🟡" if r.signal_score >= 45 else "🔴"
+        emoji = "\U0001f7e2" if r.signal_score >= 65 else "\U0001f7e1" if r.signal_score >= 45 else "\U0001f534"
         name_part = f" {r.name}" if r.name else ""
         lines.append(
             f"{emoji} {r.code}{name_part} [{r.signal_label}] "
@@ -398,11 +394,7 @@ def _notify_results(
     lines.append(f"总计: {total} | 积极: {success} | 负面: {failed}")
 
     body = "\n".join(lines)
-    try:
-        send_ntfy(header, body, priority="default", tags="chart_with_upwards_trend")
-        logger.info("ntfy 通知已发送")
-    except Exception as e:
-        logger.warning("ntfy 通知发送失败: %s", e)
+    send_ntfy(header, body, priority="default", tags="chart_with_upwards_trend")
 
 
 def main() -> int:
