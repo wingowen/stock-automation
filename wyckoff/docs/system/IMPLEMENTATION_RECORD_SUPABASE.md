@@ -65,11 +65,12 @@ alter table lps_signals
   add column if not exists spring_strength numeric;
 ```
 
-## 4. 过程中发现并修复的 3 个存量 bug
+## 4. 过程中发现并修复的 4 个存量 bug
 
 1. **`last_lps_date` NameError**（mainboard_scanner）：无 LPS 历史的股票走 debug 日志分支时变量未定义 → 被 except 捕获误记为"扫描失败"。对断点续扫是致命的：这批股票永远 failed、永远重扫。已修（无历史时占位 `"-"`）。
 2. **东财接口封锁本地 IP**：akshare 的 `stock_zh_a_hist` 全挂（`RemoteDisconnected`），同参数 curl 200 → 排除 UA/TLS 因素后确认是对 requests 特征或 IP 的间歇性拒绝。**将默认数据源切至 `TencentSource`**——与项目"腾讯为主源"的既有约定一致。
 3. **tencent_source 7 列 bug**：腾讯 qfq 数据在除权日行带第 7 列（分红信息 dict），原实现硬编码 6 列名 → 约 53% 股票解析崩溃。已修（`iloc[:, :6]` 截取）。
+4. **清单接口在 GitHub runner 上必失败**（线上首跑 31888526051 暴露）：`stock_info_a_code_name()` 走沪深交易所官网，对海外 IP 返回非 JSON（`Expecting value: line 1 column 1`）→ 清单为空直接退出。回查 8/13、8/14 定时运行同样 36 秒失败，属存量问题。已修：`_fetch_mainboard_list()` 多源 fallback——交易所官方源失败时走**新浪 `Market_Center.getHQNodeData(node=hs_a)`** 分页拉全量（每页 100、约 33 页、0.2s 限流），本地过滤主板前缀。本地实测新浪源 3193 只，前缀分布纯主板。
 
 ## 5. 本地验证记录（--limit 100，交易日 2026-08-14）
 

@@ -60,7 +60,21 @@ OUTPUT_DIR = Path(__file__).resolve().parents[1] / "wyckoff" / "scan_results"
 # ---------------------------------------------------------------------------
 
 def _fetch_mainboard_list() -> list[dict]:
-    """从 akshare 拉取主板股票清单（含股票代码和名称）。"""
+    """拉取主板股票清单：交易所官方源优先，失败 fallback 新浪源。
+
+    交易所官网（akshare stock_info_sh/sz_name_code）对海外 IP 不友好，
+    GitHub Actions runner 上会返回非 JSON 内容导致失败（存量问题），
+    因此加新浪行情列表源兜底（新浪对海外访问稳定）。
+    """
+    stocks = _fetch_mainboard_list_exchange()
+    if stocks:
+        return stocks
+    logger.warning("交易所清单拉取失败, fallback 到新浪清单源")
+    return _fetch_mainboard_list_sina()
+
+
+def _fetch_mainboard_list_exchange() -> list[dict]:
+    """从交易所官方（经 akshare）拉取沪深主板股票清单。"""
     import akshare as ak
     try:
         df = ak.stock_info_a_code_name()
@@ -75,8 +89,53 @@ def _fetch_mainboard_list() -> list[dict]:
                 stocks.append({"code": code, "name": name})
         return stocks
     except Exception as e:
-        logger.error("拉取主板股票清单失败: %s", e)
+        logger.error("拉取主板股票清单失败(交易所源): %s", e)
         return []
+
+
+def _fetch_mainboard_list_sina() -> list[dict]:
+    """从新浪行情列表分页拉取沪深全量，本地过滤出主板。
+
+    接口: Market_Center.getHQNodeData(node=hs_a)，每页 100 条按代码升序，
+    返回空列表或不足一页即结束。symbol 前缀区分市场(sh/sz/bj)。
+    """
+    import requests
+
+    s = requests.Session()
+    s.trust_env = False
+    s.headers.update({"User-Agent": "Mozilla/5.0"})
+    url = (
+        "http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php"
+        "/Market_Center.getHQNodeData"
+    )
+    stocks: list[dict] = []
+    page = 1
+    try:
+        while True:
+            r = s.get(
+                url,
+                params={"page": page, "num": 100, "sort": "symbol", "asc": 1, "node": "hs_a"},
+                timeout=15,
+            )
+            rows = r.json()
+            if not rows:
+                break
+            for row in rows:
+                sym = str(row.get("symbol", ""))
+                code = str(row.get("code", ""))
+                if sym.startswith("sh") and code.startswith(("600", "601", "603", "605")):
+                    stocks.append({"code": code, "name": str(row.get("name", ""))})
+                elif sym.startswith("sz") and code.startswith(("000", "001", "002", "003")):
+                    stocks.append({"code": code, "name": str(row.get("name", ""))})
+            if len(rows) < 100:
+                break
+            page += 1
+            time.sleep(0.2)
+    except Exception as e:
+        logger.error("拉取主板股票清单失败(新浪源, 已取 %d 只): %s", len(stocks), e)
+    if not stocks:
+        logger.error("主板股票清单为空(新浪源)")
+    return stocks
 
 
 def _compute_lps(df: pd.DataFrame, code: str) -> list[dict]:

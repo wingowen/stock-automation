@@ -6,7 +6,12 @@ from unittest.mock import patch
 import pandas as pd
 
 from wyckoff import mainboard_scanner
-from wyckoff.mainboard_scanner import _annotate_spring, run_scan
+from wyckoff.mainboard_scanner import (
+    _annotate_spring,
+    _fetch_mainboard_list,
+    _fetch_mainboard_list_sina,
+    run_scan,
+)
 from wyckoff.supabase_client import SupabaseError
 
 TRADE_DATE = "2026-08-14"
@@ -212,6 +217,76 @@ class TestStartupFailFast(unittest.TestCase):
         self.assertEqual(result["scanned_count"], 3)
         self.assertEqual(result["skipped_count"], 0)
         self.assertFalse(result["degraded"])
+
+
+class TestMainboardListFallback(unittest.TestCase):
+    """清单多源 fallback：交易所源失败时走新浪源"""
+
+    def test_exchange_ok_no_fallback(self):
+        with patch.object(mainboard_scanner, "_fetch_mainboard_list_exchange",
+                          return_value=[{"code": "600000", "name": "X"}]) as m_ex, \
+             patch.object(mainboard_scanner, "_fetch_mainboard_list_sina") as m_sina:
+            stocks = _fetch_mainboard_list()
+        self.assertEqual(stocks, [{"code": "600000", "name": "X"}])
+        m_ex.assert_called_once()
+        m_sina.assert_not_called()
+
+    def test_exchange_fail_falls_back_to_sina(self):
+        with patch.object(mainboard_scanner, "_fetch_mainboard_list_exchange",
+                          return_value=[]), \
+             patch.object(mainboard_scanner, "_fetch_mainboard_list_sina",
+                          return_value=[{"code": "000001", "name": "Y"}]) as m_sina:
+            stocks = _fetch_mainboard_list()
+        self.assertEqual(stocks, [{"code": "000001", "name": "Y"}])
+        m_sina.assert_called_once()
+
+    def test_sina_filters_mainboard_and_paginates(self):
+        """新浪源：过滤主板前缀（剔除 bj/688/300），分页在不足一页时终止"""
+        page1 = [
+            {"symbol": "sh600000", "code": "600000", "name": "浦发银行"},
+            {"symbol": "sz000001", "code": "000001", "name": "平安银行"},
+            {"symbol": "sh688001", "code": "688001", "name": "华兴源创"},   # 科创板剔除
+            {"symbol": "sz300001", "code": "300001", "name": "特锐德"},     # 创业板剔除
+            {"symbol": "bj920000", "code": "920000", "name": "安徽凤凰"},   # 北交所剔除
+        ] * 20  # 100 条满页 → 触发翻页
+        page2 = [
+            {"symbol": "sh601398", "code": "601398", "name": "工商银行"},
+        ]  # 不足一页 → 终止
+        fake_resp = unittest.mock.Mock()
+        fake_resp.json.side_effect = [page1, page2]
+
+        class FakeSession:
+            def __init__(self):
+                self.trust_env = True
+                self.headers = {}
+            def get(self, url, params=None, timeout=None):
+                return fake_resp
+
+        with patch.object(mainboard_scanner.time, "sleep"), \
+             patch("requests.Session", return_value=FakeSession()):
+            stocks = _fetch_mainboard_list_sina()
+
+        codes = [s["code"] for s in stocks]
+        self.assertEqual(codes.count("600000"), 20)
+        self.assertEqual(codes.count("000001"), 20)
+        self.assertEqual(codes.count("601398"), 1)
+        self.assertNotIn("688001", codes)
+        self.assertNotIn("300001", codes)
+        self.assertNotIn("920000", codes)
+
+    def test_sina_empty_result_returns_empty(self):
+        fake_resp = unittest.mock.Mock()
+        fake_resp.json.return_value = []
+
+        class FakeSession:
+            def __init__(self):
+                self.trust_env = True
+                self.headers = {}
+            def get(self, url, params=None, timeout=None):
+                return fake_resp
+
+        with patch("requests.Session", return_value=FakeSession()):
+            self.assertEqual(_fetch_mainboard_list_sina(), [])
 
 
 class TestSpringAnnotation(unittest.TestCase):
