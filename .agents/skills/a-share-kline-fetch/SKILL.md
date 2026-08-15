@@ -17,16 +17,16 @@ description: "Fetch A-share daily kline data (Tencent API, qfq), format for Wyck
 
 | 文件 | 作用 |
 |---|---|
-| `setup_env.sh` | 环境探测/创建：先找已装 pandas+requests 的 python，找不到则在 skill 目录创建 `.venv` |
+| `setup_env.sh` | 环境探测：优先校验仓库根目录统一 venv（uv 管理），把 python 路径写入 `.python_path`；缺失时用 uv 自动创建；无 uv（CI / 最小环境）时回退到 PATH 上已装依赖的 python3 |
 | `fetch_kline.py` | 数据拉取脚本：腾讯 K 线 + 格式化输出威科夫分析所需数据 |
 | `workflow.py` | 简报工作流：旧简报归档 + 新简报模板生成 + 历史上下文读取 |
-| `.python_path` | `setup_env.sh` 运行后生成，记录可用 python 路径（被 `fetch_kline.py` 间接使用） |
-| `.venv/` | 回退创建的最小虚拟环境（仅在系统无满足依赖的 python 时生成） |
+| `.python_path` | `setup_env.sh` 运行后生成，记录统一 venv 的 python 绝对路径（供调用方读取） |
 
 ## 环境约定
 
-- **依赖**：`pandas` + `requests`（无 akshare 依赖，避免重型安装）
-- **Python 版本**：≥ 3.10（用了 `Int64` nullable 类型）
+- **环境策略**：全项目统一使用仓库根目录 `.venv`（`uv venv .venv` 创建、`uv pip install` 装依赖），本 skill **不单独建环境**
+- **依赖**：`pandas` + `requests`（随根目录统一 venv 安装，无 akshare 重型依赖）
+- **Python 版本**：≥ 3.10（用了 `Int64` nullable 类型）；统一 venv 使用 Python 3.11+（满足 wyckoff 等子模块要求）
 - **数据源**：腾讯财经 K 线接口 `https://web.ifzq.gtimg.cn/appstock/app/fqkline/get`
 - **复权方式**：前复权（qfq）
 - **代理处理**：脚本内 `session.trust_env = False`，规避 macOS 系统代理影响
@@ -37,14 +37,17 @@ description: "Fetch A-share daily kline data (Tencent API, qfq), format for Wyck
 ### 第一步：准备环境（首次或环境变更时）
 
 ```bash
+# 全项目统一 venv（仓库根目录，uv 管理）：
+cd <repo_root> && uv venv .venv && uv pip install --python .venv/bin/python pandas requests
+# 再运行本 skill 的环境探测，生成 .python_path：
 bash .agents/skills/a-share-kline-fetch/setup_env.sh
 ```
 
 输出示例：
 ```
-[setup_env] 探测可用 Python 解释器...
-[setup_env] OK: 使用 /Users/wingo.wen/anaconda3/bin/python
-PYTHON=/Users/wingo.wen/anaconda3/bin/python
+[setup_env] 优先使用项目根目录统一 venv: /path/to/repo/.venv/bin/python
+[setup_env] OK: 使用统一 venv /path/to/repo/.venv/bin/python
+PYTHON=/path/to/repo/.venv/bin/python
 ```
 
 成功后会在 skill 目录生成 `.python_path` 文件，后续可直接用其中路径运行 `fetch_kline.py`。
@@ -151,7 +154,7 @@ agent 把 `fetch_kline.py` 的数据 + `wyckoff-trading` skill 的看盘五步�
 | 现象 | 原因 | 解决 |
 |---|---|---|
 | `[ERROR] 无数据返回` | 腾讯接口限流或代码错 | 检查代码前缀；稍后重试 |
-| `ModuleNotFoundError: pandas` | 环境探测失败 | 重新跑 `setup_env.sh`，会创建 `.venv` |
+| `ModuleNotFoundError: pandas` | 统一 venv 缺少依赖 | 根目录运行 `uv pip install --python .venv/bin/python pandas requests` |
 | `.python_path` 不存在 | 未运行 setup_env.sh | 先运行 `bash setup_env.sh` |
 | 拉取的数据少于预期 | 腾讯单次最多 640 条 | 缩短背景月数，或修改脚本分批拉取 |
 

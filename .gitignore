@@ -10,13 +10,18 @@ __pycache__/
 .coverage
 htmlcov/
 
-# 虚拟环境（各项目独立维护）
+# 虚拟环境：全项目统一使用根目录 .venv（uv 管理，禁止各自建环境）
+.venv/
+# 历史遗留：子项目曾各自维护 venv，保留忽略以防误建
 wyckoff/.venv/
 wyckoff/venv/
 wyckoff/env/
 stockexpert-daily-brief/.venv/
 stockexpert-daily-brief/venv/
 stockexpert-daily-brief/env/
+
+# 机器相关环境产物（setup_env.sh 生成，不入库）
+.agents/skills/a-share-kline-fetch/.python_path
 
 # IDE
 .idea/

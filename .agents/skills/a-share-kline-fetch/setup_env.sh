@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
-# A股K线数据获取 - 环境探测/创建脚本
+# A股K线数据获取 - 统一环境探测脚本
 #
-# 策略（按优先级回退）：
-#   1. 探测系统已有 python 是否已安装 pandas + requests
-#   2. 探测常见 conda 环境（base / 项目相关 env）
-#   3. 上述均失败 → 在 skill 目录下创建最小 venv（.venv），仅装 pandas + requests
+# 环境策略：本地开发全项目共用根目录统一 venv（uv 管理），本 skill 不再单独建环境。
+#   统一 venv 路径：<repo_root>/.venv（用 `uv venv .venv` 创建）
+#   依赖：pandas + requests（skill 所需），由根目录统一安装管理
 #
-# 输出：把可用的 python 解释器绝对路径写入 .python_path 文件（供 fetch_kline.py 读取）
+# 解释器选择（按优先级）：
+#   1. 根目录统一 venv（.venv）已存在且含 pandas/requests → 直接使用
+#   2. 不存在但机器装有 uv → 用 uv 在根目录创建统一 venv 并装依赖
+#   3. 无 uv（如 CI / 最小环境，使用 setup-python 的 python）→ 回退到 PATH 上
+#      已具备 pandas/requests 的 python3，不新建任何环境
+#
+# 输出：把选定的 python 绝对路径写入 .python_path 文件（供调用方读取）
 #       同时打印到 stdout，格式：PYTHON=<path>
 #
 # 用法：
@@ -14,56 +19,42 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 PYTHON_PATH_FILE="$SCRIPT_DIR/.python_path"
+UNIFIED_PY="$REPO_ROOT/.venv/bin/python"
 
-# ── 工具函数 ────────────────────────────────────────────────
-check_deps() {
-    local py="$1"
-    [ -x "$py" ] || return 1
-    "$py" -c "import pandas, requests" 2>/dev/null
-}
+echo "[setup_env] 优先使用项目根目录统一 venv: $UNIFIED_PY"
 
-# ── 候选 Python 列表 ─────────────────────────────────────────
-CANDIDATES=(
-    "$(command -v python3 2>/dev/null || true)"
-    "/Users/wingo.wen/anaconda3/bin/python"
-    "/opt/homebrew/bin/python3"
-    "/usr/bin/python3"
-    "/Users/wingo.wen/anaconda3/envs/stock_data_collection/bin/python"
-    "/Users/wingo.wen/anaconda3/envs/trading_env/bin/python"
-)
+# 层级 1/2：统一 venv 不存在时，尝试用 uv 创建
+if [ ! -x "$UNIFIED_PY" ]; then
+    if command -v uv >/dev/null 2>&1; then
+        echo "[setup_env] 未找到统一 venv，用 uv 在根目录创建..."
+        (cd "$REPO_ROOT" && uv venv .venv && uv pip install --python .venv/bin/python pandas requests)
+    else
+        echo "[setup_env] 未找到统一 venv 且未安装 uv，将回退到系统 python（仅 CI / 最小环境）。"
+    fi
+fi
 
-echo "[setup_env] 探测可用 Python 解释器..."
-for py in "${CANDIDATES[@]}"; do
-    [ -z "$py" ] && continue
-    if [ -x "$py" ] && check_deps "$py"; then
-        echo "$py" > "$PYTHON_PATH_FILE"
-        echo "[setup_env] OK: 使用 $py"
-        echo "PYTHON=$py"
+# 层级 1/2：统一 venv 可用
+if [ -x "$UNIFIED_PY" ] && "$UNIFIED_PY" -c "import pandas, requests" 2>/dev/null; then
+    echo "$UNIFIED_PY" > "$PYTHON_PATH_FILE"
+    echo "[setup_env] OK: 使用统一 venv $UNIFIED_PY"
+    echo "PYTHON=$UNIFIED_PY"
+    exit 0
+fi
+
+# 层级 3：回退到 PATH 上已具备依赖的 python3（CI 的 setup-python 场景）
+echo "[setup_env] 统一 venv 不可用，探测 PATH 上满足依赖的 python3..."
+for py in python3 python; do
+    if command -v "$py" >/dev/null 2>&1 && "$py" -c "import pandas, requests" 2>/dev/null; then
+        PY="$(command -v "$py")"
+        echo "$PY" > "$PYTHON_PATH_FILE"
+        echo "[setup_env] OK: 使用系统 python $PY"
+        echo "PYTHON=$PY"
         exit 0
     fi
-    echo "[setup_env]   - $py 不满足（缺失 pandas/requests 或不存在）"
 done
 
-# ── 回退：创建本地最小 venv ─────────────────────────────────
-echo "[setup_env] 未找到满足依赖的 Python，开始创建本地 venv..."
-VENV_DIR="$SCRIPT_DIR/.venv"
-
-# 选择一个能用的 python3 用于创建 venv
-BASE_PY=""
-for py in "${CANDIDATES[@]}"; do
-    [ -z "$py" ] && continue
-    if [ -x "$py" ]; then
-        BASE_PY="$py"
-        break
-    fi
-done
-[ -z "$BASE_PY" ] && { echo "[setup_env] FATAL: 系统中找不到任何 python3"; exit 1; }
-
-"$BASE_PY" -m venv "$VENV_DIR"
-"$VENV_DIR/bin/pip" install --quiet --upgrade pip
-"$VENV_DIR/bin/pip" install --quiet pandas requests
-
-echo "$VENV_DIR/bin/python" > "$PYTHON_PATH_FILE"
-echo "[setup_env] OK: 已创建 venv $VENV_DIR"
-echo "PYTHON=$VENV_DIR/bin/python"
+echo "[setup_env] ERROR: 没有可用环境。请先安装 uv 并在仓库根目录运行："
+echo "  uv venv .venv && uv pip install --python .venv/bin/python pandas requests"
+exit 1
