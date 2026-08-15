@@ -155,7 +155,9 @@ class TencentSource(DataSource):
         if not raw_rows:
             raise FetchError(f"Tencent returned no kline data for {code}")
 
-        df = pd.DataFrame(raw_rows, columns=["date", "open", "close", "high", "low", "volume"])
+        # 除权日行带第 7 列（分红信息 dict），只取前 6 列
+        df = pd.DataFrame(raw_rows).iloc[:, :6]
+        df.columns = ["date", "open", "close", "high", "low", "volume"]
         df = self._normalize(df, code)
         self.validate_response(df)
 

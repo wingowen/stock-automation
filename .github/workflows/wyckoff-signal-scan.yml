@@ -1,9 +1,9 @@
-name: 威科夫信号扫描
+name: 威科夫每日信号扫描
 
 on:
   schedule:
-    # 每天 16:00 UTC = 北京时间 00:00（盘后数据已出，数据源已更新）
-    - cron: "0 8 * * 1-5"
+    # 北京时间 19:00（收盘后，数据源已更新）= UTC 11:00
+    - cron: '0 11 * * 1-5'
   workflow_dispatch:
     inputs:
       trade_date:
@@ -13,9 +13,13 @@ on:
         description: "拉取数据天数（默认 120）"
         required: false
         default: "120"
+      limit:
+        description: "限制扫描数量（0=全部，测试用）"
+        required: false
+        default: "0"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: wyckoff-signal-scan
@@ -24,53 +28,62 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    # 全市场 ~3200 只 × (拉取+限流) ≈ 60-90 分钟；断点续扫使超时重跑只补未完成部分
+    timeout-minutes: 180
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: 检出代码
+        uses: actions/checkout@v5
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: Install deps
+      - name: 安装依赖
         run: |
-          pip install pandas requests akshare pyyaml numpy
-          # 确保 skill 目录的 fetch_kline.py 可用
-          bash .agents/skills/a-share-kline-fetch/setup_env.sh
+          pip install --upgrade pip
+          pip install pandas akshare requests
 
-      - name: Run signal scan
+      - name: 运行 LPS 信号扫描
         id: scan
         env:
           NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          # 输入经 env 传入，避免 ${{ }} 直接内插进 shell
+          INPUT_TRADE_DATE: ${{ github.event.inputs.trade_date }}
+          INPUT_DAYS: ${{ github.event.inputs.days || '120' }}
+          INPUT_LIMIT: ${{ github.event.inputs.limit || '0' }}
         run: |
           cd ${{ github.workspace }}
-          OUTPUT_FILE="wyckoff/scan_results/scan_$(date +%F).json"
-          mkdir -p wyckoff/scan_results
+          DAYS="${INPUT_DAYS:-120}"
+          LIMIT="${INPUT_LIMIT:-0}"
+          TRADE_DATE="${INPUT_TRADE_DATE:-}"
 
-          if [ -n "${{ github.event.inputs.trade_date }}" ]; then
-            python -m wyckoff.signal_scanner \
-              --trade-date "${{ github.event.inputs.trade_date }}" \
-              --days "${{ github.event.inputs.days || 120 }}" \
-              --output "$OUTPUT_FILE"
+          echo "=========================================="
+          echo "威科夫 LPS 信号扫描"
+          echo "交易日: ${TRADE_DATE:-（自动）}  days: ${DAYS}  limit: ${LIMIT}"
+          echo "=========================================="
+
+          if [ -n "$TRADE_DATE" ]; then
+            python -m wyckoff.mainboard_scanner \
+              --trade-date "$TRADE_DATE" \
+              --days "$DAYS" \
+              --limit "$LIMIT"
           else
-            python -m wyckoff.signal_scanner \
-              --days "${{ github.event.inputs.days || 120 }}" \
-              --output "$OUTPUT_FILE"
+            python -m wyckoff.mainboard_scanner \
+              --days "$DAYS" \
+              --limit "$LIMIT"
           fi
 
-          echo "output_file=$OUTPUT_FILE" >> $GITHUB_OUTPUT
-
-      - name: Commit results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add wyckoff/scan_results/
-          if git diff --cached --quiet; then
-            echo "无变化，跳过提交"
-          else
-            git commit -m "chore: 威科夫信号扫描 $(date +%F)"
-            git push
-          fi
+      - name: 上传扫描结果
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: wyckoff-scan-results-${{ github.run_number }}
+          path: wyckoff/scan_results/
+          retention-days: 30
+          # 无信号日不写 JSON（DB 已持久化），artifact 为空不算失败
+          if-no-files-found: ignore
