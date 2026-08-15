@@ -19,10 +19,16 @@ END_DT = date(2026, 8, 14)
 
 
 def make_df(signal: bool) -> pd.DataFrame:
-    """构造 25 行日线：收盘价恒为 10（紧贴 MA20），末日缩量则触发 LPS"""
-    dates = [END_DT - timedelta(days=24 - i) for i in range(25)]
-    closes = [10.0] * 25
-    volumes = [50.0 if (signal and i == 24) else 100.0 for i in range(25)]
+    """构造 31 行日线：signal=True 时第 21 行放量突破（SOS）、末日缩量回踩 MA20（LPS），
+    组合成 SOS→LPS 触发；signal=False 时全程横盘恒量，无任何信号"""
+    n = 31
+    dates = [END_DT - timedelta(days=n - 1 - i) for i in range(n)]
+    closes = [10.0] * n
+    volumes = [100.0] * n
+    if signal:
+        closes[20] = 11.0    # SOS：创前 20 日新高
+        volumes[20] = 200.0  # SOS：量比 = 200 / 前5日均量100 = 2.0 > 1.5
+        volumes[-1] = 50.0   # LPS：末日量比 = 50 / 100 = 0.5 < 0.8
     return pd.DataFrame({"date": dates, "close": closes, "volume": volumes})
 
 
@@ -287,6 +293,49 @@ class TestMainboardListFallback(unittest.TestCase):
 
         with patch("requests.Session", return_value=FakeSession()):
             self.assertEqual(_fetch_mainboard_list_sina(), [])
+
+
+class TestSosLpsGate(unittest.TestCase):
+    """SOS→LPS 组合判定：裸 LPS（无前置 SOS 放量突破）不触发信号"""
+
+    class SingleSource:
+        """所有代码都返回同一份构造好的日线"""
+
+        def __init__(self, df):
+            self.df = df
+
+        def fetch(self, code, start_dt, end_dt):
+            return self.df.copy()
+
+    def test_bare_lps_without_sos_not_signaled(self):
+        """末日缩量贴线但全程无放量突破 → 不产生信号（宁缺毋滥）"""
+        df = make_df(signal=False)
+        df.loc[df.index[-1], "volume"] = 50.0  # 只给 LPS 条件，不给 SOS
+        client = FakeClient()
+        result = run_with(STOCKS[:1], self.SingleSource(df), client)
+        self.assertEqual(result["lps_count"], 0)
+        self.assertEqual(client.signal_rows, [])
+
+    def test_lps_beyond_sos_window_not_signaled(self):
+        """SOS 后超过 15 个交易日才缩量回踩 → 不触发（窗口约束）"""
+        n = 41
+        dates = [END_DT - timedelta(days=n - 1 - i) for i in range(n)]
+        closes = [10.0] * n
+        volumes = [100.0] * n
+        closes[20] = 11.0
+        volumes[20] = 200.0
+        volumes[-1] = 50.0  # LPS 距 SOS 20 个交易日 > 窗口 15
+        df = pd.DataFrame({"date": dates, "close": closes, "volume": volumes})
+        result = run_with(STOCKS[:1], self.SingleSource(df), FakeClient())
+        self.assertEqual(result["lps_count"], 0)
+
+    def test_signal_carries_sos_date(self):
+        """信号带 sos_date，等于 SOS 突破日"""
+        result = run_with(STOCKS[:1], FakeSource(), FakeClient())
+        self.assertEqual(result["lps_count"], 1)
+        sig = result["signals"][0]
+        # make_df 的 SOS 在倒数第 11 行（距末日 10 个交易日，窗口内）
+        self.assertEqual(sig["sos_date"], (END_DT - timedelta(days=10)).isoformat())
 
 
 class TestSpringAnnotation(unittest.TestCase):

@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""主板全市场 LPS（缩量回踩）信号扫描器
+"""主板全市场威科夫 SOS→LPS 信号扫描器
 
 对 A 股主板全量股票执行盘后增量扫描：
   1. 从 akshare 拉取主板股票清单
   2. 逐只拉取近 days 天日线数据
-  3. 计算 MA20 与当日量比（当日量 / 5日均量）
-  4. 检测 LPS 触发点：
-     - |close - ma20| / ma20 <= 0.02（价格贴近均线 ±2%）
-     - volume_ratio_5d < 0.8（当日量能低于近期均值 80%）
+  3. 计算 MA20 与量比（当日量 / 前5日均量，不含当日）
+  4. 检测 SOS→LPS 组合触发（威科夫 Phase D：突破后缩量回踩确认）：
+     - SOS（放量突破）：close 创前 20 日新高 且 volume_ratio > 1.5
+     - LPS（缩量回踩）：|close - ma20| / ma20 <= 0.02 且 volume_ratio < 0.8
+     - 触发 = SOS 后 15 个交易日内首次出现的 LPS；一次 SOS 只匹配一个 LPS
+     - 裸 LPS（无前置 SOS）不算信号，宁缺毋滥
   5. 聚合结果写入 wyckoff/scan_results/scan_YYYY-MM-DD.json
   6. 有信号时通过 ntfy 发送聚合推送
 
@@ -46,8 +48,11 @@ logger = logging.getLogger("wyckoff.mainboard_scanner")
 # ---------------------------------------------------------------------------
 DEFAULT_DAYS = 120
 DEFAULT_DB_PATH = "wyckoff/data/cache"
+SOS_BREAKOUT_WINDOW = 20     # SOS 突破窗口：close > max(close[-20:])
+SOS_VOLUME_RATIO_HIGH = 1.5  # SOS 放量阈值：volume_ratio > 1.5
+SOS_LPS_WINDOW = 15          # SOS 后 15 个交易日内出现的首次 LPS 才算触发
 LPS_PRICE_BAND = 0.02        # |close - ma20| / ma20 <= 0.02
-LPS_VOL_RATIO = 0.8          # volume_ratio < 0.8（当日量 / 5日均量）
+LPS_VOL_RATIO = 0.8          # volume_ratio < 0.8（当日量 / 前5日均量，不含当日）
 SLEEP_BETWEEN = 0.5          # 每只之间 sleep（秒），避免 akshare 限流
 FLUSH_EVERY = 50             # 攒批阈值：每扫描 N 只向 Supabase flush 一次进度
 FLUSH_INTERVAL = 60.0        # 攒批阈值：距上次 flush 超过 N 秒也触发（防超时丢进度）
@@ -138,43 +143,102 @@ def _fetch_mainboard_list_sina() -> list[dict]:
     return stocks
 
 
-def _compute_lps(df: pd.DataFrame, code: str) -> list[dict]:
-    """在日线 DataFrame 上计算 LPS 触发点。
+def _prepare_indicators(df: pd.DataFrame) -> pd.DataFrame:
+    """计算 MA20 与量比指标列。
 
-    Args:
-        df: 已排序的 OHLCV DataFrame（含 date, close, volume 列）
-        code: 股票代码
-
-    Returns:
-        LPS 触发点列表，每个元素为 {"date", "close", "ma20", "vol_ratio", "deviation"}
+    量比口径：当日量 / 前5日均量（shift 1，不含当日）；
+    前 5 日数据不足或均量为 0（长期停牌）时为 NaN，不满足任何一侧阈值，自然不参与判定。
     """
-    if len(df) < 21:
-        return []
-
     df = df.copy()
     df["ma20"] = df["close"].rolling(window=20, min_periods=20).mean()
-    df["vol_ma5"] = df["volume"].rolling(window=5, min_periods=5).mean()
-    df["vol_ratio"] = df["volume"] / df["vol_ma5"].replace(0, float("nan"))
+    df["vol_ratio"] = df["volume"] / df["volume"].rolling(window=5, min_periods=5).mean().shift(1).replace(0, float("nan"))
+    return df
 
-    lps_points = []
-    for _, row in df.iterrows():
-        ma20 = row.get("ma20")
-        vol_ratio = row.get("vol_ratio")
-        close = row.get("close")
-        if ma20 is None or pd.isna(ma20) or ma20 <= 0:
+
+def _iso(d: Any) -> str:
+    """date 值转 ISO 字符串（兼容 str 输入）。"""
+    return d.isoformat() if hasattr(d, "isoformat") else str(d)
+
+
+def _detect_sos(df: pd.DataFrame, idx: int) -> bool:
+    """判定 idx 是否为 SOS 日（放量突破）。
+
+    条件:
+      1. idx 之前有 SOS_BREAKOUT_WINDOW 个交易日（保证有历史）
+      2. close[idx] > max(close[idx-window:idx])
+      3. vol_ratio[idx] > SOS_VOLUME_RATIO_HIGH
+    """
+    if idx < SOS_BREAKOUT_WINDOW or idx >= len(df):
+        return False
+    close = df["close"].iloc[idx]
+    if close is None or pd.isna(close) or close <= 0:
+        return False
+    prev_max = df["close"].iloc[idx - SOS_BREAKOUT_WINDOW:idx].max()
+    if pd.isna(prev_max) or prev_max <= 0 or close <= prev_max:
+        return False
+    vr = df["vol_ratio"].iloc[idx]
+    if pd.isna(vr) or vr <= SOS_VOLUME_RATIO_HIGH:
+        return False
+    return True
+
+
+def _detect_lps(df: pd.DataFrame, idx: int) -> bool:
+    """判定 idx 是否为 LPS 日（缩量回踩 MA20 ±2% 且量比 < 0.8）。"""
+    if idx >= len(df):
+        return False
+    close = df["close"].iloc[idx]
+    ma20 = df["ma20"].iloc[idx]
+    if close is None or pd.isna(close) or close <= 0:
+        return False
+    if ma20 is None or pd.isna(ma20) or ma20 <= 0:
+        return False
+    if abs(close - ma20) / ma20 > LPS_PRICE_BAND:
+        return False
+    vr = df["vol_ratio"].iloc[idx]
+    if pd.isna(vr) or vr >= LPS_VOL_RATIO:
+        return False
+    return True
+
+
+def _find_sos_lps_triggers(df: pd.DataFrame) -> list[dict]:
+    """扫描所有 SOS→LPS 组合触发时点。
+
+    算法（移植 daily_stock_analysis wyckoff_backtest.find_triggers）：
+      遍历交易日找到 SOS 日后，在后续 SOS_LPS_WINDOW 个交易日内寻找第一个 LPS 日，
+      找到即记一次触发（触发日 = LPS 日）；一次 SOS 只匹配首个 LPS。
+
+    Returns:
+        触发点列表，每个元素为 {"date", "close", "ma20", "vol_ratio", "deviation", "sos_date"}
+    """
+    n = len(df)
+    triggers: list[dict] = []
+    i = 0
+    while i < n:
+        if not _detect_sos(df, i):
+            i += 1
             continue
-        if vol_ratio is None or pd.isna(vol_ratio) or vol_ratio <= 0:
-            continue
-        deviation = abs(close - ma20) / ma20
-        if deviation <= LPS_PRICE_BAND and vol_ratio < LPS_VOL_RATIO:
-            lps_points.append({
-                "date": row["date"].isoformat() if hasattr(row["date"], "isoformat") else str(row["date"]),
-                "close": round(float(close), 2),
-                "ma20": round(float(ma20), 2),
-                "vol_ratio": round(float(vol_ratio), 2),
-                "deviation": round(float(deviation) * 100, 2),
-            })
-    return lps_points
+        sos_idx = i
+        found_lps = False
+        for j in range(sos_idx + 1, min(sos_idx + 1 + SOS_LPS_WINDOW, n)):
+            if _detect_lps(df, j):
+                close = float(df["close"].iloc[j])
+                ma20 = float(df["ma20"].iloc[j])
+                triggers.append({
+                    "date": _iso(df["date"].iloc[j]),
+                    "close": round(close, 2),
+                    "ma20": round(ma20, 2),
+                    "vol_ratio": round(float(df["vol_ratio"].iloc[j]), 2),
+                    "deviation": round(abs(close - ma20) / ma20 * 100, 2),
+                    "sos_date": _iso(df["date"].iloc[sos_idx]),
+                })
+                found_lps = True
+                # 跳过已匹配的窗口，从 LPS 日后继续扫描
+                i = j + 1
+                break
+        if not found_lps:
+            # SOS 后窗口内无 LPS，从 SOS 日后继续扫描
+            i = sos_idx + 1
+    return triggers
 
 
 def _annotate_spring(df: pd.DataFrame, trade_date: str) -> dict:
@@ -226,7 +290,7 @@ def run_scan(
     flush_every: int = FLUSH_EVERY,
     flush_interval: float = FLUSH_INTERVAL,
 ) -> dict[str, Any]:
-    """执行全主板 LPS 扫描。
+    """执行全主板 SOS→LPS 组合信号扫描。
 
     Args:
         trade_date: 交易日 YYYY-MM-DD
@@ -315,49 +379,52 @@ def run_scan(
                     progress_buf.append({"trade_date": trade_date, "code": code, "status": "done"})
                 continue
 
-            # 检查最新一天的 close 是否触发 LPS
-            lps_points = _compute_lps(df, code)
-            latest_lps = lps_points[-1] if lps_points else None
+            # 检查最新一天是否为 SOS→LPS 组合触发日（裸 LPS 不算信号）
+            triggers = _find_sos_lps_triggers(_prepare_indicators(df))
+            latest_trigger = triggers[-1] if triggers else None
 
-            if latest_lps and latest_lps["date"] == trade_date:
+            if latest_trigger and latest_trigger["date"] == trade_date:
                 spring = _annotate_spring(df, trade_date)
                 entry = {
                     "code": code,
                     "name": name,
                     "signal_date": trade_date,
-                    "close": latest_lps["close"],
-                    "ma20": latest_lps["ma20"],
-                    "vol_ratio": latest_lps["vol_ratio"],
-                    "deviation_pct": latest_lps["deviation"],
+                    "close": latest_trigger["close"],
+                    "ma20": latest_trigger["ma20"],
+                    "vol_ratio": latest_trigger["vol_ratio"],
+                    "deviation_pct": latest_trigger["deviation"],
+                    "sos_date": latest_trigger["sos_date"],
                     "days_since_lps": 0,
                     **spring,
                 }
                 all_lps.append(entry)
                 if client is not None:
+                    # DB 表结构固定（lps_signals），不新增 sos_date 列，仅写入既有字段
                     signal_buf.append({
                         "trade_date": trade_date,
                         "code": code,
                         "name": name,
-                        "close": latest_lps["close"],
-                        "ma20": latest_lps["ma20"],
-                        "vol_ratio": latest_lps["vol_ratio"],
-                        "deviation_pct": latest_lps["deviation"],
+                        "close": latest_trigger["close"],
+                        "ma20": latest_trigger["ma20"],
+                        "vol_ratio": latest_trigger["vol_ratio"],
+                        "deviation_pct": latest_trigger["deviation"],
                         "is_spring": spring["is_spring"],
                         "spring_date": spring["spring_date"],
                         "spring_strength": spring["spring_strength"],
                     })
-                logger.info("  [LPS] %s %s  close=%.2f ma20=%.2f vol=%.2f",
-                            code, name, entry["close"], entry["ma20"], entry["vol_ratio"])
+                logger.info("  [LPS] %s %s  close=%.2f ma20=%.2f vol=%.2f sos=%s",
+                            code, name, entry["close"], entry["ma20"], entry["vol_ratio"],
+                            entry["sos_date"])
             else:
-                # 没有当日信号，记录最新一次 LPS 距今天数（无历史时用 "-" 占位）
-                if lps_points:
-                    last_lps_date = lps_points[-1]["date"]
-                    last_dt = datetime.strptime(last_lps_date, "%Y-%m-%d").date()
+                # 没有当日信号，记录最近一次组合触发距今天数（无历史时用 "-" 占位）
+                if triggers:
+                    last_trig_date = triggers[-1]["date"]
+                    last_dt = datetime.strptime(last_trig_date, "%Y-%m-%d").date()
                     days_since = (end_dt - last_dt).days
                 else:
-                    last_lps_date = "-"
+                    last_trig_date = "-"
                     days_since = -1
-                logger.debug("  %-6s %s  最近LPS=%s %d天前", code, name, last_lps_date, days_since)
+                logger.debug("  %-6s %s  最近触发=%s %d天前", code, name, last_trig_date, days_since)
 
             scanned += 1
             if client is not None:
@@ -497,9 +564,10 @@ def main() -> int:
         header = f"威科夫 LPS 信号 {trade_date}"
         lines = [header, f"共 {len(signals)} 只触发："]
         for s in signals[:15]:
+            sos_mark = f" [SOS {s['sos_date']}]"
             spring_mark = (
-                f" [Spring✓ {s['spring_date']}]"
-                if s.get("is_spring") else ""
+                f"{sos_mark} [Spring✓ {s['spring_date']}]"
+                if s.get("is_spring") else sos_mark
             )
             lines.append(
                 f"  {s['code']} {s.get('name', '')}  "
