@@ -87,3 +87,59 @@ jobs:
           retention-days: 30
           # 无信号日不写 JSON（DB 已持久化），artifact 为空不算失败
           if-no-files-found: ignore
+
+  # 二次过滤：消费 scan artifact，硬过滤 + 四维评分 + A/B/C 分档
+  # spec: docs/specs/2026-08-16-wyckoff-secondary-filter-action-spec.md
+  # scan 失败时本 job 被 skip（needs 默认 success()），灰色不标红
+  filter:
+    needs: [scan]
+    runs-on: ubuntu-latest
+    # 仅重拉 N 只信号原始数据（N 通常 < 50），30 分钟足够
+    timeout-minutes: 30
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v5
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安装依赖
+        run: |
+          pip install --upgrade pip
+          pip install "pandas>=2.2,<3" "akshare>=1.16" "requests>=2.31"
+
+      - name: 运行单测（快速失败，仅合成数据不联网）
+        run: |
+          pip install pytest
+          python -m pytest wyckoff/tests/test_secondary_filter.py -q
+
+      - name: 下载扫描结果
+        uses: actions/download-artifact@v6
+        with:
+          name: wyckoff-scan-results-${{ github.run_number }}
+          path: wyckoff/scan_results
+          if-no-files-found: ignore
+
+      - name: 运行二次过滤
+        id: filter
+        env:
+          NTFY_TOPIC_URL: ${{ secrets.NTFY_TOPIC_URL }}
+          INPUT_TRADE_DATE: ${{ github.event.inputs.trade_date }}
+        run: |
+          cd ${{ github.workspace }}
+          TRADE_DATE="${INPUT_TRADE_DATE:-}"
+          python -m wyckoff.secondary_filter ${TRADE_DATE:+--trade-date "$TRADE_DATE"}
+
+      - name: 上传过滤结果
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: wyckoff-filtered-results-${{ github.run_number }}
+          path: wyckoff/filtered_results/
+          retention-days: 30
+          # 无信号日不写 JSON，artifact 为空不算失败
+          if-no-files-found: ignore

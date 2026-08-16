@@ -37,6 +37,10 @@ wyckoff/data/cache/*.csv
 wyckoff/data/cache/*.png
 !wyckoff/data/cache/.gitkeep
 
+# 扫描/过滤运行时产物（DB 已持久化，本地 JSON 不入库）
+wyckoff/scan_results/*.json
+wyckoff/filtered_results/
+
 # 临时调试目录
 tmp/
 
