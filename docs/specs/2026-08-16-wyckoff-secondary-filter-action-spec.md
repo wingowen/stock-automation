@@ -283,7 +283,8 @@ def score_signal(sig: dict, df: pd.DataFrame) -> dict:
         with:
           name: wyckoff-scan-results-${{ github.run_number }}
           path: wyckoff/scan_results
-          if-no-files-found: ignore
+          # 注：download-artifact 无 if-no-files-found 输入；scan 侧 upload 已保证
+          # 无信号日也会落一份 scan_<date>.json（断点续扫模式下同样写盘），artifact 恒存在
 
       - name: 运行二次过滤
         id: filter

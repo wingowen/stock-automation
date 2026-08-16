@@ -122,7 +122,6 @@ jobs:
         with:
           name: wyckoff-scan-results-${{ github.run_number }}
           path: wyckoff/scan_results
-          if-no-files-found: ignore
 
       - name: 运行二次过滤
         id: filter
