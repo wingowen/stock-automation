@@ -23,6 +23,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -57,7 +58,8 @@ def fetch_kline(code: str, start: str, end: str, adjust: str = "qfq") -> tuple[p
     param = f"{symbol},day,{start},{end},{count},{adjust}"
 
     session = requests.Session()
-    session.trust_env = False  # 规避 macOS 系统代理
+    # 沙箱等受限网络需走代理出口时，设置 KLINE_USE_PROXY=1 启用环境代理
+    session.trust_env = os.environ.get("KLINE_USE_PROXY", "") == "1"  # 默认规避 macOS 系统代理
 
     r = session.get(TENCENT_KLINE_URL, params={"param": param}, timeout=20)
     r.raise_for_status()
