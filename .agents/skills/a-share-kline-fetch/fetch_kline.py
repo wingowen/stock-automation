@@ -57,7 +57,9 @@ def fetch_kline(code: str, start: str, end: str, adjust: str = "qfq") -> tuple[p
     param = f"{symbol},day,{start},{end},{count},{adjust}"
 
     session = requests.Session()
-    session.trust_env = False  # 规避 macOS 系统代理
+    import os
+    if not os.environ.get("HTTP_PROXY") and not os.environ.get("http_proxy"):
+        session.trust_env = False  # 规避 macOS 系统代理；沙箱有代理时保留 trust_env
 
     r = session.get(TENCENT_KLINE_URL, params={"param": param}, timeout=20)
     r.raise_for_status()
