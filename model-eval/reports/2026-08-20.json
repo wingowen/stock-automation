@@ -1,0 +1,192 @@
+{
+  "trade_date": "2026-08-20",
+  "generated_at": "2026-08-20T10:04:59",
+  "weights": {
+    "structural": 0.25,
+    "schema": 0.25,
+    "consistency": 0.25,
+    "constraint": 0.25
+  },
+  "leaderboard": [
+    {
+      "model_id": "agnes-flash",
+      "label": "Agnes 2.5 Flash",
+      "provider": "agnes",
+      "model": "agnes-2.5-flash",
+      "total": 88.7,
+      "avg": {
+        "structural": 100.0,
+        "schema": 88.2,
+        "consistency": 83.3,
+        "constraint": 83.3,
+        "total": 88.7
+      },
+      "error": null,
+      "rank": 1
+    },
+    {
+      "model_id": "gemini-flash",
+      "label": "Gemini 2.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-flash-latest",
+      "total": 66.7,
+      "avg": {
+        "structural": 0.0,
+        "schema": 100.0,
+        "consistency": 100.0,
+        "constraint": 66.7,
+        "total": 66.7
+      },
+      "error": null,
+      "rank": 2
+    }
+  ],
+  "models": [
+    {
+      "per_stock": [
+        {
+          "code": "002279",
+          "name": "久其软件",
+          "completed_rounds": 0,
+          "error": "Round 1 LLM 调用失败",
+          "scores": {
+            "structural": 0.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 66.7,
+            "total": 66.7,
+            "completed_rounds": 0,
+            "notes": {
+              "schema": [
+                "必填字段 0/0 合法"
+              ],
+              "consistency": [],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        },
+        {
+          "code": "002611",
+          "name": "东方精工",
+          "completed_rounds": 0,
+          "error": "Round 1 LLM 调用失败",
+          "scores": {
+            "structural": 0.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 66.7,
+            "total": 66.7,
+            "completed_rounds": 0,
+            "notes": {
+              "schema": [
+                "必填字段 0/0 合法"
+              ],
+              "consistency": [],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        }
+      ],
+      "avg": {
+        "structural": 0.0,
+        "schema": 100.0,
+        "consistency": 100.0,
+        "constraint": 66.7,
+        "total": 66.7
+      },
+      "total": 66.7,
+      "model_id": "gemini-flash",
+      "label": "Gemini 2.5 Flash",
+      "provider": "gemini",
+      "model": "gemini-flash-latest"
+    },
+    {
+      "per_stock": [
+        {
+          "code": "002279",
+          "name": "久其软件",
+          "completed_rounds": 5,
+          "error": null,
+          "scores": {
+            "structural": 100.0,
+            "schema": 76.4,
+            "consistency": 66.7,
+            "constraint": 66.7,
+            "total": 77.4,
+            "completed_rounds": 5,
+            "notes": {
+              "schema": [
+                "必填字段 97/127 合法"
+              ],
+              "consistency": [
+                "R4.direction == prediction.direction: ✗",
+                "R5.position_size ∈ {1/3仓,1/2仓,空仓}: ✓",
+                "R5.risk_reward.ratio 为数值: ✓",
+                "R1.phase 枚举合法: ✗",
+                "R3.effort_result.stopping_action 枚举合法: ✓",
+                "R3.effort_result.consistent 为布尔: ✓"
+              ],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✗"
+              ]
+            }
+          }
+        },
+        {
+          "code": "002611",
+          "name": "东方精工",
+          "completed_rounds": 5,
+          "error": null,
+          "scores": {
+            "structural": 100.0,
+            "schema": 100.0,
+            "consistency": 100.0,
+            "constraint": 100.0,
+            "total": 100.0,
+            "completed_rounds": 5,
+            "notes": {
+              "schema": [
+                "必填字段 115/115 合法"
+              ],
+              "consistency": [
+                "R4.direction == prediction.direction: ✓",
+                "R5.position_size ∈ {1/3仓,1/2仓,空仓}: ✓",
+                "R5.risk_reward.ratio 为数值: ✓",
+                "R1.phase 枚举合法: ✓",
+                "R3.effort_result.stopping_action 枚举合法: ✓",
+                "R3.effort_result.consistent 为布尔: ✓"
+              ],
+              "constraint": [
+                "主板禁推(无 688/30xxxx/8xxxxx 代码): ✓",
+                "价格字段均为正数: ✓",
+                "R4.prediction.confidence ∈ {high,mid,low}: ✓"
+              ]
+            }
+          }
+        }
+      ],
+      "avg": {
+        "structural": 100.0,
+        "schema": 88.2,
+        "consistency": 83.3,
+        "constraint": 83.3,
+        "total": 88.7
+      },
+      "total": 88.7,
+      "model_id": "agnes-flash",
+      "label": "Agnes 2.5 Flash",
+      "provider": "agnes",
+      "model": "agnes-2.5-flash"
+    }
+  ]
+}
